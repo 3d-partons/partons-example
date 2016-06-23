@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2016-06-15"
+    description="For non regression purpose : computation of DVCSCFF model at LO with GK11 GPD model with a list of fixed and random kinematics.">
+
+    <task service="ConvolCoeffFunctionService" method="computeManyKinematicOneModel">
+        <kinematics type="DVCSConvolCoeffFunctionKinematic">
+            <param name="file"
+                value="/home/debian/workspace/PARTONS_release/bin/scenarios/ccf_kinematics.dat" />
+        </kinematics>
+
+        <computation_configuration>
+            <module type="GPDModule">
+                <param name="className" value="GK11Model" />
+            </module>
+
+            <module type="DVCSConvolCoeffFunctionModule">
+                <param name="className" value="DVCSCFFModel" />
+                <param name="qcd_order_type" value="LO" />
+            </module>
+        </computation_configuration>
+    </task>
+
+    <task service="ConvolCoeffFunctionService" method="printResults">
+    </task>
+
+</scenario>

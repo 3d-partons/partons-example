@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2016-03-25"
+    description="MMS13Model test after refactoring MSTWPDF class">
+
+    <task service="GPDService" method="computeGPDModel">
+        <kinematics type="GPDKinematic">
+            <param name="x" value="-0.99" />
+            <param name="xi" value="0.99" />
+            <param name="t" value="0" />
+            <param name="MuF2" value="1" />
+            <param name="MuR2" value="1" />
+        </kinematics>
+
+        <computation_configuration>
+            <module type="GPDModule">
+                <param name="className" value="MMS13Model" />
+            </module>
+        </computation_configuration>
+    </task>
+
+    <task service="GPDService" method="printResults">
+    </task>
+
+</scenario>
