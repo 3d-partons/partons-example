@@ -1,9 +1,6 @@
-#include <partons/beans/List.h>
 #include <partons/Partons.h>
 #include <partons/services/automation/AutomationService.h>
-#include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
-#include <partons/ServiceObjectTyped.h>
 #include <QtCore/qcoreapplication.h>
 #include <iostream>
 #include <stdexcept>
@@ -48,11 +45,6 @@ int main(int argc, char** argv) {
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
-
-        ObservableService* pObservableService =
-                pPartons->getServiceObjectRegistry()->getObservableService();
-        std::cout << pObservableService->getResultList().toString()
-                << std::endl;
 
         // Stop PARTONS application
         if (pPartons) {
