@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2016-04-14" description="How to compute an observable">
+
+    <task service="ObservableService" method="computeManyKinematicOneModel" storeInDB="1">
+        <kinematics type="ObservableKinematic">
+             <param name="file"
+  						value="/home/guest/workspace/PARTONS_release/bin/scenarios/O_kinematics.dat" />
+        </kinematics>         
+        
+        <computation_configuration>
+            <module type="Observable">
+                <param name="className" value="Alu" />
+            </module>
+
+            <module type="DVCSModule">
+                <param name="className" value="GV2008Model" />
+                <param name="beam_energy" value="5.77" />
+            </module>
+
+            <module type="DVCSConvolCoeffFunctionModule">
+                <param name="className" value="DVCSCFFModel" />
+                <param name="qcd_order_type" value="LO" />
+            </module>
+
+            <module type="GPDModule">
+                <param name="className" value="GK11Model" />
+            </module>
+
+            <module type="ScaleModule">
+                <param name="className" value="Q2Multiplier" />
+                <param name="lambda" value="1" />
+            </module>
+
+            <module type="XiConverterModule">
+                <param name="className" value="XBToXi" />
+            </module>
+        </computation_configuration>
+    </task>
+
+    <task service="ObservableService" method="printResults">
+    </task>
+
+</scenario>

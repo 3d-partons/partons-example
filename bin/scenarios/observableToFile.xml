@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2016-04-14" description="How to compute an observable">
+
+    <task service="ObservableService" method="generatePlotFile">
+
+    	<task_param type="output">
+          <param name="filePath" value="/home/guest/workspace/PARTONS_release/bin/scenarios/output_file_plot.csv" />  
+    	</task_param>
+    	
+		<task_param type="select">
+        <param name="xPlot" value="phi" />
+        <param name="yPlot" value="observable_value" />
+		</task_param>
+		
+		<task_param type="where">
+            <param name="xB" value="0.1763" />
+            <param name="t" value="-0.1346" />
+            <param name="Q2" value="1.3651" />		
+            <param name="computation_id" value="1" />	
+		</task_param>
+    </task>
+
+</scenario>
