@@ -1,255 +1,203 @@
-###############################################################################
-# cmake module for finding ROOT
+# - Finds ROOT instalation
+# This module sets up ROOT information
+# It defines:
+# ROOT_FOUND             If the ROOT is found
+# ROOT_INCLUDE_DIR       PATH to the include directory
+# ROOT_INCLUDE_DIRS      PATH to the include directories (not cached)
+# ROOT_LIBRARIES         Most common libraries
+# ROOT_<name>_LIBRARY    Full path to the library <name>
+# ROOT_LIBRARY_DIR       PATH to the library directory
+# ROOT_ETC_DIR           PATH to the etc directory
+# ROOT_DEFINITIONS       Compiler definitions
+# ROOT_CXX_FLAGS         Compiler flags to used by client packages
+# ROOT_C_FLAGS           Compiler flags to used by client packages
+# ROOT_EXE_LINKER_FLAGS  Linker flags to used by client packages
 #
-# Following cmake variables are returned by this module:
-#
-#   ROOT_FOUND              # set to TRUE if ROOT was successfully found
-#   ROOT_INCLUDE_DIRS       # list of directories where ROOT headers live
-#   ROOT_LIBRARIES          # list of all ROOT libraries (including components)
-#   ROOT_DEFINITIONS        # definitions set by this module (-DUSE_ROOT ...)
-#   ROOT_${COMPONENT}_FOUND # for ROOT components, e.g. Minuit2 MathMore ...
-#   
-#
-#   Please note that by convention components should be entered exactly as
-#   the library names, i.e. the component name equivalent to the library
-#   $ROOTSYS/lib/libMathMore.so should be called MathMore and NOT:
-#       mathmore or Mathmore or MATHMORE
-#
-#   However to follow the usual cmake convention it is agreed that the
-#   ROOT_${COMPONENT}_FOUND variables are ALL uppercase, i.e. the MathMore
-#   component returns: ROOT_MATHMORE_FOUND and NOT ROOT_MathMore_FOUND
-#
-#
-# The additional ROOT components can be defined directly in the cmake commando:
-# FIND_PACKAGE( ROOT COMPONENTS MathMore Gdml Geo ...)
-#
-# Or in the variable ROOT_USE_COMPONENTS before calling find_package, i.e.:
-# SET( ROOT_USE_COMPONENTS MathMore Gdml Geo )
-# FIND_PACKAGE( ROOT )
-#
-# The Minuit2 component is always added for backwards compatibility.
-#
-# @author Jan Engels, DESY
-###############################################################################
+# Updated by K. Smith (ksmith37@nd.edu) to properly handle
+#  dependencies in ROOT_GENERATE_DICTIONARY
 
+find_program(ROOT_CONFIG_EXECUTABLE root-config
+  HINTS $ENV{ROOTSYS}/bin)
 
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --prefix
+    OUTPUT_VARIABLE ROOTSYS
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-SET( ROOT_FOUND FALSE )
-MARK_AS_ADVANCED( ROOT_FOUND )
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --version
+    OUTPUT_VARIABLE ROOT_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-# Threads library is needed for root
-#FIND_PACKAGE( Threads REQUIRED)
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --incdir
+    OUTPUT_VARIABLE ROOT_INCLUDE_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(ROOT_INCLUDE_DIRS ${ROOT_INCLUDE_DIR})
 
-# set ROOTSYS for running root-config
-IF( DEFINED ROOT_HOME )
-    SET( ENV{ROOTSYS} "${ROOT_HOME}" )
-ENDIF()
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --etcdir
+    OUTPUT_VARIABLE ROOT_ETC_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(ROOT_ETC_DIRS ${ROOT_ETC_DIR})
 
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --libdir
+    OUTPUT_VARIABLE ROOT_LIBRARY_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(ROOT_LIBRARY_DIRS ${ROOT_LIBRARY_DIR})
 
+set(rootlibs Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread MultiProc)
+set(ROOT_LIBRARIES)
+foreach(_cpt ${rootlibs} ${ROOT_FIND_COMPONENTS})
+  find_library(ROOT_${_cpt}_LIBRARY ${_cpt} HINTS ${ROOT_LIBRARY_DIR})
+  if(ROOT_${_cpt}_LIBRARY)
+    mark_as_advanced(ROOT_${_cpt}_LIBRARY)
+    list(APPEND ROOT_LIBRARIES ${ROOT_${_cpt}_LIBRARY})
+    if(ROOT_FIND_COMPONENTS)
+      list(REMOVE_ITEM ROOT_FIND_COMPONENTS ${_cpt})
+    endif()
+  endif()
+endforeach()
+if(ROOT_LIBRARIES)
+  list(REMOVE_DUPLICATES ROOT_LIBRARIES)
+endif()
 
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --cflags
+    OUTPUT_VARIABLE __cflags
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+string(REGEX MATCHALL "-(D|U)[^ ]*" ROOT_DEFINITIONS "${__cflags}")
+string(REGEX REPLACE "(^|[ ]*)-I[^ ]*" "" ROOT_CXX_FLAGS "${__cflags}")
+string(REGEX REPLACE "(^|[ ]*)-I[^ ]*" "" ROOT_C_FLAGS "${__cflags}")
 
-# ==============================================
-# ===          ROOT_INCLUDE_DIR              ===
-# ==============================================
+execute_process(
+    COMMAND ${ROOT_CONFIG_EXECUTABLE} --ldflags
+    OUTPUT_VARIABLE __ldflags
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(ROOT_EXE_LINKER_FLAGS "${__ldflags}")
 
-# get include dir from root-config output
-EXEC_PROGRAM( "${ROOT_HOME}/bin/root-config" "${ROOT_HOME}/bin"
-    ARGS --incdir
-    OUTPUT_VARIABLE ROOT_INC_DIR
-    RETURN_VALUE exit_code
-)
-IF( NOT exit_code EQUAL 0 )
-    # clear ROOT_INC_DIR if root-config exits with error
-    # it could have garbage output
-    SET( ROOT_INC_DIR )
-ENDIF()
+set(ROOT_USE_FILE ${CMAKE_CURRENT_LIST_DIR}/RootUseFile.cmake)
 
+execute_process(
+  COMMAND ${ROOT_CONFIG_EXECUTABLE} --features
+  OUTPUT_VARIABLE _root_options
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+separate_arguments(_root_options)
+foreach(_opt ${_root_options})
+  set(ROOT_${_opt}_FOUND TRUE)
+endforeach()
 
-SET( ROOT_INCLUDE_DIR ROOT_INCLUDE_DIR-NOTFOUND )
-MARK_AS_ADVANCED( ROOT_INCLUDE_DIR )
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(ROOT DEFAULT_MSG ROOT_CONFIG_EXECUTABLE
+    ROOTSYS ROOT_VERSION ROOT_INCLUDE_DIR ROOT_LIBRARIES ROOT_LIBRARY_DIR)
 
-FIND_PATH( ROOT_INCLUDE_DIR
-    NAMES TH1.h
-    PATHS ${ROOT_HOME}/include ${ROOT_INC_DIR}
-    NO_DEFAULT_PATH )
+mark_as_advanced(ROOT_CONFIG_EXECUTABLE)
 
-IF( NOT ROOT_INCLUDE_DIR AND NOT ROOT_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for ROOT: ${ROOT_HOME}"
-            " -- failed to find ROOT include directory!!" )
-ENDIF()
+include(CMakeParseArguments)
+find_program(ROOTCLING_EXECUTABLE rootcling HINTS $ENV{ROOTSYS}/bin)
+find_program(GENREFLEX_EXECUTABLE genreflex HINTS $ENV{ROOTSYS}/bin)
+find_package(GCCXML)
 
+#----------------------------------------------------------------------------
+# function ROOT_GENERATE_DICTIONARY( dictionary
+#                                    header1 header2 ...
+#                                    LINKDEF linkdef1 ...
+#                                    OPTIONS opt1...)
+function(ROOT_GENERATE_DICTIONARY dictionary)
+  CMAKE_PARSE_ARGUMENTS(ARG "" "" "LINKDEF;OPTIONS" "" ${ARGN})
+  #---Get the list of include directories------------------
+  get_directory_property(incdirs INCLUDE_DIRECTORIES)
+  set(includedirs)
+  foreach( d ${incdirs})
+     set(includedirs ${includedirs} -I${d})
+  endforeach()
+  #---Get the list of header files-------------------------
+  set(headerfiles)
+  foreach(fp ${ARG_UNPARSED_ARGUMENTS})
+    if(${fp} MATCHES "[*?]") # Is this header a globbing expression?
+      file(GLOB files ${fp})
+      foreach(f ${files})
+        if(NOT f MATCHES LinkDef) # skip LinkDefs from globbing result
+          set(headerfiles ${headerfiles} ${f})
+        endif()
+      endforeach()
+    else()
+      find_file(headerFile ${fp} HINTS ${incdirs})
+      set(headerfiles ${headerfiles} ${headerFile})
+      unset(headerFile CACHE)
+    endif()
+  endforeach()
+  #---Get LinkDef.h file------------------------------------
+  set(linkdefs)
+  foreach( f ${ARG_LINKDEF})
+    find_file(linkFile ${f} HINTS ${incdirs})
+    set(linkdefs ${linkdefs} ${linkFile})
+    unset(linkFile CACHE)
+  endforeach()
+  #---call rootcling------------------------------------------
+  add_custom_command(OUTPUT ${dictionary}.cxx
+                     COMMAND ${ROOTCLING_EXECUTABLE} -f ${dictionary}.cxx
+                                          -c ${ARG_OPTIONS} ${includedirs} ${headerfiles} ${linkdefs}
+                     DEPENDS ${headerfiles} ${linkdefs} VERBATIM)
+endfunction()
 
-
-
-# ==============================================
-# ===            ROOT_LIBRARIES              ===
-# ==============================================
-
-# check if this flag is set to FALSE at the end of
-# this module to make sure all libraries were found
-SET( ROOT_FINDLIB_FAILED FALSE )
-MARK_AS_ADVANCED( ROOT_FINDLIB_FAILED )
-
-
-# get library dir from root-config output
-EXEC_PROGRAM( "${ROOT_HOME}/bin/root-config" "${ROOT_HOME}/bin"
-    ARGS --libdir
-    OUTPUT_VARIABLE ROOT_LIB_DIR
-    RETURN_VALUE exit_code
-)
-IF( NOT exit_code EQUAL 0 )
-    # clear ROOT_LIB_DIR if root-config exits with error
-    # it could have garbage output
-    SET( ROOT_LIB_DIR )
-ENDIF()
-
-
-
-# ========== look for standard root libraries =================
-
-# standard root libraries (without components)
-SET( ROOT_LIB_NAMES )
-SET( ROOT_LIBS )
-MARK_AS_ADVANCED( ROOT_LIB_NAMES ROOT_LIBS )
-
-# get standard root libraries from 'root-config --libs' output
-EXEC_PROGRAM( "${ROOT_HOME}/bin/root-config" "${ROOT_HOME}/bin"
-    #ARGS --noauxlibs --glibs
-    ARGS --noauxlibs --libs
-    OUTPUT_VARIABLE cmd_output
-    RETURN_VALUE exit_code
-)
-IF( exit_code EQUAL 0 )
-    
-    # create a list out of the output
-    SEPARATE_ARGUMENTS( cmd_output )
-
-    # remove first item -L compiler flag
-    LIST( REMOVE_AT cmd_output 0 )
-
-    FOREACH( lib ${cmd_output} )
-
-        # extract libnames from -l compiler flags
-        STRING( REGEX REPLACE "^-.(.*)$" "\\1" libname "${lib}")
-
-        # append all library names into a list
-        LIST( APPEND ROOT_LIB_NAMES ${libname} )
-
-        SET( ROOT_LIB_${libname} ROOT_LIB_${libname}-NOTFOUND )
-        MARK_AS_ADVANCED( ROOT_LIB_${libname} )
-
-        FIND_LIBRARY( ROOT_LIB_${libname}
-            NAMES ${libname}
-            PATHS ${ROOT_HOME}/lib ${ROOT_LIB_DIR}
-            NO_DEFAULT_PATH
-        )
-
-        IF( NOT ROOT_LIB_${libname} )
-            SET( ROOT_FINDLIB_FAILED TRUE )
-            IF( NOT ROOT_FIND_QUIETLY )
-                MESSAGE( STATUS "Check for ROOT: ${ROOT_HOME}"
-                        " -- failed to find ROOT library: ${libname}" )
-            ENDIF()
-        ELSE()
-            LIST( APPEND ROOT_LIBS ${ROOT_LIB_${libname}} )
-        ENDIF()
-
-    ENDFOREACH()
-
-    IF( NOT ROOT_FIND_QUIETLY )
-        MESSAGE( STATUS "Check for ROOT: detected libraries: ${ROOT_LIB_NAMES}" )
-    ENDIF()
-
-ELSE()
-    SET( ROOT_FINDLIB_FAILED TRUE )
-ENDIF()
-
-
-
-# ========== look for additional root components =================
-
-SET( ROOT_COMPONENT_LIBS )
-MARK_AS_ADVANCED( ROOT_COMPONENT_LIBS )
-
-# Minuit2 is always included (for backwards compatibility )
-LIST( APPEND ROOT_FIND_COMPONENTS Minuit2 )
-
-# append components defined in the variable ROOT_USE_COMPONENTS
-IF( DEFINED ROOT_USE_COMPONENTS )
-    LIST( APPEND ROOT_FIND_COMPONENTS ${ROOT_USE_COMPONENTS} )
-ENDIF()
-
-# REMOVE_DUPLICATES is only available in cmake versions >= 2.6
-# it is not a problem if a component is duplicated in the list, this is just done
-# for consistency and to display the message below without duplicate components
-IF( ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} EQUAL 2.6 OR
-    ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 2.6 )
-    IF( ROOT_FIND_COMPONENTS )
-        LIST(REMOVE_DUPLICATES ROOT_FIND_COMPONENTS)
-    ENDIF()
-ENDIF()
-
-IF( NOT ROOT_FIND_QUIETLY )
-    MESSAGE( STATUS "Check for ROOT: additional components: ${ROOT_FIND_COMPONENTS}" )
-ENDIF()
-
-FOREACH( libname ${ROOT_FIND_COMPONENTS} )
-
-    # name of the component in upper case
-    STRING( TOUPPER ${libname} upper_component_name)
-
-    SET( ROOT_LIB_${libname} ROOT_LIB_${libname}-NOTFOUND )
-    MARK_AS_ADVANCED( ROOT_LIB_${libname} )
-
-    FIND_LIBRARY( ROOT_LIB_${libname}
-        NAMES ${libname}
-        PATHS ${ROOT_HOME}/lib ${ROOT_LIB_DIR}
-        NO_DEFAULT_PATH
-    )
-
-    IF( NOT ROOT_LIB_${libname} )
-        #SET( ROOT_FINDLIB_FAILED TRUE )
-        IF( NOT ROOT_FIND_QUIETLY )
-            MESSAGE( STATUS "Check for ROOT: ${ROOT_HOME}"
-                    " -- failed to find ROOT component: ${libname}" )
-        ENDIF()
-    ELSE()
-        SET( ROOT_${upper_component}_FOUND TRUE )
-        LIST( APPEND ROOT_COMPONENT_LIBS ${ROOT_LIB_${libname}} )
-    ENDIF()
-ENDFOREACH()
-
-
-# ====== DL LIBRARY ==================================================
-# comment out this code due to cmake bug in 64 bit:
-# see: http://public.kitware.com/mantis/view.php?id=10813
-#
-#FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} dl )
-#IF( NOT DL_LIB AND NOT ROOT_FIND_QUIETLY )
-#    MESSAGE( STATUS "Check for ROOT: failed to find libdl.so" )
-#    SET( ROOT_FINDLIB_FAILED TRUE )
-#ELSE()
-#    MESSAGE( STATUS "Check for ROOT: using dl library: ${DL_LIB}" )
-#ENDIF()
-
-
-
-# set variables and display results
-IF( ROOT_INCLUDE_DIR AND NOT ROOT_FINDLIB_FAILED )
-    SET( ROOT_FOUND TRUE )
-    SET( ROOT_INCLUDE_DIRS ${ROOT_INCLUDE_DIR} )
-    #SET( ROOT_LIBRARIES ${ROOT_LIBS} ${DL_LIB} ${CMAKE_THREAD_LIBS_INIT} )
-    #SET( ROOT_LIBRARIES ${ROOT_LIBS} ${ROOT_COMPONENT_LIBS} ${DL_LIB} )
-    SET( ROOT_LIBRARIES ${ROOT_LIBS} ${ROOT_COMPONENT_LIBS} )
-    SET( ROOT_DEFINITIONS "-DUSEROOT -DUSE_ROOT -DMARLIN_USE_ROOT" )
-    MARK_AS_ADVANCED( ROOT_LIBRARIES ROOT_DEFINITIONS )
-    MESSAGE( STATUS "Check for ROOT: ${ROOT_HOME} -- works" )
-ELSE()
-    IF( ROOT_FIND_REQUIRED )
-        MESSAGE( FATAL_ERROR "did you set ROOT_HOME with -DROOT_HOME=<path_to_ROOT>?" )
-    ENDIF()
-    IF( NOT ROOT_FIND_QUIETLY )
-        MESSAGE( STATUS "Check for ROOT -- failed!! skip this package..." )
-    ENDIF()
-ENDIF()
+#----------------------------------------------------------------------------
+# function REFLEX_GENERATE_DICTIONARY(dictionary
+#                                     header1 header2 ...
+#                                     SELECTION selectionfile ...
+#                                     OPTIONS opt1...)
+function(REFLEX_GENERATE_DICTIONARY dictionary)
+  CMAKE_PARSE_ARGUMENTS(ARG "" "" "SELECTION;OPTIONS" "" ${ARGN})
+  #---Get the list of header files-------------------------
+  set(headerfiles)
+  foreach(fp ${ARG_UNPARSED_ARGUMENTS})
+    file(GLOB files ${fp})
+    if(files)
+      foreach(f ${files})
+        set(headerfiles ${headerfiles} ${f})
+      endforeach()
+    else()
+      set(headerfiles ${headerfiles} ${fp})
+    endif()
+  endforeach()
+  #---Get Selection file------------------------------------
+  if(IS_ABSOLUTE ${ARG_SELECTION})
+    set(selectionfile ${ARG_SELECTION})
+  else()
+    set(selectionfile ${CMAKE_CURRENT_SOURCE_DIR}/${ARG_SELECTION})
+  endif()
+  #---Get the list of include directories------------------
+  get_directory_property(incdirs INCLUDE_DIRECTORIES)
+  set(includedirs)
+  foreach( d ${incdirs})
+    set(includedirs ${includedirs} -I${d})
+  endforeach()
+  #---Get preprocessor definitions--------------------------
+  get_directory_property(defs COMPILE_DEFINITIONS)
+  foreach( d ${defs})
+   set(definitions ${definitions} -D${d})
+  endforeach()
+  #---Nanes and others---------------------------------------
+  set(gensrcdict ${dictionary}.cpp)
+  if(MSVC)
+    set(gccxmlopts "--gccxmlopt=\"--gccxml-compiler cl\"")
+  else()
+    #set(gccxmlopts "--gccxmlopt=\'--gccxml-cxxflags -m64 \'")
+    set(gccxmlopts)
+  endif()
+  #set(rootmapname ${dictionary}Dict.rootmap)
+  #set(rootmapopts --rootmap=${rootmapname} --rootmap-lib=${libprefix}${dictionary}Dict)
+  #---Check GCCXML and get path-----------------------------
+  if(GCCXML)
+    get_filename_component(gccxmlpath ${GCCXML} PATH)
+  else()
+    message(WARNING "GCCXML not found. Install and setup your environment to find 'gccxml' executable")
+  endif()
+  #---Actual command----------------------------------------
+  add_custom_command(OUTPUT ${gensrcdict} ${rootmapname}
+                     COMMAND ${GENREFLEX_EXECUTABLE} ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
+                             --gccxmlpath=${gccxmlpath} ${ARG_OPTIONS} ${includedirs} ${definitions}
+                     DEPENDS ${headerfiles} ${selectionfile})
+endfunction()
 

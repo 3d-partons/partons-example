@@ -15,7 +15,7 @@
     </target>
 
     <target name="cmake">
-        <exec command="cmake -G&quot;Unix Makefiles&quot; ${basedir} -DCMAKE_BUILD_TYPE=Debug -DROOT_HOME=/usr/local/root/v5.34.32" failonerror="true" dir="${build}" />
+        <exec command="cmake -G&quot;Unix Makefiles&quot; ${basedir} -DCMAKE_BUILD_TYPE=Debug" failonerror="true" dir="${build}" />
     </target>
 
     <target name="build" depends="cmake">
