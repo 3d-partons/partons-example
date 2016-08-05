@@ -15,7 +15,11 @@
     </target>
 
     <target name="cmake">
-        <exec command="cmake -G&quot;Unix Makefiles&quot; ${basedir} -DCMAKE_BUILD_TYPE=Debug" failonerror="true" dir="${build}" />
+        <exec executable="cmake" failonerror="true" dir="${build}">
+            <arg value="-GUnix Makefiles" />
+            <arg value="${basedir}" />
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+        </exec>
     </target>
 
     <target name="build" depends="cmake">
