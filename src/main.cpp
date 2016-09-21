@@ -1,9 +1,9 @@
+#include <ElementaryUtils/logger/CustomException.h>
+#include <ElementaryUtils/logger/LoggerManager.h>
 #include <partons/Partons.h>
 #include <partons/services/automation/AutomationService.h>
 #include <partons/ServiceObjectRegistry.h>
 #include <QtCore/qcoreapplication.h>
-#include <iostream>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -45,24 +45,18 @@ int main(int argc, char** argv) {
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
-
-        // Stop PARTONS application
-        if (pPartons) {
-            pPartons->close();
-            delete pPartons;
-            pPartons = 0;
-        }
-
         // If there is an exception
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+    } catch (const ElemUtils::CustomException &e) {
+        pPartons->getLoggerManager()->error(e);
+    } catch (const std::exception &e) {
+        pPartons->getLoggerManager()->error("main", __func__, e.what());
+    }
 
-        // Close PARTONS application propertly
-        if (pPartons) {
-            pPartons->close();
-            delete pPartons;
-            pPartons = 0;
-        }
+    // Close PARTONS application propertly
+    if (pPartons) {
+        pPartons->close();
+        delete pPartons;
+        pPartons = 0;
     }
 
     return 0;
