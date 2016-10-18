@@ -2,86 +2,86 @@
 
 <scenario date="2016-10-18" description="...">
 
-<!-- Compute things with GK11 -->
-    <task service="ObservableService" method="computeObservable">
-        <kinematics type="ObservableKinematic">
-            <param name="file"
-                value="/home/debian/workspace/PARTONS_release/bin/scenarios/demo/observable_kinematics.dat" />
-        </kinematics>
+	<!-- Compute things with GK11 -->
+	<task service="ObservableService" method="computeManyKinematicOneModel" storeInDB="0">
+		<kinematics type="ObservableKinematic">
+			<param name="file"
+				value="/home/debian/workspace/PARTONS_release/bin/scenarios/demo/observable_kinematics.dat" />
+		</kinematics>
 
-        <computation_configuration>
-            <module type="Observable">
-                <param name="className" value="Alu" />
-            </module>
+		<computation_configuration>
+			<module type="Observable">
+				<param name="className" value="Alu" />
+			</module>
 
-            <module type="DVCSModule">
-                <param name="className" value="BMJ2012Model" />
-                <param name="beam_energy" value="5.77" />
-            </module>
+			<module type="DVCSModule">
+				<param name="className" value="BMJ2012Model" />
+				<param name="beam_energy" value="1066" />
+			</module>
 
-            <module type="DVCSConvolCoeffFunctionModule">
-                <param name="className" value="DVCSCFFModel" />
-                <param name="qcd_order_type" value="LO" />
-            </module>
+			<module type="DVCSConvolCoeffFunctionModule">
+				<param name="className" value="DVCSCFFModel" />
+				<param name="qcd_order_type" value="LO" />
+			</module>
 
-            <module type="GPDModule">
-                <param name="className" value="GK11Model" />
-            </module>
+			<module type="GPDModule">
+				<param name="className" value="GK11Model" />
+			</module>
 
-            <module type="ScaleModule">
-                <param name="className" value="Q2Multiplier" />
-                <param name="lambda" value="1" />
-            </module>
+			<module type="ScaleModule">
+				<param name="className" value="Q2Multiplier" />
+				<param name="lambda" value="1" />
+			</module>
 
-            <module type="XiConverterModule">
-                <param name="className" value="XBToXi" />
-            </module>
-        </computation_configuration>
-    </task>
+			<module type="XiConverterModule">
+				<param name="className" value="XBToXi" />
+			</module>
+		</computation_configuration>
+	</task>
 
-<!-- Show results on screen -->
-    <task service="ObservableService" method="printResults">
-    </task>
+	<!-- Show results on screen -->
+	<task service="ObservableService" method="printResults">
+	</task>
 
-<!-- Compute things with VGG -->
-    <task service="ObservableService" method="computeObservable">
-        <kinematics type="ObservableKinematic">
-            <param name="file"
-                value="/home/debian/workspace/PARTONS_release/bin/scenarios/demo/observable_kinematics.dat" />
-        </kinematics>
+	<!-- Compute things with VGG -->
+	<task service="ObservableService" method="computeManyKinematicOneModel" storeInDB="0">
+		<kinematics type="ObservableKinematic">
+			<param name="file"
+				value="/home/debian/workspace/PARTONS_release/bin/scenarios/demo/observable_kinematics.dat" />
+		</kinematics>
 
-        <computation_configuration>
-            <module type="Observable">
-                <param name="className" value="Alu" />
-            </module>
+		<computation_configuration>
+			<module type="Observable">
+				<param name="className" value="Alu" />
+			</module>
 
-            <module type="DVCSModule">
-                <param name="className" value="BMJ2012Model" />
-                <param name="beam_energy" value="5.77" />
-            </module>
+			<module type="DVCSModule">
+				<param name="className" value="BMJ2012Model" />
+				<param name="beam_energy" value="1066" />
+			</module>
 
-            <module type="DVCSConvolCoeffFunctionModule">
-                <param name="className" value="DVCSCFFModel" />
-                <param name="qcd_order_type" value="LO" />
-            </module>
+			<module type="DVCSConvolCoeffFunctionModule">
+				<param name="className" value="DVCSCFFModel" />
+				<param name="qcd_order_type" value="LO" />
+			</module>
 
-            <module type="GPDModule">
-                <param name="className" value="VGGModel" />
-            </module>
+			<module type="GPDModule">
+				<param name="className" value="VGGModel" />
+			</module>
 
-            <module type="ScaleModule">
-                <param name="className" value="Q2Multiplier" />
-                <param name="lambda" value="1" />
-            </module>
+			<module type="ScaleModule">
+				<param name="className" value="Q2Multiplier" />
+				<param name="lambda" value="1" />
+			</module>
 
-            <module type="XiConverterModule">
-                <param name="className" value="XBToXi" />
-            </module>
-        </computation_configuration>
-    </task>
+			<module type="XiConverterModule">
+				<param name="className" value="XBToXi" />
+			</module>
+		</computation_configuration>
+	</task>
 
-<!-- Show results on screen -->
-    <task service="ObservableService" method="printResults">
-    </task>
-    
+	<!-- Show results on screen -->
+	<task service="ObservableService" method="printResults">
+	</task>
+
 </scenario>
