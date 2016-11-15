@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
-<scenario date="2016-04-14" description="How to compute an observable">
+<scenario date="2016-10-18" description="...">
 
-	<task service="ObservableService" method="computeObservable">
+	<!-- Compute things with GK11 -->
+	<task service="ObservableService" method="computeManyKinematicOneModel"
+		storeInDB="0">
 		<kinematics type="ObservableKinematic">
-			<param name="xB" value="0.1763" />
-			<param name="t" value="-0.1346" />
-			<param name="Q2" value="1.3651" />
+			<param name="file"
+				value="/home/debian/workspace/PARTONS_release/bin/scenarios/demo/observable_kinematics.dat" />
 		</kinematics>
 
 		<computation_configuration>
-			<module type="Observable" name="AcCos2phi">
-				<module type="ProcessModule" name="GV2008Model">
-					<param name="beam_energy" value="5.77" />
+			<module type="Observable" name="Alu">
+
+				<module type="DVCSModule" name="BMJ2012Model">
+
+					<param name="beam_energy" value="1066" />
 
 					<module type="ScaleModule" name="Q2Multiplier">
 						<param name="lambda" value="1" />
@@ -21,18 +24,17 @@
 					<module type="XiConverterModule" name="XBToXi">
 					</module>
 
-					<module type="ConvolCoeffFunctionModule" name="DVCSCFFModel">
+					<module type="DVCSConvolCoeffFunctionModule" name="DVCSCFFModel">
+
 						<param name="qcd_order_type" value="LO" />
 
 						<module type="GPDModule" name="GK11Model">
 						</module>
+
 					</module>
 				</module>
 			</module>
 		</computation_configuration>
-	</task>
-
-	<task service="ObservableService" method="printResults">
 	</task>
 
 </scenario>

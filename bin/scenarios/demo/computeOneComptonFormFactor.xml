@@ -1,0 +1,31 @@
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<scenario date="2016-04-14"
+	description="Example : computation of one convol coeff function model (DVCSCFF) with GPD model (GK11)">
+
+	<task service="ConvolCoeffFunctionService" method="computeWithGPDModel"
+		storeInDB="0">
+		<kinematics type="DVCSConvolCoeffFunctionKinematic">
+			<param name="xi" value="0.0088933952793878" />
+			<param name="t" value="-0.1346" />
+			<param name="Q2" value="1.5557" />
+			<param name="MuF2" value="4" />
+			<param name="MuR2" value="4" />
+		</kinematics>
+
+		<computation_configuration>
+			<module type="DVCSConvolCoeffFunctionModule" name="DVCSCFFModel">
+				<param name="qcd_order_type" value="LO" />
+
+				<module type="GPDModule" name="GK11Model">
+				</module>
+			</module>
+
+		</computation_configuration>
+	</task>
+
+	<task service="ConvolCoeffFunctionService" method="printResults">
+	</task>
+
+</scenario>

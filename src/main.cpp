@@ -9,7 +9,7 @@
 
 std::vector<std::string> parseArguments(int argc, char** argv) {
     if (argc <= 1) {
-        throw std::runtime_error(
+        throw ElemUtils::CustomException("main", __func__,
                 "Missing argument, please provide one or more than one XML scenario file.");
     }
 
@@ -55,8 +55,6 @@ int main(int argc, char** argv) {
     // Close PARTONS application propertly
     if (pPartons) {
         pPartons->close();
-        delete pPartons;
-        pPartons = 0;
     }
 
     return 0;
