@@ -17,15 +17,15 @@
                         <param name="lambda" value="1" />
                     </module>
 
-                    <module type="XiConverterModule" name="XBToXi">
-                    </module>
+                    <module type="XiConverterModule" name="XBToXi" />
+
 
                     <module type="ConvolCoeffFunctionModule"
                         name="DVCSCFFModel">
                         <param name="qcd_order_type" value="LO" />
 
-                        <module type="GPDModule" name="MMS13Model">
-                        </module>
+                        <module type="GPDModule" name="MMS13Model" />
+
                     </module>
                 </module>
             </module>
