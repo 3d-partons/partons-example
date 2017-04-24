@@ -32,26 +32,33 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 FIND_PACKAGE(ROOT COMPONENTS Core Hist REQUIRED)
 find_package(SFML COMPONENTS system REQUIRED)
 
+# ElementaryUtils
+FIND_PACKAGE(ElementaryUtils REQUIRED)
+# Awful hack not need anymore:
+#set(ELEMENTARY_UTILS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../ElementaryUtils/include")
+#set(ELEMENTARY_UTILS_LIB_DIR "${CMAKE_SOURCE_DIR}/../ElementaryUtils/lib")
+#set(ELEMENTARY_UTILS_LIBRARIES ElementaryUtils)
+
 # NumA++
-set(NUMA_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../NumA++/include")
-set(NUMA_LIB_DIR "${CMAKE_SOURCE_DIR}/../NumA++/lib")
-set(NUMA_LIBRARIES NumA++)
+FIND_PACKAGE(NumA++ REQUIRED)
+# Awful hack not need anymore:
+#set(NUMA_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../NumA++/include")
+#set(NUMA_LIB_DIR "${CMAKE_SOURCE_DIR}/../NumA++/lib")
+#set(NUMA_LIBRARIES NumA++)
 
 # PARTONS
-set(PARTONS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../PARTONS/include")
-set(PARTONS_LIB_DIR "${CMAKE_SOURCE_DIR}/../PARTONS/lib")
-set(PARTONS_LIBRARIES PARTONS)
-
-# ElementaryUtils
-set(ELEMENTARY_UTILS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../ElementaryUtils/include")
-set(ELEMENTARY_UTILS_LIB_DIR "${CMAKE_SOURCE_DIR}/../ElementaryUtils/lib")
-set(ELEMENTARY_UTILS_LIBRARIES ElementaryUtils)
+FIND_PACKAGE(PARTONS REQUIRED)
+# Awful hack not need anymore:
+#set(PARTONS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../PARTONS/include")
+#set(PARTONS_LIB_DIR "${CMAKE_SOURCE_DIR}/../PARTONS/lib")
+#set(PARTONS_LIBRARIES PARTONS)
 
 # Inclusion de librairies
 
 INCLUDE_DIRECTORIES( ${ELEMENTARY_UTILS_INCLUDE_DIR} ${QT_INCLUDE_DIRS} ${ROOT_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${SFML_INCLUDE_DIR})
 
-LINK_DIRECTORIES( ${ELEMENTARY_UTILS_LIB_DIR} ${PARTONS_LIB_DIR} ${NUMA_LIB_DIR})
+# Link libraries  # not needed anymore
+#LINK_DIRECTORIES( ${ELEMENTARY_UTILS_LIB_DIR} ${PARTONS_LIB_DIR} ${NUMA_LIB_DIR})
 
 #Génération de la liste des fichiers sources
 
