@@ -17,7 +17,9 @@ else (PARTONS_INCLUDE_DIR AND PARTONS_LIBRARIES)
       PATHS
       ${CMAKE_INSTALL_PREFIX}
       ${CMAKE_SOURCE_DIR}/../PARTONS
+      ${CMAKE_SOURCE_DIR}/../partons
       ${CMAKE_SOURCE_DIR}/PARTONS
+      ${CMAKE_SOURCE_DIR}/partons
       ${CMAKE_SOURCE_DIR}
       PATH_SUFFIXES include/PARTONS include
     )
@@ -27,7 +29,9 @@ else (PARTONS_INCLUDE_DIR AND PARTONS_LIBRARIES)
                      PATHS
                      ${CMAKE_INSTALL_PREFIX}
                      ${CMAKE_SOURCE_DIR}/../PARTONS
+                     ${CMAKE_SOURCE_DIR}/../partons
                      ${CMAKE_SOURCE_DIR}/PARTONS
+                     ${CMAKE_SOURCE_DIR}/partons
                      ${CMAKE_SOURCE_DIR}
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 

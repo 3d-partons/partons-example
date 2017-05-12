@@ -18,6 +18,8 @@ else (ELEMENTARY_UTILS_INCLUDE_DIR AND ELEMENTARY_UTILS_LIBRARIES)
       ${CMAKE_INSTALL_PREFIX}
       ${CMAKE_SOURCE_DIR}/../ElementaryUtils
       ${CMAKE_SOURCE_DIR}/ElementaryUtils
+      ${CMAKE_SOURCE_DIR}/../elementary-utils
+      ${CMAKE_SOURCE_DIR}/elementary-utils
       ${CMAKE_SOURCE_DIR}
       PATH_SUFFIXES include/PARTONS include
     )
@@ -28,6 +30,8 @@ else (ELEMENTARY_UTILS_INCLUDE_DIR AND ELEMENTARY_UTILS_LIBRARIES)
                      ${CMAKE_INSTALL_PREFIX}
                      ${CMAKE_SOURCE_DIR}/../ElementaryUtils
                      ${CMAKE_SOURCE_DIR}/ElementaryUtils
+                     ${CMAKE_SOURCE_DIR}/../elementary-utils
+                     ${CMAKE_SOURCE_DIR}/elementary-utils
                      ${CMAKE_SOURCE_DIR}
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 

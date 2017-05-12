@@ -16,8 +16,10 @@ else (NUMA_INCLUDE_DIR AND NUMA_LIBRARIES)
   find_path(NUMA_INCLUDE_DIR NAMES NumA/integration/Integrator.h NumA++/integration/Integrator.h
       PATHS
       ${CMAKE_INSTALL_PREFIX}
+      ${CMAKE_SOURCE_DIR}/../numa
       ${CMAKE_SOURCE_DIR}/../NumA
       ${CMAKE_SOURCE_DIR}/../NumA++
+      ${CMAKE_SOURCE_DIR}/numa
       ${CMAKE_SOURCE_DIR}/NumA
       ${CMAKE_SOURCE_DIR}/NumA++
       ${CMAKE_SOURCE_DIR}
@@ -30,8 +32,10 @@ else (NUMA_INCLUDE_DIR AND NUMA_LIBRARIES)
                      ${CMAKE_INSTALL_PREFIX}
                      ${CMAKE_SOURCE_DIR}/../NumA++
                      ${CMAKE_SOURCE_DIR}/../NumA
+                     ${CMAKE_SOURCE_DIR}/../numa
                      ${CMAKE_SOURCE_DIR}/NumA++
                      ${CMAKE_SOURCE_DIR}/NumA
+                     ${CMAKE_SOURCE_DIR}/numa
                      ${CMAKE_SOURCE_DIR}
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 
