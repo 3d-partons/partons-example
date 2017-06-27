@@ -108,7 +108,7 @@ void computeOneDVCSObservableManyKinematics() {
 
     // Create ProcessModule
     DVCSModule* pProcessModule =
-            Partons::getInstance()->getModuleObjectFactory()->newProcessModule(
+            Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
                     GV2008Model::classId);
 
     // Create CFF module
