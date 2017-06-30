@@ -39,7 +39,7 @@ find_package(NumA++ REQUIRED)
 find_package(PARTONS REQUIRED)
 
 # directories containing headers 
-include_directories(${ELEMENTARY_UTILS_INCLUDE_DIR} ${QT_INCLUDE_DIRS} ${PARTONS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${SFML_INCLUDE_DIR})
+include_directories(${QT_INCLUDE_DIRS} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
 
 # FINALIZE ==================================================================================
 
@@ -54,7 +54,6 @@ file(
 )
 
 # define target executable
-
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 add_executable(
@@ -68,14 +67,12 @@ add_executable(
 target_link_libraries(
 
         PARTONS_release
-
-        ${PARTONS_LIBRARIES}
+        
+        ${QT_LIBRARIES}
 
         ${ELEMENTARY_UTILS_LIBRARIES}
  
         ${NUMA_LIBRARIES}
         
-        ${QT_LIBRARIES}
-        
-        ${SFML_LIBRARIES}
+        ${PARTONS_LIBRARIES} 
 )
