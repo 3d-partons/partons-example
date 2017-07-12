@@ -58,7 +58,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 add_executable(
 
-        PARTONS_release
+        PARTONS_example
 
         ${source_files}
 )
@@ -66,7 +66,7 @@ add_executable(
 # define libraries to be linked
 target_link_libraries(
 
-        PARTONS_release
+        PARTONS_example
         
         ${QT_LIBRARIES}
 

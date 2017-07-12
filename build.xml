@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="PARTONS_release">
+<project name="PARTONS_example">
 
     <property name="build" location="${basedir}/build" />
     <property name="bin" location="${basedir}/bin" />
