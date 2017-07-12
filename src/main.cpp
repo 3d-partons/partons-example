@@ -3,7 +3,7 @@
 #include <partons/Partons.h>
 #include <partons/services/automation/AutomationService.h>
 #include <partons/ServiceObjectRegistry.h>
-#include <Qt/qcoreapplication.h>
+#include <QtCore/qcoreapplication.h>
 #include <string>
 #include <vector>
 
