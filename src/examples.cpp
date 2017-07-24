@@ -9,10 +9,10 @@
 #include <partons/beans/observable/ObservableKinematic.h>
 #include <partons/beans/observable/ObservableResult.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
-#include <partons/modules/convol_coeff_function/DVCS/DVCSCFFModel.h>
-#include <partons/modules/gpd/MMS13Model.h>
-#include <partons/modules/observable/Alu.h>
-#include <partons/modules/process/DVCS/GV2008Model.h>
+#include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
+#include <partons/modules/gpd/GPDMMS13.h>
+#include <partons/modules/observable/DVCS/asymmetry/DVCSAluMinus.h>
+#include <partons/modules/process/DVCS/DVCSProcessGV08.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <partons/services/ConvolCoeffFunctionService.h>
@@ -28,7 +28,7 @@ void computeOneGPDModel() {
     // Create GPD module with the BaseModuleFactory
     GPDModule* pGPDModel =
             Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    MMS13Model::classId);
+                    GPDMMS13::classId);
 
     // Create a GPDKinematic(x, xi, t, MuF, MuR) to compute
     GPDKinematic gpdKinematic(-0.99, 0.99, 0., 1., 1.);
@@ -53,12 +53,12 @@ void computeOneComptonFormFactor() {
     // Create GPD module with the BaseModuleFactory
     GPDModule* pGPDModule =
             Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    MMS13Model::classId);
+                    GPDMMS13::classId);
 
     // Create CFF module with the BaseModuleFactory
     DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
             Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
-                    DVCSCFFModel::classId);
+                    DVCSCFFStandard::classId);
 
     // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
     ElemUtils::Parameters parameters(
@@ -104,17 +104,17 @@ void computeOneDVCSObservableManyKinematics() {
     // Create Observable
     Observable* pObservable =
             Partons::getInstance()->getModuleObjectFactory()->newObservable(
-                    Alu::classId);
+                    DVCSAluMinus::classId);
 
     // Create ProcessModule
     DVCSModule* pProcessModule =
             Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
-                    GV2008Model::classId);
+                    DVCSProcessGV08::classId);
 
     // Create CFF module
     DVCSConvolCoeffFunctionModule* pDVCSCFFModel =
             Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
-                    DVCSCFFModel::classId);
+                    DVCSCFFStandard::classId);
 
     // Set its PerturbativeQCDOrder
     ElemUtils::Parameters dvcsConvolCoeffFunctionParameters;
@@ -128,7 +128,7 @@ void computeOneDVCSObservableManyKinematics() {
     // Create GPDModule
     GPDModule* pGPDModule =
             Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    MMS13Model::classId);
+                    GPDMMS13::classId);
 
     // Link module to each other
     pObservable->setProcessModule(pProcessModule);
