@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 
+/*
+ * Parse XML scenarios.
+ */
 std::vector<std::string> parseArguments(int argc, char** argv) {
     if (argc <= 1) {
         throw ElemUtils::CustomException("main", __func__,
@@ -22,6 +25,9 @@ std::vector<std::string> parseArguments(int argc, char** argv) {
     return xmlScenarios;
 }
 
+/*
+ * Main function.
+ */
 int main(int argc, char** argv) {
 
     // Parse arguments to retrieve xml file path list.
@@ -32,9 +38,12 @@ int main(int argc, char** argv) {
     PARTONS::Partons* pPartons = 0;
 
     try {
+
         // Init PARTONS application
         pPartons = PARTONS::Partons::getInstance();
         pPartons->init(argc, argv);
+
+        // This you need to run XML scenarios indicated in arguments of the executable
 
         // Retrieve automation service parse scenario xml file and play it.
         PARTONS::AutomationService* pAutomationService =
@@ -45,6 +54,13 @@ int main(int argc, char** argv) {
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
+
+        // Here you can run your code based on PARTONS library, e.g.
+        // computeSingleKinematicsForGPD();
+        changeIntegrationRoutine();
+
+        //TODO to run cpp one need to comment out XML part. But, if we relax argc <= 1 requirement they can be used in parallel.
+
         // If there is an exception
     } catch (const ElemUtils::CustomException &e) {
         pPartons->getLoggerManager()->error(e);
