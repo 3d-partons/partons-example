@@ -20,52 +20,51 @@
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
 
-using namespace PARTONS;
-
 void computeOneGPDModel() {
     // Retrieve GPD service
-    GPDService* pGPDService =
-            Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
+    PARTONS::GPDService* pGPDService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
 
     // Create GPD module with the BaseModuleFactory
-    GPDModule* pGPDModel =
-            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    GPDMMS13::classId);
+    PARTONS::GPDModule* pGPDModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDMMS13::classId);
 
     // Create a GPDKinematic(x, xi, t, MuF, MuR) to compute
-    GPDKinematic gpdKinematic(-0.99, 0.99, 0., 1., 1.);
+    PARTONS::GPDKinematic gpdKinematic(-0.99, 0.99, 0., 1., 1.);
 
-    GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic, pGPDModel);
+    PARTONS::GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic,
+            pGPDModel);
 
     // Print results
-    Partons::getInstance()->getLoggerManager()->info("main", __func__,
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
             gpdResult.toString());
 
     // Remove pointer reference ; Module pointers are managed by PARTONS.
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModel, 0);
     pGPDModel = 0;
 }
 
 void computeOneComptonFormFactor() {
     // Retrieve service
-    ConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
-            Partons::getInstance()->getServiceObjectRegistry()->getConvolCoeffFunctionService();
+    PARTONS::ConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getConvolCoeffFunctionService();
 
     // Create GPD module with the BaseModuleFactory
-    GPDModule* pGPDModule =
-            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    GPDMMS13::classId);
+    PARTONS::GPDModule* pGPDModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDMMS13::classId);
 
     // Create CFF module with the BaseModuleFactory
-    DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
-            Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
-                    DVCSCFFStandard::classId);
+    PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
+                    PARTONS::DVCSCFFStandard::classId);
 
     // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
     ElemUtils::Parameters parameters(
-            PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-            PerturbativeQCDOrderType::LO);
+            PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+            PARTONS::PerturbativeQCDOrderType::LO);
 
     // Configure DVCSCFFModule with previous parameters.
     pDVCSCFFModule->configure(parameters);
@@ -74,63 +73,63 @@ void computeOneComptonFormFactor() {
     pDVCSCFFModule->setGPDModule(pGPDModule);
 
     // Create kinematic
-    DVCSConvolCoeffFunctionKinematic kinematic =
-            DVCSConvolCoeffFunctionKinematic(0.0088933952793878, -0.1346,
-                    1.5557, 4., 4.);
+    PARTONS::DVCSConvolCoeffFunctionKinematic kinematic =
+            PARTONS::DVCSConvolCoeffFunctionKinematic(0.0088933952793878,
+                    -0.1346, 1.5557, 4., 4.);
 
     // Run computation
-    DVCSConvolCoeffFunctionResult result =
+    PARTONS::DVCSConvolCoeffFunctionResult result =
             pDVCSConvolCoeffFunctionService->computeForOneCCFModel(kinematic,
                     pDVCSCFFModule);
 
     // Print results for DVCSCFFModule
-    Partons::getInstance()->getLoggerManager()->info("main", __func__,
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
             result.toString());
 
     // Remove DVCSCFFModule pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pDVCSCFFModule, 0);
     pDVCSCFFModule = 0;
 
     // Remove GPDModule pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModule, 0);
     pGPDModule = 0;
 }
 
 void computeOneDVCSObservableManyKinematics() {
     // Retrieve Observable service
-    ObservableService* pObservableService =
-            Partons::getInstance()->getServiceObjectRegistry()->getObservableService();
+    PARTONS::ObservableService* pObservableService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getObservableService();
 
     // Create Observable
-    Observable* pObservable =
-            Partons::getInstance()->getModuleObjectFactory()->newObservable(
-                    DVCSAluMinus::classId);
+    PARTONS::Observable* pObservable =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newObservable(
+                    PARTONS::DVCSAluMinus::classId);
 
     // Create ProcessModule
-    DVCSModule* pProcessModule =
-            Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
-                    DVCSProcessGV08::classId);
+    PARTONS::DVCSModule* pProcessModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
+                    PARTONS::DVCSProcessGV08::classId);
 
     // Create CFF module
-    DVCSConvolCoeffFunctionModule* pDVCSCFFModel =
-            Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
-                    DVCSCFFStandard::classId);
+    PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
+                    PARTONS::DVCSCFFStandard::classId);
 
     // Set its PerturbativeQCDOrder
     ElemUtils::Parameters dvcsConvolCoeffFunctionParameters;
 
     dvcsConvolCoeffFunctionParameters.add(
-            PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-            PerturbativeQCDOrderType::NLO);
+            PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+            PARTONS::PerturbativeQCDOrderType::NLO);
 
     pDVCSCFFModel->configure(dvcsConvolCoeffFunctionParameters);
 
     // Create GPDModule
-    GPDModule* pGPDModule =
-            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    GPDMMS13::classId);
+    PARTONS::GPDModule* pGPDModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDMMS13::classId);
 
     // Link module to each other
     pObservable->setProcessModule(pProcessModule);
@@ -138,36 +137,36 @@ void computeOneDVCSObservableManyKinematics() {
     pDVCSCFFModel->setGPDModule(pGPDModule);
 
     // Load list of kinematics from file
-    List<ObservableKinematic> observableKinematicList =
-            KinematicUtils().getObservableKinematicFromFile(
+    PARTONS::List<PARTONS::ObservableKinematic> observableKinematicList =
+            PARTONS::KinematicUtils().getObservableKinematicFromFile(
                     "/home/debian/workspace/PARTONS_release/bin/examples/Observable_kinematics.csv");
 
     // Run computation
-    List<ObservableResult> results =
+    PARTONS::List<PARTONS::ObservableResult> results =
             pObservableService->computeManyKinematicOneModel(
                     observableKinematicList, pObservable);
 
     // Print results
-    Partons::getInstance()->getLoggerManager()->info("main", __func__,
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
             results.toString());
 
     // Remove Observable pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pObservable, 0);
     pObservable = 0;
 
     // Remove ProcessModule pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pProcessModule, 0);
     pProcessModule = 0;
 
     // Remove DVCSCFFModel pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pDVCSCFFModel, 0);
     pDVCSCFFModel = 0;
 
     // Remove GPDModule pointer reference
-    Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModule, 0);
     pGPDModule = 0;
 }

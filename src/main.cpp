@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-using namespace PARTONS;
-
 std::vector<std::string> parseArguments(int argc, char** argv) {
     if (argc <= 1) {
         throw ElemUtils::CustomException("main", __func__,
@@ -31,19 +29,19 @@ int main(int argc, char** argv) {
             argv);
 
     QCoreApplication a(argc, argv);
-    Partons* pPartons = 0;
+    PARTONS::Partons* pPartons = 0;
 
     try {
         // Init PARTONS application
-        pPartons = Partons::getInstance();
+        pPartons = PARTONS::Partons::getInstance();
         pPartons->init(argc, argv);
 
         // Retrieve automation service parse scenario xml file and play it.
-        AutomationService* pAutomationService =
+        PARTONS::AutomationService* pAutomationService =
                 pPartons->getServiceObjectRegistry()->getAutomationService();
 
         for (unsigned int i = 0; i != xmlScenarioFilePathList.size(); i++) {
-            Scenario* pScenario = pAutomationService->parseXMLFile(
+            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
