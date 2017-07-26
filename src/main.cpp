@@ -57,7 +57,6 @@ int main(int argc, char** argv) {
 
         // Here you can run your code based on PARTONS library, e.g.
         // computeSingleKinematicsForGPD();
-        changeIntegrationRoutine();
 
         //TODO to run cpp one need to comment out XML part. But, if we relax argc <= 1 requirement they can be used in parallel.
 
