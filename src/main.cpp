@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+using namespace PARTONS;
+
 std::vector<std::string> parseArguments(int argc, char** argv) {
     if (argc <= 1) {
         throw ElemUtils::CustomException("main", __func__,

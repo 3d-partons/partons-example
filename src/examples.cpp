@@ -20,6 +20,8 @@
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
 
+using namespace PARTONS;
+
 void computeOneGPDModel() {
     // Retrieve GPD service
     GPDService* pGPDService =
