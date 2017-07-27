@@ -7,17 +7,7 @@
 #include <string>
 #include <vector>
 
-/*
- * Some declarations from examples.cpp
- * Uncomment the one you want to use.
- */
-//void computeSingleKinematicsForGPD();
-//void computeManyKinematicsForGPD();
-//void computeSingleKinematicsForDVCSComptonFormFactor();
-//void computeManyKinematicsForDVCSComptonFormFactor();
-//void computeSingleKinematicsForDVCSObservable();
-//void computeManyKinematicsForDVCSObservable();
-//void changeIntegrationRoutine();
+#include "../include/examples.h"
 
 /*
  * Parse XML scenarios.
@@ -37,6 +27,7 @@ std::vector<std::string> parseArguments(int argc, char** argv) {
  */
 int main(int argc, char** argv) {
 
+    // Init Qt4
     QCoreApplication a(argc, argv);
     PARTONS::Partons* pPartons = 0;
 
@@ -46,43 +37,64 @@ int main(int argc, char** argv) {
         pPartons = PARTONS::Partons::getInstance();
         pPartons->init(argc, argv);
 
+        // ******************************************************
+        // RUN XML SCENARIO *************************************
+        // ******************************************************
+
+        // You need to provide at least one scenario via executable argument
         if (argc <= 1) {
-            // If you want to run your C++ code based on PARTONS library, comment out this exception:
+
             throw ElemUtils::CustomException("main", __func__,
                     "Missing argument, please provide one or more than one XML scenario file.");
-
-            // And include your code here, e.g. this function in examples.cpp:
-            // computeSingleKinematicsForGPD(); // It has to be declared before, uncomment the declaration too.
-
-            // The program will then run the code here when there are no XML scenarios in argument.
-
-        } else {
-            // You need this to run XML scenarios indicated in arguments of the executable.
-
-            // Parse arguments to retrieve xml file path list.
-            std::vector<std::string> xmlScenarioFilePathList = parseArguments(
-                    argc, argv);
-
-            // Retrieve automation service parse scenario xml file and play it.
-            PARTONS::AutomationService* pAutomationService =
-                    pPartons->getServiceObjectRegistry()->getAutomationService();
-
-            for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
-                PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
-                        xmlScenarioFilePathList[i]);
-                pAutomationService->playScenario(pScenario);
-            }
         }
 
-        // If there is an exception
-    } catch (const ElemUtils::CustomException &e) {
+        // Parse arguments to retrieve xml file path list.
+        std::vector<std::string> xmlScenarioFilePathList = parseArguments(argc,
+                argv);
+
+        // Retrieve automation service parse scenario xml file and play it.
+        PARTONS::AutomationService* pAutomationService =
+                pPartons->getServiceObjectRegistry()->getAutomationService();
+
+        for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
+            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
+                    xmlScenarioFilePathList[i]);
+            pAutomationService->playScenario(pScenario);
+        }
+
+        // ******************************************************
+        // RUN CPP CODE *****************************************
+        // ******************************************************
+
+        // You can put your own code here and build a stand-alone program based on PARTONS library.
+        // To learn how you can use PARTONS library study provided examples of functions to be found in
+        // include/examples.h (header) and src/examples.cpp (source) files.
+        // To run these examples just call them here, e.g.:
+
+        // computeSingleKinematicsForGPD();
+
+        // Note, that you may need to comment out the part responsible for the running of XML scenarios.
+
+    }
+    // Appropriate catching of exceptions is crucial for working of PARTONS.
+    // PARTONS defines its own type of exception, which allows to display class name and function name
+    // where the exception has occurred, but also a human readable explanation.
+    catch (const ElemUtils::CustomException &e) {
+
+        // Display what happened
         pPartons->getLoggerManager()->error(e);
+
         // Close PARTONS application properly
         if (pPartons) {
             pPartons->close();
         }
-    } catch (const std::exception &e) {
+    }
+    // In a case of standard exception.
+    catch (const std::exception &e) {
+
+        // Display what happened
         pPartons->getLoggerManager()->error("main", __func__, e.what());
+
         // Close PARTONS application properly
         if (pPartons) {
             pPartons->close();
