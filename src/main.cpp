@@ -16,10 +16,10 @@ std::vector<std::string> parseArguments(int argc, char** argv) {
                 "Missing argument, please provide one or more than one XML scenario file.");
     }
 
-    std::vector<std::string> xmlScenarios;
+    std::vector<std::string> xmlScenarios(argc-1);
 
-    for (unsigned int i = 1; i != argc; i++) {
-        xmlScenarios.push_back(argv[i]);
+    for (unsigned int i = 1; i < argc; i++) {
+        xmlScenarios[i-1] = argv[i];
     }
 
     return xmlScenarios;
