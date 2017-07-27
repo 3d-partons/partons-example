@@ -200,8 +200,8 @@ void computeSingleKinematicsForDVCSObservable() {
                     PARTONS::DVCSAllMinus::classId);
 
     // Create ProcessModule
-    PARTONS::DVCSModule* pProcessModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
+    PARTONS::DVCSProcessModule* pProcessModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSProcessModule(
                     PARTONS::DVCSProcessGV08::classId);
 
     // Create ScalesModule
@@ -298,8 +298,8 @@ void computeManyKinematicsForDVCSObservable() {
                     PARTONS::DVCSAllMinus::classId);
 
     // Create ProcessModule
-    PARTONS::DVCSModule* pProcessModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSModule(
+    PARTONS::DVCSProcessModule* pProcessModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSProcessModule(
                     PARTONS::DVCSProcessGV08::classId);
 
     // Create ScalesModule
