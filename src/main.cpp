@@ -63,19 +63,19 @@ int main(int argc, char** argv) {
         // If there is an exception
     } catch (const ElemUtils::CustomException &e) {
         pPartons->getLoggerManager()->error(e);
-        // Close PARTONS application propertly
+        // Close PARTONS application properly
         if (pPartons) {
             pPartons->close();
         }
     } catch (const std::exception &e) {
         pPartons->getLoggerManager()->error("main", __func__, e.what());
-        // Close PARTONS application propertly
+        // Close PARTONS application properly
         if (pPartons) {
             pPartons->close();
         }
     }
 
-    // Close PARTONS application propertly
+    // Close PARTONS application properly
     if (pPartons) {
         pPartons->close();
     }
