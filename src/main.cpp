@@ -8,18 +8,25 @@
 #include <vector>
 
 /*
+ * Some declarations from examples.cpp
+ * Uncomment the one you want to use.
+ */
+//void computeSingleKinematicsForGPD();
+//void computeManyKinematicsForGPD();
+//void computeSingleKinematicsForDVCSComptonFormFactor();
+//void computeManyKinematicsForDVCSComptonFormFactor();
+//void computeSingleKinematicsForDVCSObservable();
+//void computeManyKinematicsForDVCSObservable();
+//void changeIntegrationRoutine();
+
+/*
  * Parse XML scenarios.
  */
 std::vector<std::string> parseArguments(int argc, char** argv) {
-    if (argc <= 1) {
-        throw ElemUtils::CustomException("main", __func__,
-                "Missing argument, please provide one or more than one XML scenario file.");
-    }
-
-    std::vector<std::string> xmlScenarios(argc-1);
+    std::vector<std::string> xmlScenarios(argc - 1);
 
     for (unsigned int i = 1; i < argc; i++) {
-        xmlScenarios[i-1] = argv[i];
+        xmlScenarios[i - 1] = argv[i];
     }
 
     return xmlScenarios;
@@ -30,10 +37,6 @@ std::vector<std::string> parseArguments(int argc, char** argv) {
  */
 int main(int argc, char** argv) {
 
-    // Parse arguments to retrieve xml file path list.
-    std::vector<std::string> xmlScenarioFilePathList = parseArguments(argc,
-            argv);
-
     QCoreApplication a(argc, argv);
     PARTONS::Partons* pPartons = 0;
 
@@ -43,22 +46,33 @@ int main(int argc, char** argv) {
         pPartons = PARTONS::Partons::getInstance();
         pPartons->init(argc, argv);
 
-        // This you need to run XML scenarios indicated in arguments of the executable
+        if (argc <= 1) {
+            // If you want to run your C++ code based on PARTONS library, comment out this exception:
+            throw ElemUtils::CustomException("main", __func__,
+                    "Missing argument, please provide one or more than one XML scenario file.");
 
-        // Retrieve automation service parse scenario xml file and play it.
-        PARTONS::AutomationService* pAutomationService =
-                pPartons->getServiceObjectRegistry()->getAutomationService();
+            // And include your code here, e.g. this function in examples.cpp:
+            // computeSingleKinematicsForGPD(); // It has to be declared before, uncomment the declaration too.
 
-        for (unsigned int i = 0; i != xmlScenarioFilePathList.size(); i++) {
-            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
-                    xmlScenarioFilePathList[i]);
-            pAutomationService->playScenario(pScenario);
+            // The program will then run the code here when there are no XML scenarios in argument.
+
+        } else {
+            // You need this to run XML scenarios indicated in arguments of the executable.
+
+            // Parse arguments to retrieve xml file path list.
+            std::vector<std::string> xmlScenarioFilePathList = parseArguments(
+                    argc, argv);
+
+            // Retrieve automation service parse scenario xml file and play it.
+            PARTONS::AutomationService* pAutomationService =
+                    pPartons->getServiceObjectRegistry()->getAutomationService();
+
+            for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
+                PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
+                        xmlScenarioFilePathList[i]);
+                pAutomationService->playScenario(pScenario);
+            }
         }
-
-        // Here you can run your code based on PARTONS library, e.g.
-        // computeSingleKinematicsForGPD();
-
-        //TODO to run cpp one need to comment out XML part. But, if we relax argc <= 1 requirement they can be used in parallel.
 
         // If there is an exception
     } catch (const ElemUtils::CustomException &e) {
