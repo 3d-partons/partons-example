@@ -16,7 +16,7 @@ This scenario demonstrates the evaluation of DVCS observable for kinematics defi
       <kinematics type="ObservableKinematic">
 
          <!-- Path to file defining kinematics -->
-         <param name="file" value="/home/partons/git/partons-example/bin/examples/kinematics_dvcs_observable.csv" />
+         <param name="file" value="/home/partons/git/partons-example/data/examples/observable/kinematics_dvcs_observable.csv" />
       </kinematics>
 
       <!-- Define physics assumptions -->

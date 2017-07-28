@@ -16,7 +16,7 @@ This scenario demonstrates the evaluation of DVCS Compton Form Factors (CFF) for
       <kinematics type="DVCSConvolCoeffFunctionKinematic">
 
          <!-- Path to file defining kinematics -->
-         <param name="file" value="/home/partons/git/partons-example/bin/examples/kinematics_dvcs_cff.csv" />
+         <param name="file" value="/home/partons/git/partons-example/data/examples/cff/kinematics_dvcs_cff.csv" />
       </kinematics>
 
       <!-- Define physics assumptions -->

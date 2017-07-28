@@ -16,7 +16,7 @@ This scenario demonstrates the evaluation of GPD model for kinematics defined in
       <kinematics type="GPDKinematic">
 
          <!-- Path to file defining kinematics -->
-         <param name="file" value="/home/partons/git/partons-example/bin/examples/kinematics_gpd.csv" />
+         <param name="file" value="/home/partons/git/partons-example/data/examples/gpd/kinematics_gpd.csv" />
       </kinematics>
 
       <!-- Define physics assumptions -->
