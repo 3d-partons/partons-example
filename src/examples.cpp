@@ -37,7 +37,7 @@ void computeSingleKinematicsForGPD() {
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
                     PARTONS::GPDMMS13::classId);
 
-    // Create a GPDKinematic(x, xi, t, MuF, MuR) to compute
+    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
     PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
 
     // Run computation
@@ -402,7 +402,7 @@ void changeIntegrationRoutine() {
                     PARTONS::MathIntegratorModule::PARAM_NAME_INTEGRATOR_TYPE,
                     NumA::IntegratorType1D::GK21_ADAPTIVE));
 
-    // Create a GPDKinematic(x, xi, t, MuF, MuR) to compute
+    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
     PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
 
     // Run computation
