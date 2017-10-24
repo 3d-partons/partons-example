@@ -29,6 +29,9 @@ add_definitions(${QT_DEFINITIONS})
 # find libraries: additional modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+# find libraries: SFML
+find_package(SFML COMPONENTS system REQUIRED)
+
 # find libraries: ElementaryUtils
 find_package(ElementaryUtils REQUIRED)
 
@@ -39,7 +42,7 @@ find_package(NumA++ REQUIRED)
 find_package(PARTONS REQUIRED)
 
 # directories containing headers 
-include_directories(${QT_INCLUDE_DIRS} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
+include_directories(${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
 
 # FINALIZE ==================================================================================
 
@@ -69,6 +72,8 @@ target_link_libraries(
         PARTONS_example
         
         ${QT_LIBRARIES}
+
+	${SFML_LIBRARIES}
 
         ${ELEMENTARY_UTILS_LIBRARIES}
  
