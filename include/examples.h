@@ -73,4 +73,12 @@ void computeManyKinematicsForDVCSObservable();
  */
 void changeIntegrationRoutine();
 
+/**
+* This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point making use of GPD evolution.
+* The result of this function is printed out to the standard output.
+* These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
+* Note that you can use this example to include the GPD evolution in the evaluation of CFFs and observables.
+*/
+void makeUseOfGPDEvolution();
+
 #endif /* INCLUDE_EXAMPLES_H_ */
