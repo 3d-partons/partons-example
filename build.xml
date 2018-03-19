@@ -18,7 +18,7 @@
         <exec executable="cmake" failonerror="true" dir="${build}">
             <arg value="-GUnix Makefiles" />
             <arg value="${basedir}" />
-            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+            <arg value="-DCMAKE_BUILD_TYPE=Release" />
         </exec>
     </target>
 
