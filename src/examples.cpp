@@ -3,17 +3,25 @@
 #include <ElementaryUtils/logger/LoggerManager.h>
 #include <ElementaryUtils/parameters/Parameter.h>
 #include <ElementaryUtils/parameters/Parameters.h>
+#include <ElementaryUtils/string_utils/Formatter.h>
+#include <NumA/functor/one_dimension/Functor1D.h>
+#include <NumA/integration/one_dimension/Integrator1D.h>
 #include <NumA/integration/one_dimension/IntegratorType1D.h>
 #include <NumA/integration/one_dimension/QuadratureIntegrator1D.h>
 #include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionKinematic.h>
 #include <partons/beans/gpd/GPDKinematic.h>
+#include <partons/beans/gpd/GPDType.h>
 #include <partons/beans/KinematicUtils.h>
 #include <partons/beans/List.h>
 #include <partons/beans/observable/ObservableKinematic.h>
+#include <partons/beans/parton_distribution/PartonDistribution.h>
+#include <partons/beans/parton_distribution/QuarkDistribution.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
+#include <partons/beans/QuarkFlavor.h>
 #include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsConstant.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
 #include <partons/modules/evolution/gpd/GPDEvolutionVinnikov.h>
+#include <partons/modules/gpd/GPDHM18.h>
 #include <partons/modules/gpd/GPDMMS13.h>
 #include <partons/modules/observable/DVCS/asymmetry/DVCSAllMinus.h>
 #include <partons/modules/process/DVCS/DVCSProcessGV08.h>
@@ -26,8 +34,89 @@
 #include <partons/services/GPDService.h>
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
+#include <cmath>
+#include <vector>
 
-//Test
+class MomentsService: public PARTONS::MathIntegratorModule {
+public:
+    MomentsService() {
+        m_pint = NumA::Integrator1D::newIntegrationFunctor(this,
+                &MomentsService::integrant);
+
+        NumA::IntegratorType1D::Type integratorType =
+                NumA::IntegratorType1D::DEXP;
+
+        setIntegrator(integratorType);
+    }
+
+    double computeMellinMoment(PARTONS::GPDKinematic mKinematic,
+            PARTONS::GPDModule* pGPDModel) {
+        std::vector<double> parameters;
+        parameters.push_back(mKinematic.getX());
+        parameters.push_back(mKinematic.getT());
+        parameters.push_back(mKinematic.getMuF2());
+        parameters.push_back(mKinematic.getMuR2());
+
+        m_pGPDModel = pGPDModel;
+        if (m_pint == 0)
+            return 0;
+
+        double result = integrate(m_pint, -1.0, 1.0, parameters);
+
+        m_pGPDModel = 0;
+
+        return result;
+
+    }
+
+private:
+    PARTONS::GPDModule* m_pGPDModel = 0;
+    NumA::FunctionType1D* m_pint; ///< Functor related to integrant.
+    double integrant(double x, std::vector<double> par) ///< Integrand
+            {
+
+        int n = par[0];
+
+        // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+        PARTONS::GPDKinematic gpdKinematic(x, 0.1, par[1], par[2], par[3]);
+
+        return pow(x, n)
+                * m_pGPDModel->compute(gpdKinematic, PARTONS::GPDType::E).getQuarkDistribution(
+                        PARTONS::QuarkFlavor::UNDEFINED).getQuarkDistribution();
+
+    }
+};
+
+void computeSingleKinematicsForFormFactors() {
+
+    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+    PARTONS::GPDKinematic MellinKinematic(0.1, 0.2, -0.1, 2., 2.);
+
+    // Create GPD module with the BaseModuleFactory
+    PARTONS::GPDModule* pGPDModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDHM18::classId);
+
+    ElemUtils::Formatter formatter;
+
+    formatter << '\n';
+
+    MomentsService moments;
+    formatter << "Melllin Moment = "
+            << moments.computeMellinMoment(MellinKinematic, pGPDModel);
+
+    formatter << '\n';
+    // Print results
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            formatter.str());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModel, 0);
+    pGPDModel = 0;
+
+}
 
 void computeSingleKinematicsForGPD() {
 
