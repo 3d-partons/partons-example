@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
                     "Missing argument, please provide one or more than one XML scenario file.");
         }
 
-        if (argc = 1) {
+        if (argc == 1) {
 
             computeSingleKinematicsForFormFactors();
         }
