@@ -41,7 +41,7 @@ class MomentsService: public PARTONS::MathIntegratorModule {
 public:
     MomentsService() {
         m_pint = NumA::Integrator1D::newIntegrationFunctor(this,
-                &MomentsService::integrant);
+                &MomentsService::integrand);
 
         NumA::IntegratorType1D::Type integratorType =
                 NumA::IntegratorType1D::DEXP;
@@ -52,12 +52,13 @@ public:
     double computeMellinMoment(PARTONS::GPDKinematic mKinematic,
             PARTONS::GPDModule* pGPDModel) {
         std::vector<double> parameters;
-        parameters.push_back(mKinematic.getX());
+        parameters.push_back(1); //n-th Melin moment
         parameters.push_back(mKinematic.getT());
         parameters.push_back(mKinematic.getMuF2());
         parameters.push_back(mKinematic.getMuR2());
 
         m_pGPDModel = pGPDModel;
+
         if (m_pint == 0)
             return 0;
 
@@ -71,8 +72,10 @@ public:
 
 private:
     PARTONS::GPDModule* m_pGPDModel = 0;
-    NumA::FunctionType1D* m_pint; ///< Functor related to integrant.
-    double integrant(double x, std::vector<double> par) ///< Integrand
+    PARTONS::GPDType* m_pgpdType = 0;
+
+    NumA::FunctionType1D* m_pint; ///< Functor related to integrand.
+    double integrand(double x, std::vector<double> par) ///< Integrand
             {
 
         int n = par[0];
@@ -80,17 +83,14 @@ private:
         // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
         PARTONS::GPDKinematic gpdKinematic(x, 0.1, par[1], par[2], par[3]);
 
-        return pow(x, n)
-                * m_pGPDModel->compute(gpdKinematic, PARTONS::GPDType::E).getQuarkDistribution(
+        return pow(x, n - 1)
+                * m_pGPDModel->compute(gpdKinematic, PARTONS::GPDType::H).getQuarkDistribution(
                         PARTONS::QuarkFlavor::UNDEFINED).getQuarkDistribution();
 
     }
 };
 
 void computeSingleKinematicsForFormFactors() {
-
-    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
-    PARTONS::GPDKinematic MellinKinematic(0.1, 0.2, -0.1, 2., 2.);
 
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
@@ -102,10 +102,16 @@ void computeSingleKinematicsForFormFactors() {
     formatter << '\n';
 
     MomentsService moments;
-    formatter << "Melllin Moment = "
-            << moments.computeMellinMoment(MellinKinematic, pGPDModel);
 
-    formatter << '\n';
+    for (double t = 0; t > -1; t = t - 0.1) {
+        // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+        PARTONS::GPDKinematic MellinKinematic(0.1, 0.2, t, 2., 2.);
+
+        formatter << "Melllin Moment for " << t << " = "
+                << moments.computeMellinMoment(MellinKinematic, pGPDModel)
+                << '\n';
+    }
+
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
             formatter.str());
@@ -127,10 +133,10 @@ void computeSingleKinematicsForGPD() {
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDHM18::classId);
 
     // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
-    PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
+    PARTONS::GPDKinematic gpdKinematic(0.5, 0.1, -0.1, 2., 2.);
 
     // Run computation
     PARTONS::GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic,
