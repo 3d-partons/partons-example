@@ -1,0 +1,42 @@
+version: '2'
+volumes:
+  partons-mysql-data:
+    driver: local
+
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.mysql
+    restart: 'no'
+    volumes:
+      - "partons-mysql-data:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: 'partons'
+      MYSQL_USER: 'partons'
+      MYSQL_PASSWORD: 'partons'
+
+  partons:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.partons
+    restart: 'no'
+    depends_on:
+      - mysql
+    volumes:
+      - ".:/root/workspace/partons-example"
+    environment:
+      ENV: Local
+    command: /bin/bash
+
+  compile:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.partons
+    restart: 'no'
+    volumes:
+      - ".:/root/workspace/partons-example"
+      - ".docker/scripts:/root/scripts"
+    environment:
+      ENV: Local
+    command: /bin/bash /root/scripts/compile_example.sh

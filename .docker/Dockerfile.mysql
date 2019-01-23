@@ -1,0 +1,14 @@
+FROM mysql/mysql-server:5.7 AS partons-example-mysql
+
+RUN yum install -y git && \
+    cd /root && \
+    mkdir /root/sql_schema && \
+    git clone https://drf-gitlab.cea.fr/partons/core/partons.git && \
+    cp /root/partons/data/database/sql_schema/*.sql /root/sql_schema && \
+    rm -rf /root/partons/ && \
+    yum remove -y git && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
+COPY .docker/partons-setup-schema.sh /docker-entrypoint-initdb.d/partons-setup-schema.sh
+RUN chmod +x /docker-entrypoint-initdb.d/partons-setup-schema.sh

@@ -1,0 +1,28 @@
+FROM debian:jessie
+
+ENV WORKSPACE="/root/workspace/"
+WORKDIR ${WORKSPACE}
+
+RUN apt-get update && \
+    apt-get install -y libeigen3-dev libcln-dev libsfml-dev libqt4-dev libqt4-sql-mysql cmake git
+
+RUN cd ${WORKSPACE} && \
+    git clone https://drf-gitlab.cea.fr/partons/core/elementary-utils.git && \
+    cd ${WORKSPACE}elementary-utils/build && \
+    cmake -G"Unix Makefiles" ../ -DCMAKE_BUILD_TYPE=Debug && \
+    make && \
+    make install && \
+    cd ${WORKSPACE} && \
+    git clone https://drf-gitlab.cea.fr/partons/core/numa.git && \
+    cd ${WORKSPACE}numa/build && \
+    cmake -G"Unix Makefiles" ../ -DCMAKE_BUILD_TYPE=Debug && \
+    make && \
+    make install && \
+    cd ${WORKSPACE} && \
+    git clone https://drf-gitlab.cea.fr/partons/core/partons.git && \
+    cd ${WORKSPACE}partons/build && \
+    cmake -G"Unix Makefiles" ../ -DCMAKE_BUILD_TYPE=Debug && \
+    make && \
+    make install
+
+
