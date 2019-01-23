@@ -16,7 +16,7 @@ services:
       MYSQL_USER: 'partons'
       MYSQL_PASSWORD: 'partons'
 
-  partons:
+  shell:
     build:
       context: .
       dockerfile: .docker/Dockerfile.partons
@@ -40,3 +40,14 @@ services:
     environment:
       ENV: Local
     command: /bin/bash /root/scripts/compile_example.sh
+
+  partons:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile.partons
+    restart: 'no'
+    volumes:
+      - ".:/root/workspace/partons-example"
+      - ".docker/scripts:/root/scripts"
+    environment:
+      ENV: Local
