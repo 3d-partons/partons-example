@@ -2,9 +2,9 @@
 #define PARTON_VALUES_H
 
 /**
- * @file PartonValue.h
- * @author: Bryan BERTHOU (SPhN / CEA Saclay)
- * @date 26 April 2015
+ * @file PartonValues.h
+ * @author: Arkadiusz P. Trawiński (DPhN/CEA-Saclay & CPHT/École polytechnique)
+ * @date 21 March 2019
  * @version 1.0
  */
 

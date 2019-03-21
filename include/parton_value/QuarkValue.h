@@ -3,8 +3,8 @@
 
 /**
  * @file QuarkValue.h
- * @author: Bryan BERTHOU (SPhN / CEA Saclay)
- * @date 26 April 2015
+ * @author: Arkadiusz P. Trawiński (DPhN/CEA-Saclay & CPHT/École polytechnique)
+ * @date 21 March 2019
  * @version 1.0
  */
 
