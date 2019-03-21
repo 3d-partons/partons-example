@@ -35,7 +35,7 @@ public:
     /**
      *
      */
-    static const std::string GLUON_VALUE_PARAMETER_NAME_GLUON_Value;
+    static const std::string GLUON_VALUE_PARAMETER_NAME_GLUON_VALUE;
 
     /**
      * Default constructor.

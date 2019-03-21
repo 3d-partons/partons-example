@@ -72,7 +72,7 @@ public:
 	 * Get list of quark flavors associated to stored quark values.
 	 * @return Vector of associated flavors.
 	 */
-	std::vector<QuarkFlavor::Type> listTypeOfQuarkFlavor();
+	std::vector<QuarkFlavor::Type> getListOfQuarkFlavor();
 
 	/**
 	 * Get number of quark values stored in this object.

@@ -26,9 +26,6 @@ class QuarkValue: public BaseObject {
 public:
 
     static const std::string QUARK_VALUE_DB_COLUMN_NAME_QUARK_VALUE;
-    static const std::string QUARK_VALUE_DB_COLUMN_NAME_QUARK_VALUE_PLUS;
-    static const std::string QUARK_VALUE_DB_COLUMN_NAME_QUARK_VALUE_MINUS;
-
     /**
      * Copy constructor.
      * @param other Object to be copied.
