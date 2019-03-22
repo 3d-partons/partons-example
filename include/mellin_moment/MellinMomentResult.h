@@ -170,7 +170,7 @@ private:
     /**
      * GPD kinematics associated to this result.
      */
-    GPDKinematic m_kinematic;
+    MellinMomentKinematic m_kinematic;
 };
 
 } /* namespace PARTONS */

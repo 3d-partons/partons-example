@@ -14,7 +14,7 @@
  * These are the values for all defined in the model GPDs,
  * including singlet and non-singlet combinations for quarks.
  */
-void computeSingleKinematicsForFormFactors();
+void computeSingleKinematicsForMellinMoment();
 
 /**
  * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point.

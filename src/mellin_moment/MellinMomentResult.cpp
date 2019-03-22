@@ -1,9 +1,7 @@
-#include "../../../../MellinMomentResult.h"
 #include "../../include/mellin_moment/MellinMomentResult.h"
 
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/string_utils/Formatter.h>
-#include <initializer_list>
 #include <utility>
 
 namespace PARTONS {

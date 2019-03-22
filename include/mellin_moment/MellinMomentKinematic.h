@@ -32,11 +32,6 @@ class MellinMomentKinematic: public Kinematic {
 
 public:
     /**
-     * Parameter name to set variable \f$n\f$ via configuration methods.
-     */
-    static const std::string MELLIN_MOMENT_KINEMATIC_PARAMETER_NAME_N;
-
-    /**
      * Parameter name to set variable \f$\xi\f$ via configuration methods.
      */
     static const std::string MELLIN_MOMENT_KINEMATIC_PARAMETER_NAME_XI;
@@ -71,25 +66,22 @@ public:
     /**
      * Assignment constructor.
      *
-     * @param n index of Mellin Moment, where \f$n\f$-th means \f$f_n = \int dx x^{n-1} f(x) \f$-th.
      * @param xi Skewness variable.
      * @param t Four-momentum transfer squared of hadron target (in \f$GeV^{2}\f$).
      * @param MuF2 Factorization scale squared (in \f$GeV^{2}\f$).
      * @param MuR2 Renormalization scale squared (in \f$GeV^{2}\f$).
      */
-    MellinMomentKinematic(int n, double xi, double t, double MuF2, double MuR2);
+    MellinMomentKinematic(double xi, double t, double MuF2, double MuR2);
 
     /**
      * Assignment constructor.
      *
-     * @param n index of Mellin Moment, where \f$n\f$-th means \f$f_n = \int dx x^{n-1} f(x) \f$-th.
      * @param xi Skewness variable.
      * @param t Four-momentum transfer squared of hadron target (in \f$GeV^{2}\f$).
      * @param MuF2 Factorization scale squared (in \f$GeV^{2}\f$).
      * @param MuR2 Renormalization scale squared (in \f$GeV^{2}\f$).
      */
-    MellinMomentKinematic(const ElemUtils::GenericType &n,
-            const ElemUtils::GenericType &xi, const ElemUtils::GenericType &t,
+    MellinMomentKinematic(const ElemUtils::GenericType &xi, const ElemUtils::GenericType &t,
             const ElemUtils::GenericType &MuF2,
             const ElemUtils::GenericType &MuR2);
 
@@ -125,16 +117,6 @@ public:
      * Set kinematics type.
      */
     void setKinematicType(KinematicType::Type kinematicType);
-
-    /**
-     * Get longitudinal momentum fraction of active parton.
-     */
-    double getN() const;
-
-    /**
-     * Set longitudinal momentum fraction of active parton.
-     */
-    void setN(int x);
 
     /**
      * Get skewness variable.
@@ -186,11 +168,6 @@ private:
      * Kinematics type.
      */
     KinematicType::Type m_kinematicType;
-
-    /**
-     * Longitudinal momentum fraction of active parton.
-     */
-    double m_n;
 
     /**
      * Skewness variable.
