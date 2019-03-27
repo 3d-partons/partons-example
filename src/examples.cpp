@@ -61,13 +61,12 @@ void computeSingleKinematicsForMellinMoment() {
 
 	PARTONS::MellinMoment moment;
 
-	formatter << "Gluon Mellin Moment = "
-			<< moment.compute(2, mkinematic, pGPDModel, PARTONS::GPDType::H)
+	formatter << "Mellin Moments: " << '\n'
+			<< moment.computeGluonValue(2, mkinematic, pGPDModel, PARTONS::GPDType::H).toString()
 			<< '\n';
 
-	formatter << "Quark Mellin Moment = "
-			<< moment.compute(1, mkinematic, pGPDModel, PARTONS::GPDType::H,
-					PARTONS::QuarkFlavor::UNDEFINED) << '\n';
+	formatter << moment.computeQuarkValue(1, mkinematic, pGPDModel, PARTONS::GPDType::H,
+					PARTONS::QuarkFlavor::UNDEFINED).toString() << '\n';
 	// Print results
 	PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
 			formatter.str());

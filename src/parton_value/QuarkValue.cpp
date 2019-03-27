@@ -42,6 +42,12 @@ void QuarkValue::setQuarkFlavor(QuarkFlavor quarkFlavorType) {
 	m_quarkFlavor = quarkFlavorType;
 }
 
+
+QuarkFlavor QuarkValue::getQuarkFlavor() const{
+	return m_quarkFlavor;
+}
+
+
 void QuarkValue::compare(ComparisonReport &rootComparisonReport,
 		const QuarkValue &referenceObject, std::string parentObjectInfo) const {
 	ComparisonData quark_distribution_value_comparisonData =
