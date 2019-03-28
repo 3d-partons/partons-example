@@ -1,5 +1,6 @@
 #include "../../include/mellin_moment/MellinMoment.h"
 
+#include <ElementaryUtils/string_utils/Formatter.h>
 #include <NumA/functor/one_dimension/Functor1D.h>
 #include <NumA/integration/one_dimension/Integrator1D.h>
 #include <NumA/integration/one_dimension/IntegratorType1D.h>
@@ -7,21 +8,25 @@
 #include <partons/beans/parton_distribution/GluonDistribution.h>
 #include <partons/beans/parton_distribution/PartonDistribution.h>
 #include <partons/beans/parton_distribution/QuarkDistribution.h>
-#include <partons/modules/gpd/GPDModule.h>
+#include <partons/BaseObjectRegistry.h>
 #include <cmath>
-
-#include "../../include/parton_value/GluonValue.h"
-#include "../../include/parton_value/PartonValues.h"
-#include "../../include/parton_value/QuarkValue.h"
-
-namespace PARTONS {
-class GluonValue;
-class QuarkValue;
-} /* namespace PARTONS */
+#include <iostream>
+#include <string>
 
 namespace PARTONS {
 
-MellinMoment::MellinMoment() {
+const unsigned int MellinMoment::classId = BaseObjectRegistry::getInstance()->registerBaseObject(new MellinMoment("MellinMomentModule"));
+
+const std::string MellinMoment::MELLIN_MOMENT_MODULE_CLASS_NAME =
+		"MellinMomentModule";
+const std::string MellinMoment::MELLIN_MOMENT_MODULE_GPD_TYPE =
+		"GPD_MODULE_GPD_TYPE";
+
+MellinMoment::MellinMoment(const std::string &className) :
+		ModuleObject(className) {
+	m_n = 0;
+	m_gluon = false;
+	m_pGPDModel = 0;
 	m_pint = NumA::Integrator1D::newIntegrationFunctor(this,
 			&MellinMoment::integrant);
 
@@ -49,15 +54,15 @@ MellinMoment* MellinMoment::clone() const {
 }
 
 void MellinMoment::isModuleWellConfigured() {
-	ModuleObject::isModuleWellConfigured();
+	debug(__func__, ElemUtils::Formatter() << "executed");
 }
 void MellinMoment::initModule() {
-	ModuleObject::initModule();
+	debug(__func__, ElemUtils::Formatter() << "executed");
 }
 
 GluonValue MellinMoment::computeGluonValue(int n,
-		MellinMomentKinematic mKinematic, GPDModule* pGPDModel, GPDType mtype) {
-	m_type = mtype;
+		MellinMomentKinematic mKinematic, GPDModule* pGPDModel, GPDType mGPDtype) {
+	m_type = mGPDtype;
 	m_gluon = true;
 	GluonValue result;
 
@@ -67,9 +72,9 @@ GluonValue MellinMoment::computeGluonValue(int n,
 }
 
 QuarkValue MellinMoment::computeQuarkValue(int n,
-		MellinMomentKinematic mKinematic, GPDModule* pGPDModel, GPDType mtype,
+		MellinMomentKinematic mKinematic, GPDModule* pGPDModel, GPDType mGPDtype,
 		QuarkFlavor mflavor) {
-	m_type = mtype;
+	m_type = mGPDtype;
 	m_gluon = false;
 	m_flavor = mflavor;
 	QuarkValue result;
@@ -80,14 +85,18 @@ QuarkValue MellinMoment::computeQuarkValue(int n,
 	return result;
 }
 
-PartonValues compute(int n, MellinMomentKinematic mKinematic,
-		GPDModule* pGPDModel, GPDType mtype) {
+PartonValues MellinMoment::compute(int n, MellinMomentKinematic mKinematic,
+		GPDModule* pGPDModel, GPDType mGPDtype) {
 	PartonValues result;
 
-	GluonValue gluon = computeGluonValue(n, mKinematic, pGPDModel, mtype);
+	GluonValue gluon = MellinMoment::computeGluonValue(n, mKinematic, pGPDModel, mGPDtype);
 	result.setGluonValue(gluon);
 
-	//TODO loop over all flavor
+	List<QuarkFlavor> flavorList = MellinMoment::getQuarkFlavorList(mKinematic, pGPDModel, mGPDtype);
+
+	for (unsigned int i = 0; i != flavorList.size(); i++) {
+		result.addQuarkValue(MellinMoment::computeQuarkValue(n, mKinematic, pGPDModel, mGPDtype,flavorList[i]));
+	}
 
 	return result;
 
@@ -100,6 +109,7 @@ double MellinMoment::compute(int n, MellinMomentKinematic mKinematic,
 	m_pGPDModel = pGPDModel;
 
 	std::vector<double> parameters;
+	parameters.push_back(mKinematic.getXi());
 	parameters.push_back(mKinematic.getT());
 	parameters.push_back(mKinematic.getMuF2());
 	parameters.push_back(mKinematic.getMuR2());
@@ -112,7 +122,7 @@ double MellinMoment::integrant(double x, std::vector<double> par) ///< Integrand
 		{
 
 	// Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
-	GPDKinematic gpdKinematic(x, 0.1, par[0], par[1], par[2]);
+	GPDKinematic gpdKinematic(x, par[0], par[1], par[2], par[3]);
 
 	if (m_gluon) {
 		return pow(x, m_n - 2)
@@ -122,6 +132,34 @@ double MellinMoment::integrant(double x, std::vector<double> par) ///< Integrand
 				* m_pGPDModel->compute(gpdKinematic, m_type).getQuarkDistribution(
 						m_flavor).getQuarkDistribution();
 	}
+}
+
+List<QuarkFlavor> MellinMoment::getQuarkFlavorList(
+		MellinMomentKinematic mKinematic, GPDModule* pGPDModule,
+		const GPDType &gpdType) {
+
+	List<QuarkFlavor> result;
+	List<GPDType> gpdTypeList =
+			pGPDModule->getListOfAvailableGPDTypeForComputation();
+	bool isGPDType = false;
+
+	for (unsigned int i = 0; i != gpdTypeList.size(); i++) {
+		if (gpdTypeList[i].getType() == gpdType.getType())
+			isGPDType = true;
+	}
+
+	if (isGPDType) {
+		GPDKinematic kinematic(1, mKinematic.getXi, mKinematic.getT,
+				mKinematic.getMuF2, mKinematic.getMuR2);
+		List<QuarkDistribution> list =
+				pGPDModule->compute(kinematic, gpdType).getListOfQuarkDistribution();
+		for (unsigned int i = 0; i != list.size(); i++) {
+			QuarkFlavor flavor = list[i].getQuarkFlavor();
+			result.add(flavor);
+		}
+	}
+
+	return result;
 }
 
 } /* namespace PARTONS */

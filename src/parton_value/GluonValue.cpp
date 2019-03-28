@@ -34,7 +34,7 @@ GluonValue::~GluonValue() {
 }
 
 std::string GluonValue::toString() const {
-    return ElemUtils::Formatter() << "G = " << m_gluonValue << '\n';
+    return ElemUtils::Formatter() << "Gluon = " << m_gluonValue << '\n';
 }
 
 double GluonValue::getGluonValue() const {

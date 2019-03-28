@@ -19,9 +19,6 @@
 
 namespace PARTONS {
 class MellinMoment;
-} /* namespace PARTONS */
-
-namespace PARTONS {
 class GPDModule;
 class MellinMomentResult;
 } /* namespace PARTONS */
@@ -152,6 +149,12 @@ private:
      */
     List<GPDType> getFinalGPDTypeList(GPDModule* pGPDModule,
             const List<GPDType> &gpdTypeList) const;
+
+    List<GPDType> getGPDTypeList(GPDModule* pGPDModule,
+            const List<GPDType> &gpdTypeList) const;
+
+    List<QuarkFlavor> getQuarkFlavorList(GPDModule* pGPDModule,
+    		const GPDType &gpdType) const;
 };
 
 } /* namespace PARTONS */

@@ -27,7 +27,7 @@ QuarkValue::~QuarkValue() {
 }
 
 std::string QuarkValue::toString() const {
- 	return ElemUtils::Formatter() << QuarkFlavor(m_quarkFlavor).getShortName() << " = " << m_quarkValue << '\n';
+ 	return ElemUtils::Formatter() << "Quark " << QuarkFlavor(m_quarkFlavor).getShortName() << " = " << m_quarkValue << '\n';
 }
 
 double QuarkValue::getQuarkValue() const {

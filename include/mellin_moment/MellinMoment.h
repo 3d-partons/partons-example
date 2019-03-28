@@ -9,19 +9,17 @@
  */
 
 #include <partons/beans/gpd/GPDType.h>
+#include <partons/modules/gpd/GPDModule.h>
+#include <partons/beans/List.h>
 #include <partons/beans/QuarkFlavor.h>
 #include <partons/modules/MathIntegratorModule.h>
 #include <partons/ModuleObject.h>
 #include <vector>
 
 #include "MellinMomentKinematic.h"
-
-namespace PARTONS {
-class GluonValue;
-class GPDModule;
-class PartonValues;
-class QuarkValue;
-} /* namespace PARTONS */
+#include "../parton_value/QuarkValue.h"
+#include "../parton_value/GluonValue.h"
+#include "../parton_value/PartonValues.h"
 
 namespace PARTONS {
 
@@ -36,7 +34,18 @@ namespace PARTONS {
 class MellinMoment: public ModuleObject, public MathIntegratorModule {
 public:
 
-	MellinMoment();
+    static const std::string MELLIN_MOMENT_MODULE_CLASS_NAME; ///< Type of the module in XML automation.
+    static const std::string MELLIN_MOMENT_MODULE_GPD_TYPE; ///< Parameter used in configure() or XML automation to set the type of the GPD to compute.
+
+    /**
+     * ID assigned by BaseObjectRegistry.
+     */
+    static const unsigned int classId;
+    /**
+     * Default constructor.
+     * @param className Name of class.
+     */
+    MellinMoment(const std::string &className);
 
 	virtual MellinMoment* clone() const;
 
@@ -78,17 +87,20 @@ protected:
 	MellinMoment(const MellinMoment &other);
 
 private:
-	int m_n = 0; ///< Mellin Moment index
-	bool m_gluon = false; ///< If compute for gluon.
-	QuarkFlavor m_flavor = QuarkFlavor::UNDEFINED; ///< For witch quark flavor compute.
-	GPDType m_type = GPDType::UNDEFINED; ///< Witch type of GPD compute.
-	GPDModule* m_pGPDModel = 0; ///< Pointer to GPD model to use.
+	int m_n; ///< Mellin Moment index
+	bool m_gluon; ///< If compute for gluon.
+	QuarkFlavor m_flavor; ///< For witch quark flavor compute.
+	GPDType m_type; ///< Witch type of GPD compute.
+	GPDModule* m_pGPDModel; ///< Pointer to GPD model to use.
 	NumA::FunctionType1D* m_pint; ///< Functor related to integrant.
 
 	double compute(int n, MellinMomentKinematic mKinematic,
 			GPDModule* pGPDModel);
 
 	double integrant(double x, std::vector<double> par);
+
+	List<QuarkFlavor> getQuarkFlavorList(MellinMomentKinematic mKinematic, GPDModule* pGPDModule,
+			const GPDType &gpdType);
 }
 ;
 

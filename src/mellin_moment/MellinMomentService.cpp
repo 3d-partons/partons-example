@@ -2,7 +2,6 @@
 
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/parameters/GenericType.h>
-#include <ElementaryUtils/parameters/Parameter.h>
 #include <ElementaryUtils/parameters/Parameters.h>
 #include <ElementaryUtils/PropertiesManager.h>
 #include <ElementaryUtils/string_utils/Formatter.h>
@@ -10,18 +9,15 @@
 #include <ElementaryUtils/thread/Packet.h>
 #include <partons/beans/automation/BaseObjectData.h>
 #include <partons/beans/automation/Task.h>
-#include <partons/beans/KinematicUtils.h>
 #include <partons/BaseObjectRegistry.h>
 #include <partons/modules/gpd/GPDModule.h>
 #include <partons/ModuleObjectFactory.h>
+#include <partons/utils/VectorUtils.h>
 #include <partons/Partons.h>
 #include <map>
 
 #include "../../include/mellin_moment/MellinMoment.h"
-#include "../../include/mellin_moment/MellinMomentResult.h"
-#include "../../include/parton_value/GluonValue.h"
 #include "../../include/parton_value/PartonValues.h"
-#include <vector>
 
 namespace PARTONS {
 
@@ -61,20 +57,31 @@ void MellinMomentService::resolveObjectDependencies() {
 MellinMomentResult MellinMomentService::compute(int n,
 		const MellinMomentKinematic &kinematic, GPDModule* pGPDModule,
 		const List<GPDType> & gpdTypeList) const {
-	MellinMoment moment;
+
 	MellinMomentResult result;
+
+	// Create Mellin Moment Module module with the BaseModuleFactory
+	PARTONS::MellinMoment* pMellinMoment = static_cast<PARTONS::MellinMoment*>(
+			PARTONS::Partons::getInstance()->getModuleObjectFactory()->newModuleObject(
+					PARTONS::MellinMoment::classId));
 
 	List<GPDType> restrictedByGPDTypeListFinal = getFinalGPDTypeList(pGPDModule,
 			gpdTypeList);
 
 	for (unsigned int i = 0; i != restrictedByGPDTypeListFinal.size(); i++) {
-		PartonValues values = moment.compute(n, kinematic, pGPDModule,
+		PartonValues values = pMellinMoment->compute(n, kinematic, pGPDModule,
 				restrictedByGPDTypeListFinal[i]);
 		result.addPartonValues(restrictedByGPDTypeListFinal[i], values);
 	}
 
 	result.setKinematic(kinematic);
-	result.setComputationModuleName(pGPDModule->getClassName());
+	result.setComputationModuleName(pMellinMoment->getClassName());
+
+	// Remove pointer references
+	// Module pointers are managed by PARTONS
+	PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+			pMellinMoment, 0);
+	pMellinMoment = 0;
 
 	return result;
 }
@@ -199,9 +206,7 @@ void MellinMomentService::generatePlotFileTask(Task& task) {
 List<GPDType> MellinMomentService::getFinalGPDTypeList(GPDModule* pGPDModule,
 		const List<GPDType> &gpdTypeList) const {
 
-	List<GPDType> restrictedByGPDTypeListFinal = gpdTypeList;
-
-	restrictedByGPDTypeListFinal =
+	List<GPDType> restrictedByGPDTypeListFinal =
 			pGPDModule->getListOfAvailableGPDTypeForComputation();
 
 	if (!gpdTypeList.isEmpty()) {
@@ -215,6 +220,9 @@ List<GPDType> MellinMomentService::getFinalGPDTypeList(GPDModule* pGPDModule,
 
 	return restrictedByGPDTypeListFinal;
 }
+
+
+
 
 void MellinMomentService::computeTask(Task &task) {
 	debug(__func__, "Processing ...");
