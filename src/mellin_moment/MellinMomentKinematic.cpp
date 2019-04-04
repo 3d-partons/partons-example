@@ -64,9 +64,9 @@ MellinMomentKinematic::~MellinMomentKinematic() {
 }
 
 std::string MellinMomentKinematic::toString() const {
-    return ElemUtils::Formatter() << Kinematic::toString() << "\n" << "m_n = "
-            << " m_xi = " << m_xi << " m_t = " << m_t << " m_MuF2 = "
-            << m_MuF2 << "(Gev2) m_MuR2 = " << m_MuR2 << "(Gev2)";
+    return ElemUtils::Formatter() << Kinematic::toString() << "\n"
+            << " m_xi = " << m_xi << ", m_t = " << m_t << ", m_MuF2 = "
+            << m_MuF2 << "(Gev2), m_MuR2 = " << m_MuR2 << "(Gev2)";
 }
 
 

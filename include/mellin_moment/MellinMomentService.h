@@ -16,6 +16,7 @@
 
 #include "MellinMomentKinematic.h"
 #include "MellinMomentResult.h"
+#include "MellinMomentModule.h"
 
 namespace PARTONS {
 class MellinMoment;
@@ -60,32 +61,28 @@ public:
     virtual void resolveObjectDependencies();
 
     /**
-     * Computes n-th Mellin moment of GPD model at specific kinematic.
+     * Computes n-th Mellin moment of list GPD types at specific kinematic.
      *
-     * @param n index of Mellin Moment.
      * @param kinematic Mellin Moment kinematic.
-     * @param pGPDModule GPDModule to use.
-     * @param gpdType List of GPDType to compute. Default: all the GPDTypes available with the GPDModule.
-     * @return GPDResult
+     * @param pMellinModule MellinMomentModule to use.
+     * @param gpdType List of GPDType to compute. Default: all the GPDTypes available with the MellinMomentModule.
+     * @return MellinMomentResult
      */
-    MellinMomentResult compute(int n, const MellinMomentKinematic &kinematic,
-            GPDModule* pGPDModule, const List<GPDType> & gpdType =
-                    List<GPDType>()) const;
+    MellinMomentResult compute(const MellinMomentKinematic &kinematic, MellinMomentModule* pMellinModule,
+         const List<GPDType> & gpdType = List<GPDType>()) const;
 
     /**
      * Computes n-th Mellin moments of GPD model for a list of kinematics.
      *
-     * @param n index of Mellin Moment.
-     * @param kinematicList List of GPDKinematics.
-     * @param pGPDModule GPDModule to use for the computation.
-     * @param gpdTypeList List of GPDType to compute. Default: all the GPDTypes available with the GPDModule.
+     * @param kinematicList List of MellinMomentKinematic.
+     * @param pMellinModule MellinMomentModule to use.
+     * @param gpdTypeList List of GPDType to compute. Default: all the GPDTypes available with the MellinMomentModule.
      * @param storeInDB Boolean to store the results and kinematics on the database. Default: false.
      * @return List of GPDResults.
      */
-    List<MellinMomentResult> computeManyKinematic(int n,
-            const List<MellinMomentKinematic> &kinematicList, GPDModule* pGPDModule,
+    List<MellinMomentResult> computeManyKinematic(const List<MellinMomentKinematic> &kinematicList, MellinMomentModule* pMellinModule,
             const List<GPDType> &gpdTypeList = List<GPDType>(),
-            const bool storeInDB = 0);
+            const bool storeInDB = false);
 
     /**
      * Method used in automation to compute given tasks.
@@ -147,13 +144,13 @@ private:
      * @param gpdTypeList List of desired GPD types to compute.
      * @return List of GPD types.
      */
-    List<GPDType> getFinalGPDTypeList(GPDModule* pGPDModule,
+    List<GPDType> getFinalGPDTypeList(MellinMomentModule* pMellinModule,
             const List<GPDType> &gpdTypeList) const;
 
-    List<GPDType> getGPDTypeList(GPDModule* pGPDModule,
+    List<GPDType> getGPDTypeList(MellinMomentModule* pMellinModule,
             const List<GPDType> &gpdTypeList) const;
 
-    List<QuarkFlavor> getQuarkFlavorList(GPDModule* pGPDModule,
+    List<QuarkFlavor> getQuarkFlavorList(MellinMomentModule* pMellinModule,
     		const GPDType &gpdType) const;
 };
 

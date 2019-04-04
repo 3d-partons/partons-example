@@ -41,13 +41,15 @@
 #include <vector>
 
 #include "../include/mellin_moment/MellinMomentKinematic.h"
-#include "../include/mellin_moment/MellinMoment.h"
+#include "../include/mellin_moment/MellinMomentModule.h"
+#include "../include/mellin_moment/MellinMomentFromGPD.h"
+#include "../include/mellin_moment/MellinMomentService.h"
 
 
 
 void computeSingleKinematicsForMellinMoment() {
 
-	// Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+	// Create a MellinMomentKinematic(xi, t, MuF2, MuR2) to compute
 	PARTONS::MellinMomentKinematic mkinematic(0.2, -0.1, 2., 2.);
 
 	// Create GPD module with the BaseModuleFactory
@@ -59,14 +61,36 @@ void computeSingleKinematicsForMellinMoment() {
 
 	formatter << '\n';
 
-	PARTONS::MellinMoment moment;
+	// Create Mellin Moment Module module with the BaseModuleFactory
+	PARTONS::MellinMomentFromGPD* pMoment = static_cast<PARTONS::MellinMomentFromGPD*>(
+			PARTONS::Partons::getInstance()->getModuleObjectFactory()->newModuleObject(
+					PARTONS::MellinMomentFromGPD::classId));
 
-	formatter << "Mellin Moments: " << '\n'
-			<< moment.computeGluonValue(2, mkinematic, pGPDModel, PARTONS::GPDType::H).toString()
-			<< '\n';
+	pMoment->setGPDModule(pGPDModel);
+	pMoment->setN(2);
 
-	formatter << moment.computeQuarkValue(1, mkinematic, pGPDModel, PARTONS::GPDType::H,
-					PARTONS::QuarkFlavor::UNDEFINED).toString() << '\n';
+	formatter << "Mellin Moments: " << '\n'	<< pMoment->computeGluonValue(mkinematic, PARTONS::GPDType::H).toString();
+
+	formatter << pMoment->computeQuarkValue(mkinematic, PARTONS::GPDType::H,PARTONS::QuarkFlavor::UNDEFINED).toString() << '\n';
+
+	formatter << pMoment->computeAll(mkinematic, PARTONS::GPDType::H).toString() << '\n';
+
+	// Retrieve Mellin Moment service
+	//PARTONS::MellinMomentService* pMellinService = static_cast<PARTONS::MellinMomentService*>(PARTONS::Partons::getInstance()->getServiceObjectRegistry()->get(PARTONS::MellinMomentService::classId));
+
+
+	// Run computation
+	PARTONS::List<PARTONS::GPDType> gpdTypeList;
+	//gpdTypeList.add(PARTONS::GPDType::H);
+	gpdTypeList.add(PARTONS::GPDType::E);
+	gpdTypeList.add(PARTONS::GPDType::Et);
+	gpdTypeList.add(PARTONS::GPDType::Ht);
+	//PARTONS::MellinMomentResult result = pMellinService->compute(mkinematic,pGPDModel,gpdTypeList);
+
+	// Print results
+	//PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,	result.toString());
+
+
 	// Print results
 	PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
 			formatter.str());
@@ -76,6 +100,12 @@ void computeSingleKinematicsForMellinMoment() {
 	PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
 			pGPDModel, 0);
 	pGPDModel = 0;
+
+	// Remove pointer references
+	// Module pointers are managed by PARTONS
+	PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+			pMoment, 0);
+	pMoment = 0;
 
 }
 
