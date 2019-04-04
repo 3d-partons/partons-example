@@ -35,8 +35,7 @@ const unsigned int MellinMomentService::classId =
 				new MellinMomentService("MellinMomentService"));
 
 MellinMomentService::MellinMomentService(const std::string &className) :
-		ServiceObjectTyped<MellinMomentKinematic, MellinMomentResult>(
-				className), m_pGPDModule(0) {
+		ServiceObjectTyped<MellinMomentKinematic, MellinMomentResult>(className) {
 }
 
 MellinMomentService::~MellinMomentService() {
@@ -58,7 +57,7 @@ MellinMomentResult MellinMomentService::compute(const MellinMomentKinematic &kin
 
 	MellinMomentResult result;
 
-	List<GPDType> restrictedByGPDTypeListFinal; // = getFinalGPDTypeList(pGPDModule,gpdTypeList);
+	List<GPDType> restrictedByGPDTypeListFinal = getFinalGPDTypeList(pMellinMoment,gpdTypeList);
 
 	for (unsigned int i = 0; i != restrictedByGPDTypeListFinal.size(); i++) {
 		PartonValues values = pMellinMoment->computeAll(kinematic,	restrictedByGPDTypeListFinal[i]);
@@ -67,12 +66,6 @@ MellinMomentResult MellinMomentService::compute(const MellinMomentKinematic &kin
 
 	result.setKinematic(kinematic);
 	result.setComputationModuleName(pMellinMoment->getClassName());
-
-	// Remove pointer references
-	// Module pointers are managed by PARTONS
-	PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
-			pMellinMoment, 0);
-	pMellinMoment = 0;
 
 	return result;
 }
@@ -91,7 +84,7 @@ List<MellinMomentResult> MellinMomentService::computeManyKinematic(
 	List<MellinMomentResult> results;
 	List<ElemUtils::Packet> listOfPacket;
 
-	List<GPDType> finalGPDTypeList;// = getFinalGPDTypeList(pGPDModule,gpdTypeList);
+	List<GPDType> finalGPDTypeList = getFinalGPDTypeList(pMellinModule,gpdTypeList);
 
 	if (finalGPDTypeList.size() == 0) {
 		info(__func__,
@@ -153,66 +146,6 @@ List<MellinMomentResult> MellinMomentService::computeManyKinematic(
 	return results;
 }
 
-MellinMomentResult MellinMomentService::computeMellinMomentTask(Task& task) {
-	MellinMomentKinematic kinematic = newKinematicFromTask(task);
-
-	MellinMomentModule* pMellinModule;// = newGPDModuleFromTask(task);
-	int n = getNFromTask(task);
-
-	MellinMomentResult result = compute(kinematic,pMellinModule);
-
-	// Remove reference to pGPDModule pointer.
-	m_pModuleObjectFactory->updateModulePointerReference(pMellinModule, 0);
-	pMellinModule = 0;
-
-	return result;
-}
-
-List<MellinMomentResult> MellinMomentService::computeManyKinematicTask(
-		Task& task) {
-	List<MellinMomentKinematic> listOfKinematic = newListOfKinematicFromTask(task);
-
-	List<GPDType> gpdTypeList = getGPDTypeListFromTask(task);
-
-	int n = getNFromTask(task);
-
-	MellinMomentModule* pMellinModule;// = newGPDModuleFromTask(task);
-
-	List<MellinMomentResult> result = computeManyKinematic(listOfKinematic,pMellinModule,
-			gpdTypeList, task.isStoreInDB());
-
-// Remove reference to pGPDModule pointer.
-	m_pModuleObjectFactory->updateModulePointerReference(pMellinModule, 0);
-	pMellinModule = 0;
-	return result;
-}
-
-void MellinMomentService::generatePlotFileTask(Task& task) {
-	generatePlotFile(getOutputFilePathForPlotFileTask(task),
-			generateSQLQueryForPlotFileTask(task, "mellin_moment_plot_2d_view"), ' ');
-}
-
-List<GPDType> MellinMomentService::getFinalGPDTypeList(MellinMomentModule* pMellinModule,
-		const List<GPDType> &gpdTypeList) const {
-
-	List<GPDType> restrictedByGPDTypeListFinal;/* =
-			pGPDModule->getListOfAvailableGPDTypeForComputation();
-
-	if (!gpdTypeList.isEmpty()) {
-		restrictedByGPDTypeListFinal = VectorUtils::intersection(
-				restrictedByGPDTypeListFinal, gpdTypeList);
-	}
-
-	info(__func__,
-			ElemUtils::Formatter() << restrictedByGPDTypeListFinal.size()
-					<< " GPDType will be computed");
-*/
-	return restrictedByGPDTypeListFinal;
-}
-
-
-
-
 void MellinMomentService::computeTask(Task &task) {
 	debug(__func__, "Processing ...");
 
@@ -226,7 +159,7 @@ void MellinMomentService::computeTask(Task &task) {
 	} else {
 		if (ElemUtils::StringUtils::equals(task.getFunctionName(),
 				MellinMomentService::MELLIN_MOMENT_SERVICE_COMPUTE_ONE_KINEMATIC)) {
-			resultList.add(computeMellinMomentTask(task));
+			resultList.add(computeOneKinematicTask(task));
 		} else if (ElemUtils::StringUtils::equals(task.getFunctionName(),
 				MellinMomentService::FUNCTION_NAME_GENERATE_PLOT_FILE)) {
 			generatePlotFileTask(task);
@@ -248,21 +181,77 @@ void MellinMomentService::computeTask(Task &task) {
 	m_resultListBuffer = resultList;
 }
 
+MellinMomentResult MellinMomentService::computeOneKinematicTask(Task& task) {
+	MellinMomentKinematic kinematic = newKinematicFromTask(task);
 
-GPDModule* MellinMomentService::newGPDModuleFromTask(const Task& task) const {
-	GPDModule* pGPDModule = 0;
+	MellinMomentModule* pMellinModule = newMellinMomentModuleFromTask(task);
+	int n = getNFromTask(task);
+
+	MellinMomentResult result = compute(kinematic,pMellinModule);
+
+	// Remove reference to pGPDModule pointer.
+	m_pModuleObjectFactory->updateModulePointerReference(pMellinModule, 0);
+	pMellinModule = 0;
+
+	return result;
+}
+
+List<MellinMomentResult> MellinMomentService::computeManyKinematicTask(
+		Task& task) {
+	List<MellinMomentKinematic> listOfKinematic = newListOfKinematicFromTask(task);
+
+	List<GPDType> gpdTypeList = getGPDTypeListFromTask(task);
+
+	int n = getNFromTask(task);
+
+	MellinMomentModule* pMellinModule = newMellinMomentModuleFromTask(task);
+
+	List<MellinMomentResult> result = computeManyKinematic(listOfKinematic,pMellinModule,
+			gpdTypeList, task.isStoreInDB());
+
+// Remove reference to pGPDModule pointer.
+	m_pModuleObjectFactory->updateModulePointerReference(pMellinModule, 0);
+	pMellinModule = 0;
+	return result;
+}
+
+void MellinMomentService::generatePlotFileTask(Task& task) {
+	generatePlotFile(getOutputFilePathForPlotFileTask(task),
+			generateSQLQueryForPlotFileTask(task, "mellin_moment_plot_2d_view"), ' ');
+}
+
+List<GPDType> MellinMomentService::getFinalGPDTypeList(MellinMomentModule* pMellinModule,
+		const List<GPDType> &gpdTypeList) const {
+
+	List<GPDType> restrictedByGPDTypeListFinal =
+			pMellinModule->getListOfAvailableGPDType();
+
+	if (!gpdTypeList.isEmpty()) {
+		restrictedByGPDTypeListFinal = VectorUtils::intersection(
+				restrictedByGPDTypeListFinal, gpdTypeList);
+	}
+
+	info(__func__,
+			ElemUtils::Formatter() << restrictedByGPDTypeListFinal.size()
+					<< " GPDType will be computed");
+
+	return restrictedByGPDTypeListFinal;
+}
+
+MellinMomentModule* MellinMomentService::newMellinMomentModuleFromTask(const Task& task) const {
+	MellinMomentModule* pMellinModule = 0;
 
 	if (ElemUtils::StringUtils::equals(
 			task.getModuleComputationConfiguration().getModuleType(),
-			GPDModule::GPD_MODULE_CLASS_NAME)) {
-		pGPDModule =
-				Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-						task.getModuleComputationConfiguration().getModuleClassName());
+			MellinMomentModule::MELLIN_MOMENT_MODULE_CLASS_NAME)) {
+		pMellinModule =	static_cast<PARTONS::MellinMomentModule*>(
+				PARTONS::Partons::getInstance()->getModuleObjectFactory()->newModuleObject(
+						task.getModuleComputationConfiguration().getModuleClassName()));
 
-		pGPDModule->configure(
+		pMellinModule->configure(
 				task.getModuleComputationConfiguration().getParameters());
 
-		pGPDModule->prepareSubModules(
+		pMellinModule->prepareSubModules(
 				task.getModuleComputationConfiguration().getSubModules());
 	} else {
 		throw ElemUtils::CustomException(getClassName(), __func__,
@@ -270,7 +259,7 @@ GPDModule* MellinMomentService::newGPDModuleFromTask(const Task& task) const {
 						<< "You have not provided any GPDModule");
 	}
 
-	return pGPDModule;
+	return pMellinModule;
 }
 
 int MellinMomentService::getNFromTask(const Task& task) const

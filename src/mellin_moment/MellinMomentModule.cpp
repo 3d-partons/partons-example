@@ -17,12 +17,14 @@ namespace PARTONS {
 const std::string MellinMomentModule::MELLIN_MOMENT_MODULE_CLASS_NAME =
 		"MellinMomentModule";
 
-const std::string MellinMomentModule::PARAMETER_NAME_MELLIN_MODEL_MODULE_N = "MELLIN_INDEX_N";
+const std::string MellinMomentModule::PARAMETER_NAME_MELLIN_MOMENT_MODULE_N = "MELLIN_INDEX_N";
 
 MellinMomentModule::MellinMomentModule(const std::string &className) :
 		ModuleObject(className) {
 	m_n = 0;
 	m_gluon = false;
+
+	initModule();
 }
 
 MellinMomentModule::MellinMomentModule(const MellinMomentModule& other) :
@@ -32,6 +34,8 @@ MellinMomentModule::MellinMomentModule(const MellinMomentModule& other) :
 	m_gluon = other.m_gluon;
 	m_flavor = other.m_flavor;
 	m_type = other.m_type;
+
+	initModule();
 
 }
 
@@ -48,12 +52,12 @@ void MellinMomentModule::initModule() {
 
 void MellinMomentModule::configure(const ElemUtils::Parameters &parameters) {
 
-    if (parameters.isAvailable(MellinMomentModule::PARAMETER_NAME_MELLIN_MODEL_MODULE_N)) {
+    if (parameters.isAvailable(MellinMomentModule::PARAMETER_NAME_MELLIN_MOMENT_MODULE_N)) {
 
         m_n = parameters.getLastAvailable().toDouble();
         info(__func__,
                 ElemUtils::Formatter() << "Parameter "
-                        << MellinMomentModule::PARAMETER_NAME_MELLIN_MODEL_MODULE_N << " changed to "
+                        << MellinMomentModule::PARAMETER_NAME_MELLIN_MOMENT_MODULE_N << " changed to "
                         << m_n);
     }
 }
@@ -64,7 +68,7 @@ PartonValues MellinMomentModule::computeAll(MellinMomentKinematic mKinematic, GP
 	GluonValue gluon = computeGluonValue(mKinematic,mGPDtype);
 	result.setGluonValue(gluon);
 
-	List<QuarkFlavor> flavorList = getQuarkFlavorList(mKinematic, mGPDtype);
+	List<QuarkFlavor> flavorList = getListOfAvailableQuarkFlavor(mKinematic, mGPDtype);
 
 	for (unsigned int i = 0; i != flavorList.size(); i++) {
 		result.addQuarkValue(computeQuarkValue(mKinematic, mGPDtype,

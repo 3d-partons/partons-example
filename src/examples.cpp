@@ -76,16 +76,16 @@ void computeSingleKinematicsForMellinMoment() {
 	formatter << pMoment->computeAll(mkinematic, PARTONS::GPDType::H).toString() << '\n';
 
 	// Retrieve Mellin Moment service
-	//PARTONS::MellinMomentService* pMellinService = static_cast<PARTONS::MellinMomentService*>(PARTONS::Partons::getInstance()->getServiceObjectRegistry()->get(PARTONS::MellinMomentService::classId));
+	PARTONS::MellinMomentService* pMellinService = static_cast<PARTONS::MellinMomentService*>(PARTONS::Partons::getInstance()->getServiceObjectRegistry()->get(PARTONS::MellinMomentService::classId));
 
 
 	// Run computation
 	PARTONS::List<PARTONS::GPDType> gpdTypeList;
-	//gpdTypeList.add(PARTONS::GPDType::H);
-	gpdTypeList.add(PARTONS::GPDType::E);
-	gpdTypeList.add(PARTONS::GPDType::Et);
-	gpdTypeList.add(PARTONS::GPDType::Ht);
-	//PARTONS::MellinMomentResult result = pMellinService->compute(mkinematic,pGPDModel,gpdTypeList);
+	gpdTypeList.add(PARTONS::GPDType::H);
+	//gpdTypeList.add(PARTONS::GPDType::E);
+	//gpdTypeList.add(PARTONS::GPDType::Et);
+	//gpdTypeList.add(PARTONS::GPDType::Ht);
+	//PARTONS::MellinMomentResult result = pMellinService->compute(mkinematic,pMoment,gpdTypeList);
 
 	// Print results
 	//PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,	result.toString());

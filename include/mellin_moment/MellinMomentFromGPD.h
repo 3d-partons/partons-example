@@ -36,7 +36,7 @@ class MellinMomentFromGPD: public MellinMomentModule, public MathIntegratorModul
 public:
 
     static const std::string MELLIN_MOMENT_MODULE_CLASS_NAME; ///< Type of the module in XML automation.
-    static const std::string MELLIN_MOMENT_MODULE_GPD_TYPE; ///< Parameter used in configure() or XML automation to set the type of the GPD to compute.
+    static const std::string MELLIN_MOMENT_MODULE_GPD_MODEL; ///< Parameter used in configure() or XML automation to set the type of the GPD to compute.
 
     /**
      * ID assigned by BaseObjectRegistry.
@@ -50,10 +50,17 @@ public:
 
 	virtual MellinMomentFromGPD* clone() const;
 
-	void virtual configure(const ElemUtils::Parameters &parameters);
+	virtual void configure(const ElemUtils::Parameters &parameters);
+
+    virtual void prepareSubModules(
+            const std::map<std::string, BaseObjectData>& subModulesData);
 
 	GPDModule* getGPDModule() const;
 	void setGPDModule(GPDModule* pGPDModel);
+
+	virtual List<QuarkFlavor> getListOfAvailableQuarkFlavor(MellinMomentKinematic mKinematic, const GPDType &gpdType);
+
+	virtual List<GPDType> getListOfAvailableGPDType();
 
 protected:
 	virtual void isModuleWellConfigured();
@@ -67,8 +74,6 @@ private:
 	virtual double compute(MellinMomentKinematic mKinematic);
 
 	double integrant(double x, std::vector<double> par);
-
-	virtual List<QuarkFlavor> getQuarkFlavorList(MellinMomentKinematic mKinematic, const GPDType &gpdType);
 }
 ;
 

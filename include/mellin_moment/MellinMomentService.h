@@ -98,7 +98,7 @@ public:
      * @param task Automation task.
      * @return GPDModule pointer.
      */
-    GPDModule* newGPDModuleFromTask(const Task &task) const;
+    MellinMomentModule* newMellinMomentModuleFromTask(const Task &task) const;
 
     // GPDModule* configureGPDModule(GPDModule* pGPDModule) const;
 
@@ -118,14 +118,14 @@ public:
     List<MellinMomentKinematic> newListOfKinematicFromTask(const Task &task) const;
 
 private:
-    GPDModule* m_pGPDModule; ///< Pointer to the currently used GPD module.
+    //MellinMomentModule* m_pMellinModule; ///< Pointer to the currently used GPD module.
 
     /**
      * Method used in the automated interface to compute GPD.
      * @param task Automated XML task.
      * @return GPDResult object.
      */
-    MellinMomentResult computeMellinMomentTask(Task &task);
+    MellinMomentResult computeOneKinematicTask(Task &task);
     /**
      * Method used in the automated interface to compute GPDs for a list of kinematics.
      * @param task Automated XML task.

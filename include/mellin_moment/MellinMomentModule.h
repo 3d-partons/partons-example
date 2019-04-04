@@ -34,7 +34,7 @@ class MellinMomentModule: public ModuleObject {
 public:
 
 	static const std::string MELLIN_MOMENT_MODULE_CLASS_NAME; ///< Type of the module in XML automation.
-	static const std::string PARAMETER_NAME_MELLIN_MODEL_MODULE_N; ///< Index of the Mellin Model in XML automation.
+	static const std::string PARAMETER_NAME_MELLIN_MOMENT_MODULE_N; ///< Index of the Mellin Model in XML automation.
 
 
 	/**
@@ -54,7 +54,7 @@ public:
 
 	virtual MellinMomentModule* clone() const = 0;
 
-	void configure(const ElemUtils::Parameters &parameters);
+	virtual void configure(const ElemUtils::Parameters &parameters);
 
 	/*
 	 * @param n index of Mellin Moment.
@@ -83,6 +83,10 @@ public:
 	int getN();
 	void setN(int n);
 
+	virtual List<QuarkFlavor> getListOfAvailableQuarkFlavor(MellinMomentKinematic mKinematic, const GPDType &gpdType) = 0;
+
+	virtual List<GPDType> getListOfAvailableGPDType() = 0;
+
 protected:
 	virtual void isModuleWellConfigured();
 	virtual void initModule();
@@ -93,7 +97,7 @@ protected:
 	QuarkFlavor m_flavor; ///< For witch quark flavor compute.
 	GPDType m_type; ///< Witch type of GPD compute.
 
-	virtual List<QuarkFlavor> getQuarkFlavorList(MellinMomentKinematic mKinematic, const GPDType &gpdType) = 0;
+
 
 private:
 	virtual double compute(MellinMomentKinematic mKinematic) = 0;
