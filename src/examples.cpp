@@ -5,24 +5,31 @@
 #include <ElementaryUtils/parameters/Parameters.h>
 #include <NumA/integration/one_dimension/IntegratorType1D.h>
 #include <NumA/integration/one_dimension/QuadratureIntegrator1D.h>
+#include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
 #include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionKinematic.h>
 #include <partons/beans/gpd/GPDKinematic.h>
+#include <partons/beans/gpd/GPDType.h>
 #include <partons/beans/KinematicUtils.h>
 #include <partons/beans/List.h>
-#include <partons/beans/observable/ObservableKinematic.h>
+#include <partons/beans/observable/DVCS/DVCSObservableKinematic.h>
+#include <partons/beans/observable/ObservableResult.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsConstant.h>
+#include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
 #include <partons/modules/evolution/gpd/GPDEvolutionVinnikov.h>
-#include <partons/modules/gpd/GPDMMS13.h>
+#include <partons/modules/gpd/GPDGK16.h>
+#include <partons/modules/gpd/GPDGK16Numerical.h>
 #include <partons/modules/observable/DVCS/asymmetry/DVCSAllMinus.h>
 #include <partons/modules/process/DVCS/DVCSProcessGV08.h>
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongVinnikov.h>
-#include <partons/modules/scales/ScalesQ2Multiplier.h>
-#include <partons/modules/xi_converter/XiConverterXBToXi.h>
+#include <partons/modules/scales/DVCS/DVCSScalesQ2Multiplier.h>
+#include <partons/modules/xi_converter/DVCS/DVCSXiConverterXBToXi.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <partons/services/ConvolCoeffFunctionService.h>
+#include <partons/services/DVCSConvolCoeffFunctionService.h>
+#include <partons/services/DVCSObservableService.h>
 #include <partons/services/GPDService.h>
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
@@ -36,14 +43,14 @@ void computeSingleKinematicsForGPD() {
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
     PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
 
     // Run computation
-    PARTONS::GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic,
-            pGPDModel);
+    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
+            gpdKinematic, pGPDModel);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -65,7 +72,7 @@ void computeManyKinematicsForGPD() {
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Load list of kinematics from file
     PARTONS::List<PARTONS::GPDKinematic> gpdKinematicList =
@@ -74,8 +81,7 @@ void computeManyKinematicsForGPD() {
 
     // Run computation
     PARTONS::List<PARTONS::GPDResult> gpdResultList =
-            pGPDService->computeManyKinematicOneModel(gpdKinematicList,
-                    pGPDModel);
+            pGPDService->computeManyKinematic(gpdKinematicList, pGPDModel);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -91,13 +97,13 @@ void computeManyKinematicsForGPD() {
 void computeSingleKinematicsForDVCSComptonFormFactor() {
 
     // Retrieve service
-    PARTONS::ConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
-            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getConvolCoeffFunctionService();
+    PARTONS::DVCSConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVCSConvolCoeffFunctionService();
 
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModule =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create CFF module with the BaseModuleFactory
     PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
@@ -121,8 +127,8 @@ void computeSingleKinematicsForDVCSComptonFormFactor() {
 
     // Run computation
     PARTONS::DVCSConvolCoeffFunctionResult cffResult =
-            pDVCSConvolCoeffFunctionService->computeForOneCCFModel(cffKinematic,
-                    pDVCSCFFModule);
+            pDVCSConvolCoeffFunctionService->computeSingleKinematic(
+                    cffKinematic, pDVCSCFFModule);
 
     // Print results for DVCSCFFModule
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -142,13 +148,13 @@ void computeSingleKinematicsForDVCSComptonFormFactor() {
 void computeManyKinematicsForDVCSComptonFormFactor() {
 
     // Retrieve service
-    PARTONS::ConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
-            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getConvolCoeffFunctionService();
+    PARTONS::DVCSConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVCSConvolCoeffFunctionService();
 
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModule =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create CFF module with the BaseModuleFactory
     PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
@@ -168,12 +174,12 @@ void computeManyKinematicsForDVCSComptonFormFactor() {
 
     // Load list of kinematics from file
     PARTONS::List<PARTONS::DVCSConvolCoeffFunctionKinematic> cffKinematicList =
-            PARTONS::KinematicUtils().getCCFKinematicFromFile(
+            PARTONS::KinematicUtils().getDVCSCCFKinematicFromFile(
                     "/home/partons/git/partons-example/data/examples/cff/kinematics_dvcs_cff.csv");
 
     // Run computation
     PARTONS::List<PARTONS::DVCSConvolCoeffFunctionResult> cffResultList =
-            pDVCSConvolCoeffFunctionService->computeForOneCCFModelAndManyKinematics(
+            pDVCSConvolCoeffFunctionService->computeManyKinematic(
                     cffKinematicList, pDVCSCFFModule);
 
     // Print results for DVCSCFFModule
@@ -194,13 +200,13 @@ void computeManyKinematicsForDVCSComptonFormFactor() {
 void computeSingleKinematicsForDVCSObservable() {
 
     // Retrieve Observable service
-    PARTONS::ObservableService* pObservableService =
-            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getObservableService();
+    PARTONS::DVCSObservableService* pObservableService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVCSObservableService();
 
     // Create GPDModule
     PARTONS::GPDModule* pGPDModule =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create CFF module
     PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModel =
@@ -211,22 +217,23 @@ void computeSingleKinematicsForDVCSObservable() {
     pDVCSCFFModel->configure(
             ElemUtils::Parameter(
                     PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-                    PARTONS::PerturbativeQCDOrderType::NLO));
+                    PARTONS::PerturbativeQCDOrderType::LO));
 
     // Create XiConverterModule
-    PARTONS::XiConverterModule* pXiConverterModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newXiConverterModule(
-                    PARTONS::XiConverterXBToXi::classId);
+    PARTONS::DVCSXiConverterModule* pXiConverterModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSXiConverterModule(
+                    PARTONS::DVCSXiConverterXBToXi::classId);
 
     // Create ScalesModule
-    PARTONS::ScalesModule* pScalesModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newScalesModule(
-                    PARTONS::ScalesQ2Multiplier::classId);
+    PARTONS::DVCSScalesModule* pScalesModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSScalesModule(
+                    PARTONS::DVCSScalesQ2Multiplier::classId);
 
     // Set its lambda parameter, so MuF2 = MuR2 = lambda * Q2
     pScalesModule->configure(
             ElemUtils::Parameter(
-                    PARTONS::ScalesQ2Multiplier::PARAMETER_NAME_LAMBDA, 1.));
+                    PARTONS::DVCSScalesQ2Multiplier::PARAMETER_NAME_LAMBDA,
+                    1.));
 
     // Create ProcessModule
     PARTONS::DVCSProcessModule* pProcessModule =
@@ -234,8 +241,8 @@ void computeSingleKinematicsForDVCSObservable() {
                     PARTONS::DVCSProcessGV08::classId);
 
     // Create Observable
-    PARTONS::Observable* pObservable =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newObservable(
+    PARTONS::DVCSObservable* pObservable =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSObservable(
                     PARTONS::DVCSAllMinus::classId);
 
     // Link modules (set physics assumptions of your computation)
@@ -246,12 +253,12 @@ void computeSingleKinematicsForDVCSObservable() {
     pDVCSCFFModel->setGPDModule(pGPDModule);
 
     // Load list of kinematics from file
-    PARTONS::ObservableKinematic observableKinematic =
-            PARTONS::ObservableKinematic(0.2, -0.1, 2., 6.);
+    PARTONS::DVCSObservableKinematic observableKinematic =
+            PARTONS::DVCSObservableKinematic(0.2, -0.1, 2., 6., 0.);
 
     // Create kinematic
-    PARTONS::ObservableResult observableResult =
-            pObservableService->computeObservable(observableKinematic,
+    PARTONS::DVCSObservableResult observableResult =
+            pObservableService->computeSingleKinematic(observableKinematic,
                     pObservable);
 
     // Print results
@@ -288,13 +295,13 @@ void computeSingleKinematicsForDVCSObservable() {
 void computeManyKinematicsForDVCSObservable() {
 
     // Retrieve Observable service
-    PARTONS::ObservableService* pObservableService =
-            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getObservableService();
+    PARTONS::DVCSObservableService* pObservableService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVCSObservableService();
 
     // Create GPDModule
     PARTONS::GPDModule* pGPDModule =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create CFF module
     PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModel =
@@ -305,22 +312,23 @@ void computeManyKinematicsForDVCSObservable() {
     pDVCSCFFModel->configure(
             ElemUtils::Parameter(
                     PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-                    PARTONS::PerturbativeQCDOrderType::NLO));
+                    PARTONS::PerturbativeQCDOrderType::LO));
 
     // Create XiConverterModule
-    PARTONS::XiConverterModule* pXiConverterModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newXiConverterModule(
-                    PARTONS::XiConverterXBToXi::classId);
+    PARTONS::DVCSXiConverterModule* pXiConverterModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSXiConverterModule(
+                    PARTONS::DVCSXiConverterXBToXi::classId);
 
     // Create ScalesModule
-    PARTONS::ScalesModule* pScalesModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newScalesModule(
-                    PARTONS::ScalesQ2Multiplier::classId);
+    PARTONS::DVCSScalesModule* pScalesModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSScalesModule(
+                    PARTONS::DVCSScalesQ2Multiplier::classId);
 
     // Set its lambda parameter, so MuF2 = MuR2 = lambda * Q2
     pScalesModule->configure(
             ElemUtils::Parameter(
-                    PARTONS::ScalesQ2Multiplier::PARAMETER_NAME_LAMBDA, 1.));
+                    PARTONS::DVCSScalesQ2Multiplier::PARAMETER_NAME_LAMBDA,
+                    1.));
 
     // Create ProcessModule
     PARTONS::DVCSProcessModule* pProcessModule =
@@ -328,8 +336,8 @@ void computeManyKinematicsForDVCSObservable() {
                     PARTONS::DVCSProcessGV08::classId);
 
     // Create Observable
-    PARTONS::Observable* pObservable =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newObservable(
+    PARTONS::DVCSObservable* pObservable =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSObservable(
                     PARTONS::DVCSAllMinus::classId);
 
     // Link modules (set physics assumptions of your computation)
@@ -340,14 +348,14 @@ void computeManyKinematicsForDVCSObservable() {
     pDVCSCFFModel->setGPDModule(pGPDModule);
 
     // Load list of kinematics from file
-    PARTONS::List<PARTONS::ObservableKinematic> observableKinematicList =
-            PARTONS::KinematicUtils().getObservableKinematicFromFile(
+    PARTONS::List<PARTONS::DVCSObservableKinematic> observableKinematicList =
+            PARTONS::KinematicUtils().getDVCSObservableKinematicFromFile(
                     "/home/partons/git/partons-example/data/examples/observable/kinematics_dvcs_observable.csv");
 
     // Run computation
-    PARTONS::List<PARTONS::ObservableResult> observableResultList =
-            pObservableService->computeManyKinematicOneModel(
-                    observableKinematicList, pObservable);
+    PARTONS::List<PARTONS::DVCSObservableResult> observableResultList =
+            pObservableService->computeManyKinematic(observableKinematicList,
+                    pObservable);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -389,7 +397,7 @@ void changeIntegrationRoutine() {
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16Numerical::classId);
 
     // Change integration routine
     pGPDModel->configure(
@@ -401,8 +409,8 @@ void changeIntegrationRoutine() {
     PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
 
     // Run computation
-    PARTONS::GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic,
-            pGPDModel);
+    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
+            gpdKinematic, pGPDModel);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -424,7 +432,7 @@ void makeUseOfGPDEvolution() {
     // Create GPD module with the BaseModuleFactory
     PARTONS::GPDModule* pGPDModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDMMS13::classId);
+                    PARTONS::GPDGK16::classId);
 
     // Create GPD evolution module with the BaseModuleFactory
     PARTONS::GPDEvolutionModule* pGPDEvolutionModel =
@@ -470,8 +478,8 @@ void makeUseOfGPDEvolution() {
     PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 40., 40.);
 
     // Run computation
-    PARTONS::GPDResult gpdResult = pGPDService->computeGPDModel(gpdKinematic,
-            pGPDModel);
+    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
+            gpdKinematic, pGPDModel);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
@@ -491,6 +499,41 @@ void makeUseOfGPDEvolution() {
             pGPDEvolutionModel, 0);
     pGPDModel = 0;
 
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModel, 0);
+    pGPDModel = 0;
+}
+
+void selectSpecificGPDTypes() {
+
+    // Retrieve GPD service
+    PARTONS::GPDService* pGPDService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
+
+    // Create GPD module with the BaseModuleFactory
+    PARTONS::GPDModule* pGPDModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDGK16::classId);
+
+    // Create a list of GPD types you want to compute for
+    PARTONS::List<PARTONS::GPDType> gpdTypelist;
+
+    gpdTypelist.add(PARTONS::GPDType::E);
+    gpdTypelist.add(PARTONS::GPDType::Et);
+
+    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+    PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
+
+    // Run computation
+    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
+            gpdKinematic, pGPDModel, gpdTypelist);
+
+    // Print results
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            gpdResult.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
     PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModel, 0);
     pGPDModel = 0;

@@ -14,7 +14,7 @@ This scenario is the demonstration for GPD module. Note however that the way of 
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeGPDModel" storeInDB="0">
+   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">
@@ -29,7 +29,7 @@ This scenario is the demonstration for GPD module. Note however that the way of 
       <computation_configuration>
 
          <!-- Select GPD model -->
-         <module type="GPDModule" name="GPDMMS13">
+         <module type="GPDModule" name="GPDGK16Numerical">
    
             <!-- Change integration routine -->
             <param name="integrator_type" value="GK21_ADAPTIVE" />

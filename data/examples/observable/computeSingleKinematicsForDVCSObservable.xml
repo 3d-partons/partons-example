@@ -10,28 +10,29 @@ This scenario demonstrates a simple task as the evaluation of DVCS observable in
 
    <!-- First task: evaluate DVCS observable for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="ObservableService" method="computeObservable" storeInDB="0">
+   <task service="DVCSObservableService" method="computeSingleKinematic" storeInDB="0">
 
       <!-- Define DVCS observable kinematics -->
-      <kinematics type="ObservableKinematic">
+      <kinematics type="DVCSObservableKinematic">
          <param name="xB" value="0.2" />
          <param name="t" value="-0.1" />
          <param name="Q2" value="2." />
          <param name="E" value="6." />
+         <param name="phi" value="0." />
       </kinematics>
 
       <!-- Define physics assumptions -->
       <computation_configuration>
 
          <!-- Select DVCS observable -->
-         <module type="Observable" name="DVCSAllMinus">
+         <module type="DVCSObservableModule" name="DVCSAllMinus">
 
             <!-- Select DVCS process model -->
-            <module type="ProcessModule" name="DVCSProcessGV08">
+            <module type="DVCSProcessModule" name="DVCSProcessGV08">
 
                <!-- Select scales module -->
                <!-- (it is used to evaluate factorization and renormalization scales out of kinematics) -->
-               <module type="ScalesModule" name="ScalesQ2Multiplier">
+               <module type="DVCSScalesModule" name="DVCSScalesQ2Multiplier">
 
                   <!-- Configure this module -->
                   <param name="lambda" value="1." />
@@ -39,17 +40,17 @@ This scenario demonstrates a simple task as the evaluation of DVCS observable in
 
                <!-- Select xi-converter module -->
                <!-- (it is used to evaluate GPD variable xi out of kinematics) -->
-               <module type="XiConverterModule" name="XiConverterXBToXi">
+               <module type="DVCSXiConverterModule" name="DVCSXiConverterXBToXi">
                </module>
 
                <!-- Select DVCS CFF model -->
-               <module type="ConvolCoeffFunctionModule" name="DVCSCFFStandard">
+               <module type="DVCSConvolCoeffFunctionModule" name="DVCSCFFStandard">
 
                   <!-- Indicate pQCD order of calculation -->
-                  <param name="qcd_order_type" value="NLO" />
+                  <param name="qcd_order_type" value="LO" />
 
                   <!-- Select GPD model -->
-                  <module type="GPDModule" name="GPDMMS13">
+                  <module type="GPDModule" name="GPDGK16">
                   </module>
 
                </module>
@@ -63,7 +64,7 @@ This scenario demonstrates a simple task as the evaluation of DVCS observable in
    </task>
 
    <!-- Second task: print results of the last computation into standard output --> 
-   <task service="ObservableService" method="printResults">
+   <task service="DVCSObservableService" method="printResults">
    </task>
 
 </scenario>

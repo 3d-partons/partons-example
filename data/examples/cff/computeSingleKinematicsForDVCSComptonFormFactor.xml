@@ -10,7 +10,7 @@ This scenario demonstrates a simple task as the evaluation of DVCS Compton Form 
 
    <!-- First task: evaluate DVCS CFF for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="ConvolCoeffFunctionService" method="computeWithGPDModel" storeInDB="0">
+   <task service="DVCSConvolCoeffFunctionService" method="computeSingleKinematic" storeInDB="0">
 
       <!-- Define DVCS CFF kinematics -->
       <kinematics type="DVCSConvolCoeffFunctionKinematic">
@@ -25,13 +25,13 @@ This scenario demonstrates a simple task as the evaluation of DVCS Compton Form 
       <computation_configuration>
 
          <!-- Select DVCS CFF model -->
-         <module type="ConvolCoeffFunctionModule" name="DVCSCFFStandard">
+         <module type="DVCSConvolCoeffFunctionModule" name="DVCSCFFStandard">
 
             <!-- Indicate pQCD order of calculation -->
             <param name="qcd_order_type" value="LO" />
 
             <!-- Select GPD model -->
-            <module type="GPDModule" name="GPDMMS13">
+            <module type="GPDModule" name="GPDGK16">
             </module>
 
          </module>
@@ -41,7 +41,7 @@ This scenario demonstrates a simple task as the evaluation of DVCS Compton Form 
    </task>
 
    <!-- Second task: print results of the last computation into standard output --> 
-   <task service="ConvolCoeffFunctionService" method="printResults">
+   <task service="DVCSConvolCoeffFunctionService" method="printResults">
    </task>
 
 </scenario>

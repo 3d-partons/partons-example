@@ -10,7 +10,7 @@ This scenario demonstrates the evaluation of GPD model for kinematics defined in
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeManyKinematicOneModel" storeInDB="0">
+   <task service="GPDService" method="computeManyKinematic" storeInDB="0">
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">
@@ -23,7 +23,7 @@ This scenario demonstrates the evaluation of GPD model for kinematics defined in
       <computation_configuration>
 
          <!-- Select GPD model -->
-         <module type="GPDModule" name="GPDMMS13">
+         <module type="GPDModule" name="GPDGK16">
          </module>
 
       </computation_configuration>

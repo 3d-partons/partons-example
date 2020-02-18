@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
 <!--
-This scenario demonstrates a simple task as the evaluation of GPD model in a single kinematic point. The result of this scenario is printed out to the standard output. These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks. 
+This scenario demonstrates a simple task as the evaluation of GPD model in a single kinematic point for specific GPD types only.
+
+The result of this function is printed out to the standard output.
+These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
+
+Note that you can use this example to select specific GPD types in the evaluation of CFFs and observables.
 -->
 
 <!-- Scenario starts here -->
 <!-- For your convenience and for bookkeeping provide creation date and unique description -->
-<scenario date="2017-07-18" description="GPD evaluation for single kinematics example">
+<scenario date="2017-07-18" description="Select specific GPD types">
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
    <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+
+      <!-- Define GPD types -->
+      <task_param type="GPDType">
+         <param name="value" value="E|Et" />
+      </task_param>
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">
@@ -26,13 +36,13 @@ This scenario demonstrates a simple task as the evaluation of GPD model in a sin
 
          <!-- Select GPD model -->
          <module type="GPDModule" name="GPDGK16">
-         </module>
+         </module> 
 
       </computation_configuration>
 
    </task>
 
-   <!-- Second task: print results of the last computation into standard output --> 
+   <!-- Second task: print results of the last computation into standard ouput --> 
    <task service="GPDService" method="printResults">
    </task>
 
