@@ -14,7 +14,7 @@ Q2                         	observable kinematics Q2 	             			double
 E                         	observable kinematics E 	             			double
 phi                         	observable kinematics phi 	             			double
 
-observable_value         	observable value 	    					double
+value         			observable value 	    					double
 
 computation_id             	Unique id of related computation				integer
 observable_name			Observable name (should be the same as computation_module_name)	char string
@@ -31,7 +31,7 @@ observable_name			Observable name (should be the same as computation_module_name
       <!-- Variables selected to be stored in the output file -->
       <task_param type="select">
          <param name="xPlot" value="xB" />
-         <param name="yPlot" value="observable_value" />
+         <param name="yPlot" value="value" />
       </task_param>
 
       <!-- Applied requirements -->
