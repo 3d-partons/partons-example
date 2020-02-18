@@ -33,6 +33,8 @@
 #include <partons/services/GPDService.h>
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
+#include <partons/utils/type/PhysicalType.h>
+#include <partons/utils/type/PhysicalUnit.h>
 
 void computeSingleKinematicsForGPD() {
 
@@ -527,6 +529,48 @@ void selectSpecificGPDTypes() {
     // Run computation
     PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
             gpdKinematic, pGPDModel, gpdTypelist);
+
+    // Print results
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            gpdResult.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModel, 0);
+    pGPDModel = 0;
+}
+
+void demonstrateUnits() {
+
+    // Retrieve GPD service
+    PARTONS::GPDService* pGPDService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
+
+    // Create GPD module with the BaseModuleFactory
+    PARTONS::GPDModule* pGPDModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDGK16::classId);
+
+    // Kinematics
+    PARTONS::PhysicalType<double> x(0.1, PARTONS::PhysicalUnit::NONE);
+    PARTONS::PhysicalType<double> xi(0.2, PARTONS::PhysicalUnit::NONE);
+    PARTONS::PhysicalType<double> t(-0.1, PARTONS::PhysicalUnit::GEV2);
+    PARTONS::PhysicalType<double> muF2(2., PARTONS::PhysicalUnit::GEV2);
+    PARTONS::PhysicalType<double> muR2(2., PARTONS::PhysicalUnit::GEV2);
+
+    PARTONS::PhysicalType<double> tInMeV2_a = t.makeSameUnitAs(
+            PARTONS::PhysicalUnit::MEV2);
+
+    PARTONS::PhysicalType<double> tInMeV2_b = t;
+    tInMeV2_b.makeSameUnitAs(tInMeV2_a);
+
+    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+    PARTONS::GPDKinematic gpdKinematic(x, xi, tInMeV2_a, muF2, muF2);
+
+    // Run computation
+    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
+            gpdKinematic, pGPDModel);
 
     // Print results
     PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,

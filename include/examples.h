@@ -89,4 +89,9 @@ void makeUseOfGPDEvolution();
 */
 void selectSpecificGPDTypes();
 
+/**
+ * This function demonstrates the usage of units.
+ */
+void demonstrateUnits();
+
 #endif /* INCLUDE_EXAMPLES_H_ */
