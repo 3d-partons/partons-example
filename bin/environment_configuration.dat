@@ -14,6 +14,7 @@ qt:
 smfl:
 eigen3:
 cln:
+gsl:
 elementary-utils: 
 numa: 
 partons: 
