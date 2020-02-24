@@ -29,7 +29,7 @@ observable_channel_short_name	Channel type				char string	DVCS, HEMP, see Observ
 <scenario date="2017-07-18" description="Get CFF result from database">
 
    <!-- Task: generate file with data matching indicated criteria --> 
-   <task service="ConvolCoeffFunctionService" method="generatePlotFile">
+   <task service="DVCSConvolCoeffFunctionService" method="generatePlotFile">
 
       <!-- Variables selected to be stored in the output file -->
       <task_param type="select">

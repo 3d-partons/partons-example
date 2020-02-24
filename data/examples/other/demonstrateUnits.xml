@@ -16,7 +16,8 @@ This scenario demonstrates a simple task as the evaluation of GPD model in a sin
       <kinematics type="GPDKinematic">
          <param name="x" value="0.1" />
          <param name="xi" value="0.2" />
-         <param name="t" value="-0.1" />
+         <param name="t" value="-100000" />
+         <param name="t_unit" value="MeV2" />
          <param name="MuF2" value="2." />
          <param name="MuR2" value="2." />
       </kinematics>

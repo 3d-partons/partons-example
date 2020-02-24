@@ -14,10 +14,9 @@ Q2                         	observable kinematics Q2 	             			double
 E                         	observable kinematics E 	             			double
 phi                         	observable kinematics phi 	             			double
 
-observable_value         	observable value 	    					double
+value         			observable value 	    					double
 
 computation_id             	Unique id of related computation				integer
-computation_module_name    	Name of observable module used in computation  			char string
 observable_name			Observable name (should be the same as computation_module_name)	char string
 ====================================================================================================================================
 -->
@@ -27,12 +26,12 @@ observable_name			Observable name (should be the same as computation_module_name
 <scenario date="2017-07-18" description="Get observable result from database">
 
    <!-- Task: generate file with data matching indicated criteria --> 
-   <task service="ObservableService" method="generatePlotFile">
+   <task service="DVCSObservableService" method="generatePlotFile">
 
       <!-- Variables selected to be stored in the output file -->
       <task_param type="select">
          <param name="xPlot" value="xB" />
-         <param name="yPlot" value="observable_value" />
+         <param name="yPlot" value="value" />
       </task_param>
 
       <!-- Applied requirements -->

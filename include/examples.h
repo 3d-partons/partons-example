@@ -81,4 +81,17 @@ void changeIntegrationRoutine();
 */
 void makeUseOfGPDEvolution();
 
+/**
+* This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point for specific GPD types only.
+* The result of this function is printed out to the standard output.
+* These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
+* Note that you can use this example to select specific GPD types in the evaluation of CFFs and observables.
+*/
+void selectSpecificGPDTypes();
+
+/**
+ * This function demonstrates the usage of units.
+ */
+void demonstrateUnits();
+
 #endif /* INCLUDE_EXAMPLES_H_ */

@@ -19,6 +19,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # FIND LIBRARIES ===========================================================================
 
+# find libraries: gsl
+find_package(GSL)
+
 # find libraries: Qt4
 find_package(Qt4 REQUIRED QtCore QtSql)
 
@@ -42,7 +45,7 @@ find_package(NumA++ REQUIRED)
 find_package(PARTONS REQUIRED)
 
 # directories containing headers 
-include_directories(${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
+include_directories($(GSL_INCLUDE_DIRS) ${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
 
 # FINALIZE ==================================================================================
 
@@ -71,9 +74,11 @@ target_link_libraries(
 
         PARTONS_example
         
+        ${GSL_LIBRARIES}
+        
         ${QT_LIBRARIES}
 
-	${SFML_LIBRARIES}
+		${SFML_LIBRARIES}
 
         ${ELEMENTARY_UTILS_LIBRARIES}
  
