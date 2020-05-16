@@ -1,7 +1,2 @@
 /.settings/
 /.externalToolBuilders/
-CMakeCache.txt
-CMakeFiles/
-Makefile
-PARTONS_example_autogen/
-cmake_install.cmake

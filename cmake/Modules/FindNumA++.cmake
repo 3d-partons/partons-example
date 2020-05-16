@@ -2,18 +2,18 @@
 #
 # Once done this will define
 #
-#  NumA++_FOUND - system has NumA++ lib
-#  NumA++_LIBRARIES - the path of the library
-#  NumA++_INCLUDE_DIR - the include directory
+#  NUMA_FOUND - system has NumA++ lib
+#  NUMA_LIBRARIES - the path of the library
+#  NUMA_INCLUDE_DIR - the include directory
 
-if (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
+if (NUMA_INCLUDE_DIR AND NUMA_LIBRARIES)
 
   # in cache already
-  set(NumA++_FOUND TRUE)
+  set(NUMA_FOUND TRUE)
 
-else (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
+else (NUMA_INCLUDE_DIR AND NUMA_LIBRARIES)
 
-  find_path(NumA++_INCLUDE_DIR NAMES NumA/integration/Integrator.h NumA++/integration/Integrator.h
+  find_path(NUMA_INCLUDE_DIR NAMES NumA/integration/Integrator.h NumA++/integration/Integrator.h
       PATHS
       ${CMAKE_INSTALL_PREFIX}
       ${CMAKE_SOURCE_DIR}/../numa
@@ -26,7 +26,7 @@ else (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
       PATH_SUFFIXES include/PARTONS include
     )
     
-  find_library(NumA++_LIBRARIES
+  find_library(NUMA_LIBRARIES
                      NAMES NumA NumA++
                      PATHS
                      ${CMAKE_INSTALL_PREFIX}
@@ -40,7 +40,7 @@ else (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 
   include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(NumA++ DEFAULT_MSG NumA++_INCLUDE_DIR NumA++_LIBRARIES)
+  find_package_handle_standard_args(NUMA DEFAULT_MSG NUMA_INCLUDE_DIR NUMA_LIBRARIES)
 
-endif(NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
+endif(NUMA_INCLUDE_DIR AND NUMA_LIBRARIES)
 
