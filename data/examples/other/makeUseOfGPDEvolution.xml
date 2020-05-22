@@ -34,7 +34,7 @@ This scenario demonstrates a simple task as the evaluation of GPD model in a sin
                <param name="qcd_order_type" value="LO" />
 
                <!-- Number of steps in integration over factorization scale -->
-               <param name="numberOfNodes" value="1" />
+               <param name="numberOfNodes" value="2" />
 
 	       <!-- Select alpha_s model -->	
                <module type="RunningAlphaStrongModule" name="RunningAlphaStrongVinnikov">
