@@ -7,7 +7,12 @@ cmake_minimum_required(VERSION 2.6)
 project(PARTONS_release CXX)
 
 # define c++ standard and issue all the warning demanded by this standard
-add_definitions(-std=c++98 -pedantic)
+add_definitions(-std=c++11 -pedantic -Wno-vla-extension)
+set(CMAKE_CXX_STANDARD 11)
+
+if (NOT DEFINED CMAKE_MACOSX_RPATH)
+   set(CMAKE_MACOSX_RPATH 0)
+endif()
 
 # AUTOMOC ==================================================================================
 
@@ -22,11 +27,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # find libraries: gsl
 find_package(GSL)
 
-# find libraries: Qt4
-find_package(Qt4 REQUIRED QtCore QtSql)
+# find libraries: Qt
+find_package(Qt5 COMPONENTS Core Sql REQUIRED)
 
 # add some useful macros and variables
-include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
 # find libraries: additional modules
@@ -45,7 +49,7 @@ find_package(NumA++ REQUIRED)
 find_package(PARTONS REQUIRED)
 
 # directories containing headers 
-include_directories($(GSL_INCLUDE_DIRS) ${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ELEMENTARY_UTILS_INCLUDE_DIR} ${NUMA_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
+include_directories($(GSL_INCLUDE_DIRS) ${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
 
 # FINALIZE ==================================================================================
 
@@ -78,11 +82,15 @@ target_link_libraries(
         
         ${QT_LIBRARIES}
 
-		${SFML_LIBRARIES}
+	${SFML_LIBRARIES}
 
-        ${ELEMENTARY_UTILS_LIBRARIES}
+        ${ElementaryUtils_LIBRARIES}
  
-        ${NUMA_LIBRARIES}
+        ${NumA++_LIBRARIES}
         
         ${PARTONS_LIBRARIES} 
+
+	Qt5::Core
+
+	Qt5::Sql
 )
