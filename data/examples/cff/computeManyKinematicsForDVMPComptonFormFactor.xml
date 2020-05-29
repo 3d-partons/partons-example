@@ -1,32 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
 <!--
-This scenario demonstrates a simple task as the evaluation of DVMP Compton Form Factors (CFF) in a single kinematic point. The result of this scenario is printed out to the standard output. These are CFF values for all GPD types defined in the selected GPD model.
+This scenario demonstrates the evaluation of DVMP Compton Form Factors (CFF) for kinematics defined in a text file. In this file kinematic points are encoded in separate lines using the following format: "xi|t|MuF2|MuR2|Q2". The result of this scenario is printed out to the standard output. These are CFF values for all GPD types defined in the selected GPD model. 
 -->
 
 <!-- Scenario starts here -->
 <!-- For your convenience and for bookkeeping provide creation date and unique description -->
-<scenario date="2017-07-18" description="DVMP CFF evaluation for single kinematics example">
+<scenario date="2017-07-18" description="DVMP CFF evaluation for many kinematics example">
 
-   <!-- First task: evaluate DVCS CFF for a single kinematics --> 
+   <!-- First task: evaluate DVMP CFF for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="DVMPConvolCoeffFunctionService" method="computeSingleKinematic" storeInDB="0">
+   <task service="DVMPConvolCoeffFunctionService" method="computeManyKinematic" storeInDB="0">
 
-      <!-- Define DVCS CFF kinematics -->
+      <!-- Define DVMP CFF kinematics -->
       <kinematics type="DVMPConvolCoeffFunctionKinematic">
-         <param name="xi" value="0.01" />
-         <param name="t" value="-0.1" />
-         <param name="Q2" value="4." />
-         <param name="MuF2" value="4." />
-         <param name="MuR2" value="4." />
-         <param name="meson" value="pi0" />
-         <param name="mesonPolarization" value="UNDEFINED" />
+
+         <!-- Path to file defining kinematics -->
+         <param name="file" value="/home/partons/git/partons-example/data/examples/cff/kinematics_dvmp_cff_with_units.csv" />
       </kinematics>
 
       <!-- Define physics assumptions -->
       <computation_configuration>
 
-         <!-- Select DVCS CFF model -->
+         <!-- Select DVMP CFF model -->
          <module type="DVMPConvolCoeffFunctionModule" name="DVMPCFFGK06">
 
             <!-- Parameters of MC integration -->
