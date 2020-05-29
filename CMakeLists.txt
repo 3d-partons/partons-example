@@ -1,7 +1,7 @@
 # BASIC DEFINITIONS ========================================================================
 
 # define minimum version of cmake
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
 
 # define project name and its language
 project(PARTONS_release CXX)
