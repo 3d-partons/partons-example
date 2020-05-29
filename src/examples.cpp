@@ -461,7 +461,7 @@ void makeUseOfGPDEvolution() {
 
     // Number of steps in the factorization scale (i.e. set the number of steps in the integration over factorization scale)
     // One step is a typical value for Vinnikov code
-    parameters.add(NumA::QuadratureIntegrator1D::PARAM_NAME_N, 1);
+    parameters.add(NumA::QuadratureIntegrator1D::PARAM_NAME_N, 2);
 
     // PerturbativeQCD = LO
     parameters.add(
