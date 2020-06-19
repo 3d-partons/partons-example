@@ -4,6 +4,10 @@
 // ******************************************************
 // GPD EXAMPLES *****************************************
 // ******************************************************
+/**
+ * My test code for the benchmark of the GPD evolution in APFEL++
+ */
+void MyGPDEvolution();
 
 /**
  * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point.

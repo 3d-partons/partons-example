@@ -48,8 +48,13 @@ find_package(NumA++ REQUIRED)
 # find libraries: PARTONS
 find_package(PARTONS REQUIRED)
 
+# find libraries: Apfel++
+find_package(Apfel++ REQUIRED)
+
 # directories containing headers 
-include_directories($(GSL_INCLUDE_DIRS) ${QT_INCLUDE_DIRS} ${SFML_INCLUDE_DIR} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR})
+include_directories($(GSL_INCLUDE_DIRS) ${QT_INCLUDE_DIRS}
+${SFML_INCLUDE_DIR} ${ElementaryUtils_INCLUDE_DIR}
+${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${Apfel++_INCLUDE_DIR})
 
 # FINALIZE ==================================================================================
 
@@ -77,18 +82,20 @@ add_executable(
 target_link_libraries(
 
         PARTONS_example
-        
+
         ${GSL_LIBRARIES}
-        
+
         ${QT_LIBRARIES}
 
 	${SFML_LIBRARIES}
 
         ${ElementaryUtils_LIBRARIES}
- 
+
         ${NumA++_LIBRARIES}
-        
-        ${PARTONS_LIBRARIES} 
+
+        ${PARTONS_LIBRARIES}
+
+        ${Apfel++_LIBRARIES}
 
 	Qt5::Core
 

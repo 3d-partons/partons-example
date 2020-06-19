@@ -35,6 +35,204 @@
 #include <partons/ServiceObjectRegistry.h>
 #include <partons/utils/type/PhysicalType.h>
 #include <partons/utils/type/PhysicalUnit.h>
+#include <apfel/apfelxx.h>
+
+//======================================================================================
+void MyGPDEvolution()
+{
+  // Retrieve GPD service
+  PARTONS::GPDService* pGPDService = PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
+
+  // Create GPD module with the BaseModuleFactory
+  PARTONS::GPDModule* pGPDModel = PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(PARTONS::GPDGK16::classId);
+
+  // Create GPD evolution module with the BaseModuleFactory
+  PARTONS::GPDEvolutionModule* pGPDEvolutionModel =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDEvolutionModule(PARTONS::GPDEvolutionVinnikov::classId);
+
+  // Create alphaS module with the BaseModuleFactory
+  PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModule =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(PARTONS::RunningAlphaStrongVinnikov::classId);
+
+  // Create active flavors thresholds module with the
+  // BaseModuleFactory
+  PARTONS::ActiveFlavorsThresholdsModule* pActiveFlavorsThresholdsModule =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newActiveFlavorsThresholdsModule(PARTONS::ActiveFlavorsThresholdsConstant::classId);
+
+  // ActiveFlavorsThresholdsConstant module allows you to set the
+  // desired nf value that will be constant during performing the
+  // evolution. Default value is nf = 3. You can change it in the
+  // following way, but you must be sure that both used GPD model and
+  // evolution routine can handle it.
+  static_cast<PARTONS::ActiveFlavorsThresholdsConstant*>(pActiveFlavorsThresholdsModule)->setNFlavors(3);
+
+  // Create parameters to configure later GPDEvolutionModule
+  ElemUtils::Parameters parameters;
+
+  // Number of steps in the factorization scale (i.e. set the number
+  // of steps in the integration over factorization scale). One step
+  // is a typical value for Vinnikov code
+  parameters.add(NumA::QuadratureIntegrator1D::PARAM_NAME_N, 10);
+
+  // PerturbativeQCD = LO
+  parameters.add(PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE, PARTONS::PerturbativeQCDOrderType::LO);
+
+  // Configure GPDEvolutionModule with previous parameters.
+  pGPDEvolutionModel->configure(parameters);
+
+  // Link modules (set physics assumptions of your computation)
+  pGPDEvolutionModel->setRunningAlphaStrongModule(pRunningAlphaStrongModule);
+  pGPDEvolutionModel->setActiveFlavorsModule(pActiveFlavorsThresholdsModule);
+  pGPDModel->setEvolQcdModule(pGPDEvolutionModel);
+
+  // Fixed values of skewness and the momentum transfer
+  const double xi = 0.2;
+  const double t  = -0.1;
+
+  // initial scale
+  const double mu0  = 2;
+  const double mu02 = mu0 * mu0;
+
+  // Alpha_s function
+  std::function<double(double const&)> Alphas = [=] (double const& mu) -> double{ return pRunningAlphaStrongModule->compute(pow(mu, 2)); };
+
+  // GPDs in the evolution basis
+  std::function<std::map<int, double>(double const&, double const&)> GPDs = [=] (double const& x, double const& muF) -> std::map<int, double>
+    {
+      // Compute results with PARTONS
+      const double muF2 = pow(muF, 2);
+      const PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(PARTONS::GPDKinematic{x, xi, t, muF2, muF2}, pGPDModel);
+
+      // Get H GPDs
+      const PARTONS::PartonDistribution d = gpdResult.getPartonDistributions().at(PARTONS::GPDType::H);
+
+      // Retrieve single distributions
+      const double Gluon  = x * d.getGluonDistribution().getGluonDistribution();
+      const double UPlus  = x * d.getListOfQuarkDistribution()[0].getQuarkDistributionPlus();
+      const double UMinus = x * d.getListOfQuarkDistribution()[0].getQuarkDistributionMinus();
+      const double DPlus  = x * d.getListOfQuarkDistribution()[1].getQuarkDistributionPlus();
+      const double DMinus = x * d.getListOfQuarkDistribution()[1].getQuarkDistributionMinus();
+      const double SPlus  = x * d.getListOfQuarkDistribution()[2].getQuarkDistributionPlus();
+      const double SMinus = x * d.getListOfQuarkDistribution()[2].getQuarkDistributionMinus();
+
+      // Construct evolution basis
+      const double Singlet = UPlus + DPlus + SPlus;
+      const double Valence = UMinus + DMinus + SMinus;
+      const double T3      = UPlus - DPlus;
+      const double V3      = UMinus - DMinus;
+      const double T8      = UPlus + DPlus - 2 * SPlus;
+      const double V8      = UMinus + DMinus - 2 * SMinus;
+
+      // Fill in map in the QCD evolution basis.
+      std::map<int, double> QCDEvMap;
+      QCDEvMap[0]  = Gluon;
+      QCDEvMap[1]  = Singlet;
+      QCDEvMap[2]  = Valence;
+      QCDEvMap[3]  = T3;
+      QCDEvMap[4]  = V3;
+      QCDEvMap[5]  = T8;
+      QCDEvMap[6]  = V8;
+      QCDEvMap[7]  = Singlet;
+      QCDEvMap[8]  = Valence;
+      QCDEvMap[9]  = Singlet;
+      QCDEvMap[10] = Valence;
+      QCDEvMap[11] = Singlet;
+      QCDEvMap[12] = Valence;
+
+      return QCDEvMap;
+    };
+
+  // Set verbosity level of APFEL++ to minimum
+  apfel::SetVerbosityLevel(0);
+
+  // APFEL++ x-space grid
+  const apfel::Grid g{{apfel::SubGrid{200, 1e-3, 3}, apfel::SubGrid{200, 2e-1, 3}, apfel::SubGrid{200, 4e-1, 3}, apfel::SubGrid{200, 8e-1, 3}}};
+
+  // Vector of thresholds (3-flavour scheme)
+  const std::vector<double> Thresholds = {0, 0, 0};
+
+  // Perturbative order
+  const int PerturbativeOrder = 0;
+
+  // Initialize GPD evolution objects
+  const auto GpdObj = apfel::InitializeGpdObjects(g, Thresholds, xi);
+
+  // Also initialise DGLAP objects for checking purposes
+  const auto DglapObj = apfel::InitializeDglapObjectsQCD(g, Thresholds);
+
+  // Construct the DGLAP objects
+  const auto EvolvedGPDs = BuildDglap(GpdObj, GPDs, mu0, PerturbativeOrder, Alphas);
+  const auto EvolvedPDFs = BuildDglap(DglapObj, GPDs, mu0, 1, Alphas);
+
+  // Tabulate GPDs
+  const apfel::TabulateObject<apfel::Set<apfel::Distribution>> TabulatedGPDs{*EvolvedGPDs, 50, 1, 10, 3};
+  const apfel::TabulateObject<apfel::Set<apfel::Distribution>> TabulatedPDFs{*EvolvedPDFs, 50, 1, 10, 3};
+
+  // Final scale
+  const double mu  = 3;
+  const double mu2 = pow(mu, 2);
+
+  // Evolve GPDs and PDFs to the final Scale and rotate them to the physical
+  // basis
+  const std::map<int, apfel::Distribution> gpds = apfel::QCDEvToPhys(EvolvedGPDs->Evaluate(mu).GetObjects());
+  const std::map<int, apfel::Distribution> pdfs = apfel::QCDEvToPhys(EvolvedPDFs->Evaluate(mu).GetObjects());
+
+  // Test Values of x
+  const int nx = 500;
+  const double xmin = 1e-3;
+  const double xmax = 0.9;
+  const double xstp = exp( log(xmax / xmin) / ( nx - 1 ) );
+  std::vector<double> xlha;
+
+  // Initialise list of kinematic configurations
+  PARTONS::List<PARTONS::GPDKinematic> gpdKinematicList;
+  for (double x = xmin; x <= xmax; x *= xstp)
+    {
+      gpdKinematicList.add(PARTONS::GPDKinematic{x, xi, t, mu2, mu2});
+      xlha.push_back(x);
+    }
+
+  // Run computation
+  PARTONS::List<PARTONS::GPDResult> gpdResultList = pGPDService->computeManyKinematic(gpdKinematicList, pGPDModel);
+
+  // Print results
+  std::cout << std::scientific << "\n";
+  for (int i = 0; i < (int) xlha.size(); i++)
+    {
+      // Get H GPDs
+      const PARTONS::PartonDistribution f = gpdResultList[i].getPartonDistributions().at(PARTONS::GPDType::H);
+
+      // Print results
+      //std::cout.precision(1);
+      std::cout << mu << "  ";
+      std::cout << xlha[i] << "  ";
+      //std::cout.precision(4);
+      std::cout << pdfs.at(1).Evaluate(xlha[i]) - pdfs.at(-1).Evaluate(xlha[i])<< "  "
+		<< gpds.at(1).Evaluate(xlha[i]) - gpds.at(-1).Evaluate(xlha[i])<< "  "
+		<< xlha[i] * f.getListOfQuarkDistribution()[1].getQuarkDistributionMinus() << "  "
+		<< pdfs.at(1).Evaluate(xlha[i]) + pdfs.at(-1).Evaluate(xlha[i])<< "  "
+		<< gpds.at(1).Evaluate(xlha[i]) + gpds.at(-1).Evaluate(xlha[i])<< "  "
+		<< xlha[i] * f.getListOfQuarkDistribution()[1].getQuarkDistributionPlus() << "  "
+                << std::endl;
+    }
+
+  // Print results
+  //PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__, gpdResultList.toString());
+
+  // Remove pointer references. Module pointers are managed by PARTONS
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pActiveFlavorsThresholdsModule, 0);
+  pGPDModel = 0;
+
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModule, 0);
+  pGPDModel = 0;
+
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pGPDEvolutionModel, 0);
+  pGPDModel = 0;
+
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pGPDModel, 0);
+  pGPDModel = 0;
+}
+//======================================================================================
 
 void computeSingleKinematicsForGPD() {
 
@@ -425,85 +623,74 @@ void changeIntegrationRoutine() {
     pGPDModel = 0;
 }
 
-void makeUseOfGPDEvolution() {
+void makeUseOfGPDEvolution()
+{
+  // Retrieve GPD service
+  PARTONS::GPDService* pGPDService = PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
 
-    // Retrieve GPD service
-    PARTONS::GPDService* pGPDService =
-            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
+  // Create GPD module with the BaseModuleFactory
+  PARTONS::GPDModule* pGPDModel = PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(PARTONS::GPDGK16::classId);
 
-    // Create GPD module with the BaseModuleFactory
-    PARTONS::GPDModule* pGPDModel =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                    PARTONS::GPDGK16::classId);
+  // Create GPD evolution module with the BaseModuleFactory
+  PARTONS::GPDEvolutionModule* pGPDEvolutionModel =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDEvolutionModule(PARTONS::GPDEvolutionVinnikov::classId);
 
-    // Create GPD evolution module with the BaseModuleFactory
-    PARTONS::GPDEvolutionModule* pGPDEvolutionModel =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDEvolutionModule(
-                    PARTONS::GPDEvolutionVinnikov::classId);
+  // Create alphaS module with the BaseModuleFactory
+  PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModule =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(PARTONS::RunningAlphaStrongVinnikov::classId);
 
-    // Create alphaS module with the BaseModuleFactory
-    PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(
-                    PARTONS::RunningAlphaStrongVinnikov::classId);
+  // Create active flavors thresholds module with the
+  // BaseModuleFactory
+  PARTONS::ActiveFlavorsThresholdsModule* pActiveFlavorsThresholdsModule =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newActiveFlavorsThresholdsModule(PARTONS::ActiveFlavorsThresholdsConstant::classId);
 
-    // Create active flavors thresholds module with the BaseModuleFactory
-    PARTONS::ActiveFlavorsThresholdsModule* pActiveFlavorsThresholdsModule =
-            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newActiveFlavorsThresholdsModule(
-                    PARTONS::ActiveFlavorsThresholdsConstant::classId);
+  // ActiveFlavorsThresholdsConstant module allows you to set the
+  // desired nf value that will be constant during performing the
+  // evolution. Default value is nf = 3. You can change it in the
+  // following way, but you must be sure that both used GPD model and
+  // evolution routine can handle it.
+  static_cast<PARTONS::ActiveFlavorsThresholdsConstant*>(pActiveFlavorsThresholdsModule)->setNFlavors(3);
 
-    // ActiveFlavorsThresholdsConstant module allows you to set the desired nf value that will be constant during performing the evolution.
-    // Default value is nf = 3. You can change it in the following way, but you must be sure that both used GPD model and evolution routine can handle it.
-    static_cast<PARTONS::ActiveFlavorsThresholdsConstant*>(pActiveFlavorsThresholdsModule)->setNFlavors(
-            3);
+  // Create parameters to configure later GPDEvolutionModule
+  ElemUtils::Parameters parameters;
 
-    // Create parameters to configure later GPDEvolutionModule
-    ElemUtils::Parameters parameters;
+  // Number of steps in the factorization scale (i.e. set the number
+  // of steps in the integration over factorization scale). One step
+  // is a typical value for Vinnikov code
+  parameters.add(NumA::QuadratureIntegrator1D::PARAM_NAME_N, 10);
 
-    // Number of steps in the factorization scale (i.e. set the number of steps in the integration over factorization scale)
-    // One step is a typical value for Vinnikov code
-    parameters.add(NumA::QuadratureIntegrator1D::PARAM_NAME_N, 2);
+  // PerturbativeQCD = LO
+  parameters.add(PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE, PARTONS::PerturbativeQCDOrderType::LO);
 
-    // PerturbativeQCD = LO
-    parameters.add(
-            PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-            PARTONS::PerturbativeQCDOrderType::LO);
+  // Configure GPDEvolutionModule with previous parameters.
+  pGPDEvolutionModel->configure(parameters);
 
-    // Configure GPDEvolutionModule with previous parameters.
-    pGPDEvolutionModel->configure(parameters);
+  // Link modules (set physics assumptions of your computation)
+  pGPDEvolutionModel->setRunningAlphaStrongModule(pRunningAlphaStrongModule);
+  pGPDEvolutionModel->setActiveFlavorsModule(pActiveFlavorsThresholdsModule);
+  pGPDModel->setEvolQcdModule(pGPDEvolutionModel);
 
-    // Link modules (set physics assumptions of your computation)
-    pGPDEvolutionModel->setRunningAlphaStrongModule(pRunningAlphaStrongModule);
-    pGPDEvolutionModel->setActiveFlavorsModule(pActiveFlavorsThresholdsModule);
-    pGPDModel->setEvolQcdModule(pGPDEvolutionModel);
+  // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+  PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 20., 20.);
 
-    // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
-    PARTONS::GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 40., 40.);
+  // Run computation
+  PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(gpdKinematic, pGPDModel);
 
-    // Run computation
-    PARTONS::GPDResult gpdResult = pGPDService->computeSingleKinematic(
-            gpdKinematic, pGPDModel);
+  // Print results
+  PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__, gpdResult.toString());
 
-    // Print results
-    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
-            gpdResult.toString());
+  // Remove pointer references. Module pointers are managed by PARTONS
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pActiveFlavorsThresholdsModule, 0);
+  pGPDModel = 0;
 
-    // Remove pointer references
-    // Module pointers are managed by PARTONS
-    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
-            pActiveFlavorsThresholdsModule, 0);
-    pGPDModel = 0;
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModule, 0);
+  pGPDModel = 0;
 
-    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
-            pRunningAlphaStrongModule, 0);
-    pGPDModel = 0;
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pGPDEvolutionModel, 0);
+  pGPDModel = 0;
 
-    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
-            pGPDEvolutionModel, 0);
-    pGPDModel = 0;
-
-    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
-            pGPDModel, 0);
-    pGPDModel = 0;
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pGPDModel, 0);
+  pGPDModel = 0;
 }
 
 void selectSpecificGPDTypes() {
