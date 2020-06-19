@@ -4,10 +4,17 @@
 // ******************************************************
 // GPD EXAMPLES *****************************************
 // ******************************************************
+
 /**
- * My test code for the benchmark of the GPD evolution in APFEL++
+ * Test code for the benchmark of the GPD evolution in APFEL++
  */
 void MyGPDEvolution();
+
+/**
+ * Code for testing the modules for the evolution of alphaS provided
+ * by PARTONS.
+ */
+void computeRunningAlphaS();
 
 /**
  * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point.

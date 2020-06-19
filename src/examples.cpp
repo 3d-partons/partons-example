@@ -22,7 +22,9 @@
 #include <partons/modules/gpd/GPDGK16Numerical.h>
 #include <partons/modules/observable/DVCS/asymmetry/DVCSAllMinus.h>
 #include <partons/modules/process/DVCS/DVCSProcessGV08.h>
+#include <partons/modules/running_alpha_strong/RunningAlphaStrongStandard.h>
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongVinnikov.h>
+#include <partons/modules/running_alpha_strong/RunningAlphaStrongApfel.h>
 #include <partons/modules/scales/DVCS/DVCSScalesQ2Multiplier.h>
 #include <partons/modules/xi_converter/DVCS/DVCSXiConverterXBToXi.h>
 #include <partons/ModuleObjectFactory.h>
@@ -37,7 +39,34 @@
 #include <partons/utils/type/PhysicalUnit.h>
 #include <apfel/apfelxx.h>
 
-//======================================================================================
+void computeRunningAlphaS()
+{
+  // Create alphaS module for the standard evolution
+  PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModuleStd =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(PARTONS::RunningAlphaStrongStandard::classId);
+
+  // Create alphaS module for the Vinnikov evolution
+  PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModuleVnk =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(PARTONS::RunningAlphaStrongVinnikov::classId);
+
+  // Create alphaS module for the APFEL++ evolution
+  PARTONS::RunningAlphaStrongModule* pRunningAlphaStrongModuleApf =
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->newRunningAlphaStrongModule(PARTONS::RunningAlphaStrongApfel::classId);
+
+  // Set scale
+  const double Mu2 = 10;
+
+  std::cout << "\nStandard Module: " << pRunningAlphaStrongModuleStd->compute(Mu2) << std::endl;
+  std::cout << "Vinnikov Module: " << pRunningAlphaStrongModuleVnk->compute(Mu2) << std::endl;
+  std::cout << "APFEL++ Module:  " << pRunningAlphaStrongModuleApf->compute(Mu2) << std::endl;
+  std::cout << "\n";
+
+  // Reset pointers
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModuleStd, 0);
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModuleVnk, 0);
+  PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModuleApf, 0);
+}
+
 void MyGPDEvolution()
 {
   // Retrieve GPD service
@@ -232,7 +261,6 @@ void MyGPDEvolution()
   PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pGPDModel, 0);
   pGPDModel = 0;
 }
-//======================================================================================
 
 void computeSingleKinematicsForGPD() {
 
