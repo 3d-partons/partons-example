@@ -67,6 +67,11 @@ void computeRunningAlphaS()
   PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(pRunningAlphaStrongModuleApf, 0);
 }
 
+void computeGPDEvolution()
+{
+
+}
+
 void MyGPDEvolution()
 {
   // Retrieve GPD service

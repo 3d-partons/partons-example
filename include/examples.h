@@ -17,6 +17,12 @@ void MyGPDEvolution();
 void computeRunningAlphaS();
 
 /**
+ * Code for testing the modules for the evolution of GPDs provided
+ * by PARTONS.
+ */
+void computeGPDEvolution();
+
+/**
  * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point.
  * The result of this function is printed out to the standard output.
  * These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
