@@ -25,7 +25,14 @@ This scenario demonstrates a simple task as the evaluation of GPD model in a sin
       <computation_configuration>
 
          <!-- Select GPD model -->
-         <module type="GPDModule" name="GPDGK16">
+         <module type="GPDModule" name="GPDMPSSW13">
+
+            <!-- Indicate name of the LHAPDF set -->
+            <param name="setName" value="MSTW2008nlo68cl" />
+
+	    <!-- Select member index -->
+            <param name="member" value="0" />
+
          </module>
 
       </computation_configuration>
