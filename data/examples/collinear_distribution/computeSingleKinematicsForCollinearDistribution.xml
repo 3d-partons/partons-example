@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 
 <!--
-This scenario demonstrates a simple task as the evaluation of a collinear distribution in a single kinematic point using LHAPDF. The result of this scenario is printed out to the standard output. These are the values for all defined distributions. 
+This scenario demonstrates a simple task as the evaluation of a
+collinear distribution in a single kinematic point using LHAPDF. The
+result of this scenario is printed out to the standard output. These
+are the values for all defined distributions. 
 -->
 
 <!-- Scenario starts here -->
 <!-- For your convenience and for bookkeeping provide creation date and unique description -->
-<scenario date="2020-07-18" description="Collienear distribution evaluation for single kinematics example using LHAPDF">
+<scenario date="2020-07-18" description="Collinear distribution evaluation for single kinematics example using LHAPDF">
 
    <!-- First task: evaluate CollinearDistribution model for a single kinematics --> 
    <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
@@ -26,10 +29,13 @@ This scenario demonstrates a simple task as the evaluation of a collinear distri
          <module type="CollinearDistributionModule" name="CollinearDistributionLHAPDF">
 
             <!-- Indicate name of the LHAPDF set -->
-            <param name="setName" value="MMHT2014nlo68cl" />
+            <param name="setName" value="CT14nnlo" />
 
 	    <!-- Select member index -->
-            <param name="member" value="2" />
+            <param name="member" value="0" />
+
+	    <!-- Declare distrubution type -->
+            <param name="collinear_distribution_type" value="UnpolPDF"/>
 
          </module>
 
