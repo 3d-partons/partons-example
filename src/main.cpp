@@ -12,8 +12,8 @@ int main(int argc, char** argv)
   pPartons->init(argc, argv);
 
   // My code
-  computeRunningAlphaS();
-  //MyGPDEvolution();
+  //computeRunningAlphaS();
+  MyGPDEvolution();
   //makeUseOfGPDEvolution();
 
   // Report results and close PARTONS application properly
