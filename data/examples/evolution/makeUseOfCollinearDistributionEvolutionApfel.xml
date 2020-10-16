@@ -39,7 +39,7 @@ calculation of CFFs or observables.
             <param name="member" value="0" />
 
 	    <!-- Declare distrubution type -->
-            <param name="collinear_distribution_type" value="UnpolPDF"/>
+            <param name="setType" value="UnpolPDF"/>
 
 	    <!-- Select collinear distribution evolution model -->
             <module type="CollinearDistributionEvolutionModule" name="CollinearDistributionEvolutionApfel">
