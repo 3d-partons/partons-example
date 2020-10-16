@@ -35,7 +35,7 @@ are the values for all defined distributions.
             <param name="member" value="0" />
 
 	    <!-- Declare distrubution type -->
-            <param name="collinear_distribution_type" value="UnpolPDF"/>
+            <param name="setType" value="UnpolPDF"/>
 
          </module>
 
