@@ -31,12 +31,6 @@ are the values for all defined distributions.
             <!-- Indicate name of the LHAPDF set -->
             <param name="setName" value="CT14nnlo" />
 
-	    <!-- Select member index -->
-            <param name="member" value="0" />
-
-	    <!-- Declare distrubution type -->
-            <param name="setType" value="UnpolPDF"/>
-
          </module>
 
       </computation_configuration>
