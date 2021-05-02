@@ -1,0 +1,15 @@
+# environment_configuration.dat
+# The content of this file is stored in the database during the insertion of data,
+# so latter one can easily reproduce the used computational environment.
+
+system: @CMAKE_SYSTEM_NAME@ @CMAKE_SYSTEM_VERSION@
+g++: @CMAKE_CXX_COMPILER_ID@ @CMAKE_CXX_COMPILER_VERSION@
+qt: @Qt5Core_VERSION@
+smfl: @SFML_VERSION@
+cln: @CLN_VERSION@
+gsl: @GSL_VERSION@
+apfel++: @Apfel++_VERSION@
+lhapdf: @LHAPDF_VERSION@
+elementary-utils: @ELEMUTILS_BRANCH@/@ELEMUTILS_REVISION@
+numa: @NUMA_BRANCH@/@NUMA_REVISION@
+partons: @PARTONS_BRANCH@/@PARTONS_REVISION@

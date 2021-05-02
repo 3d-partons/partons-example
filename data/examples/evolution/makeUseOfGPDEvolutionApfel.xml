@@ -52,7 +52,7 @@ calculation of CFFs or observables.
 
 	       <!-- Select alpha_s model -->
                <module type="RunningAlphaStrongModule" name="RunningAlphaStrongApfel">
-                  <param name="qcd_order_type" value="NNLO" />
+                  <param name="qcd_order_type" value="LO" />
 		  <param name="alphasRef" value="0.118" />
 		  <param name="muRef" value="91.1876" />
 		  <param name="thresholds" value="0 0 0 1.3 4.75 172" />
