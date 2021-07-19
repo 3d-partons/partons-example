@@ -7,29 +7,40 @@
 #include <NumA/integration/one_dimension/QuadratureIntegrator1D.h>
 #include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
 #include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/convol_coeff_function/DVMP/DVMPConvolCoeffFunctionKinematic.h>
 #include <partons/beans/gpd/GPDKinematic.h>
 #include <partons/beans/gpd/GPDType.h>
 #include <partons/beans/KinematicUtils.h>
 #include <partons/beans/List.h>
+#include <partons/beans/MesonPolarization.h>
+#include <partons/beans/MesonType.h>
 #include <partons/beans/observable/DVCS/DVCSObservableKinematic.h>
+#include <partons/beans/observable/DVMP/DVMPObservableKinematic.h>
 #include <partons/beans/observable/ObservableResult.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsConstant.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
+#include <partons/modules/convol_coeff_function/DVMP/DVMPCFFGK06.h>
 #include <partons/modules/evolution/gpd/GPDEvolutionVinnikov.h>
-#include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/gpd/GPDGK16Numerical.h>
+#include <partons/modules/gpd/GPDGK19.h>
 #include <partons/modules/observable/DVCS/asymmetry/DVCSAllMinus.h>
+#include <partons/modules/observable/DVMP/cross_section/DVMPCrossSectionUUMinusPi0.h>
 #include <partons/modules/process/DVCS/DVCSProcessGV08.h>
+#include <partons/modules/process/DVMP/DVMPProcessGK06.h>
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongVinnikov.h>
 #include <partons/modules/scales/DVCS/DVCSScalesQ2Multiplier.h>
+#include <partons/modules/scales/DVMP/DVMPScalesQ2Multiplier.h>
 #include <partons/modules/xi_converter/DVCS/DVCSXiConverterXBToXi.h>
+#include <partons/modules/xi_converter/DVMP/DVMPXiConverterXBToXi.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <partons/services/ConvolCoeffFunctionService.h>
 #include <partons/services/DVCSConvolCoeffFunctionService.h>
 #include <partons/services/DVCSObservableService.h>
+#include <partons/services/DVMPConvolCoeffFunctionService.h>
+#include <partons/services/DVMPObservableService.h>
 #include <partons/services/GPDService.h>
 #include <partons/services/ObservableService.h>
 #include <partons/ServiceObjectRegistry.h>
@@ -193,6 +204,75 @@ void computeManyKinematicsForDVCSComptonFormFactor() {
     PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pDVCSCFFModule, 0);
     pDVCSCFFModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModule, 0);
+    pGPDModule = 0;
+}
+
+void computeSingleKinematicsForDVMPComptonFormFactor() {
+
+    // Retrieve service
+    PARTONS::DVMPConvolCoeffFunctionService* pDVMPConvolCoeffFunctionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVMPConvolCoeffFunctionService();
+
+    // Create GPD module with the BaseModuleFactory
+    PARTONS::GPDModule* pGPDModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDGK19::classId);
+
+    // Create CFF module with the BaseModuleFactory
+    PARTONS::DVMPConvolCoeffFunctionModule* pDVMPCFFModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPConvolCoeffFunctionModule(
+                    PARTONS::DVMPCFFGK06::classId);
+
+    // Create parameters to configure later DVMPCFFModel with PerturbativeQCD = LO
+    ElemUtils::Parameters parameters;
+
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+                    PARTONS::PerturbativeQCDOrderType::LO));
+
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_NWARMUP,
+                    10000));
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_NCALLS,
+                    100000));
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_CHI2LIMIT,
+                    0.8));
+
+    // Configure DVMPCFFModule with previous parameters.
+    pDVMPCFFModule->configure(parameters);
+
+    // Link modules (set physics assumptions of your computation)
+    pDVMPCFFModule->setGPDModule(pGPDModule);
+
+    // Create kinematic
+    PARTONS::DVMPConvolCoeffFunctionKinematic cffKinematic =
+            PARTONS::DVMPConvolCoeffFunctionKinematic(0.01, -0.1, 4., 4., 4.,
+                    PARTONS::MesonType::PI0,
+                    PARTONS::MesonPolarization::UNDEFINED);
+
+    // Run computation
+    PARTONS::DVMPConvolCoeffFunctionResult cffResult =
+            pDVMPConvolCoeffFunctionService->computeSingleKinematic(
+                    cffKinematic, pDVMPCFFModule);
+
+    // Print results for DVMPCFFModule
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            cffResult.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pDVMPCFFModule, 0);
+    pDVMPCFFModule = 0;
 
     PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModule, 0);
@@ -372,6 +452,120 @@ void computeManyKinematicsForDVCSObservable() {
     PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pDVCSCFFModel, 0);
     pDVCSCFFModel = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pXiConverterModule, 0);
+    pXiConverterModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pScalesModule, 0);
+    pScalesModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pProcessModule, 0);
+    pProcessModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pObservable, 0);
+    pObservable = 0;
+}
+
+void computeSingleKinematicsForDVMPObservable() {
+
+    // Retrieve Observable service
+    PARTONS::DVMPObservableService* pObservableService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVMPObservableService();
+
+    // Create GPDModule
+    PARTONS::GPDModule* pGPDModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDGK19::classId);
+
+    // Create CFF module with the BaseModuleFactory
+    PARTONS::DVMPConvolCoeffFunctionModule* pDVMPCFFModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPConvolCoeffFunctionModule(
+                    PARTONS::DVMPCFFGK06::classId);
+
+    // Create parameters to configure later DVMPCFFModel with PerturbativeQCD = LO
+    ElemUtils::Parameters parameters;
+
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+                    PARTONS::PerturbativeQCDOrderType::LO));
+
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_NWARMUP,
+                    10000));
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_NCALLS,
+                    100000));
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPCFFGK06::PARAMETER_NAME_DVMPCFFGK06_MC_CHI2LIMIT,
+                    0.8));
+
+    // Configure DVMPCFFModule with previous parameters.
+    pDVMPCFFModule->configure(parameters);
+
+    // Create XiConverterModule
+    PARTONS::DVMPXiConverterModule* pXiConverterModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPXiConverterModule(
+                    PARTONS::DVMPXiConverterXBToXi::classId);
+
+    // Create ScalesModule
+    PARTONS::DVMPScalesModule* pScalesModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPScalesModule(
+                    PARTONS::DVMPScalesQ2Multiplier::classId);
+
+    // Set its lambda parameter, so MuF2 = MuR2 = lambda * Q2
+    pScalesModule->configure(
+            ElemUtils::Parameter(
+                    PARTONS::DVMPScalesQ2Multiplier::PARAMETER_NAME_LAMBDA,
+                    1.));
+
+    // Create ProcessModule
+    PARTONS::DVMPProcessModule* pProcessModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPProcessModule(
+                    PARTONS::DVMPProcessGK06::classId);
+
+    // Create Observable
+    PARTONS::DVMPObservable* pObservable =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPObservable(
+                    PARTONS::DVMPCrossSectionUUMinusPi0::classId);
+
+    // Link modules (set physics assumptions of your computation)
+    pObservable->setProcessModule(pProcessModule);
+    pProcessModule->setScaleModule(pScalesModule);
+    pProcessModule->setXiConverterModule(pXiConverterModule);
+    pProcessModule->setConvolCoeffFunctionModule(pDVMPCFFModule);
+    pDVMPCFFModule->setGPDModule(pGPDModule);
+
+    // Load list of kinematics from file
+    PARTONS::DVMPObservableKinematic observableKinematic =
+            PARTONS::DVMPObservableKinematic(0.2, -0.1, 2., 6., 0.,
+                    PARTONS::MesonType::PI0);
+
+    // Create kinematic
+    PARTONS::DVMPObservableResult observableResult =
+            pObservableService->computeSingleKinematic(observableKinematic,
+                    pObservable);
+
+    // Print results
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            observableResult.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModule, 0);
+    pGPDModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pDVMPCFFModule, 0);
+    pDVMPCFFModule = 0;
 
     PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pXiConverterModule, 0);

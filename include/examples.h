@@ -39,6 +39,13 @@ void computeSingleKinematicsForDVCSComptonFormFactor();
  */
 void computeManyKinematicsForDVCSComptonFormFactor();
 
+/**
+ * This function demonstrates a simple task as the evaluation of DVMP Compton Form Factors (CFF) in a single kinematic point.
+ * The result of this function is printed out to the standard output.
+ * These are CFF values for all GPD types defined in the selected GPD model.
+ */
+void computeSingleKinematicsForDVMPComptonFormFactor();
+
 // ******************************************************
 // OBSERVABLE EXAMPLES **********************************
 // ******************************************************
@@ -55,6 +62,12 @@ void computeSingleKinematicsForDVCSObservable();
  * The result of this function is printed out to the standard output.
  */
 void computeManyKinematicsForDVCSObservable();
+
+/**
+ * This function demonstrates a simple task as the evaluation of DVMP observable in a single kinematic point.
+ * The result of this function is printed out to the standard output.
+ */
+void computeSingleKinematicsForDVMPObservable();
 
 // ******************************************************
 // OTHER ************************************************
@@ -74,19 +87,19 @@ void computeManyKinematicsForDVCSObservable();
 void changeIntegrationRoutine();
 
 /**
-* This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point making use of GPD evolution.
-* The result of this function is printed out to the standard output.
-* These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
-* Note that you can use this example to include the GPD evolution in the evaluation of CFFs and observables.
-*/
+ * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point making use of GPD evolution.
+ * The result of this function is printed out to the standard output.
+ * These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
+ * Note that you can use this example to include the GPD evolution in the evaluation of CFFs and observables.
+ */
 void makeUseOfGPDEvolution();
 
 /**
-* This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point for specific GPD types only.
-* The result of this function is printed out to the standard output.
-* These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
-* Note that you can use this example to select specific GPD types in the evaluation of CFFs and observables.
-*/
+ * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point for specific GPD types only.
+ * The result of this function is printed out to the standard output.
+ * These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
+ * Note that you can use this example to select specific GPD types in the evaluation of CFFs and observables.
+ */
 void selectSpecificGPDTypes();
 
 /**
