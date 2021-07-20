@@ -40,7 +40,7 @@ else (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 
   include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(NumA++ DEFAULT_MSG NumA++_INCLUDE_DIR NumA++_LIBRARIES)
+  find_package_handle_standard_args(NumA++ DEFAULT_MSG NumA++_LIBRARIES)
 
 endif(NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
 

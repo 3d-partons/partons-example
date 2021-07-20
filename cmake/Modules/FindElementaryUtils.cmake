@@ -36,7 +36,7 @@ else (ElementaryUtils_INCLUDE_DIR AND ElementaryUtils_LIBRARIES)
                      PATH_SUFFIXES lib/PARTONS lib64/PARTONS bin/PARTONS lib lib64 bin)
 
   include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(ElementaryUtils DEFAULT_MSG ElementaryUtils_INCLUDE_DIR ElementaryUtils_LIBRARIES)
+  find_package_handle_standard_args(ElementaryUtils DEFAULT_MSG ElementaryUtils_LIBRARIES)
 
 endif(ElementaryUtils_INCLUDE_DIR AND ElementaryUtils_LIBRARIES)
 

@@ -26,7 +26,7 @@
 #include <partons/modules/gpd/GPDGK16Numerical.h>
 #include <partons/modules/gpd/GPDGK19.h>
 #include <partons/modules/observable/DVCS/asymmetry/DVCSAllMinus.h>
-#include <partons/modules/observable/DVMP/cross_section/DVMPCrossSectionUUMinusPi0.h>
+#include <partons/modules/observable/DVMP/cross_section/DVMPCrossSectionUUUMinus.h>
 #include <partons/modules/process/DVCS/DVCSProcessGV08.h>
 #include <partons/modules/process/DVMP/DVMPProcessGK06.h>
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongVinnikov.h>
@@ -534,7 +534,7 @@ void computeSingleKinematicsForDVMPObservable() {
     // Create Observable
     PARTONS::DVMPObservable* pObservable =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVMPObservable(
-                    PARTONS::DVMPCrossSectionUUMinusPi0::classId);
+                    PARTONS::DVMPCrossSectionUUUMinus::classId);
 
     // Link modules (set physics assumptions of your computation)
     pObservable->setProcessModule(pProcessModule);
