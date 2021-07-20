@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!--
+This scenario demonstrates a simple task as the evaluation of
+GPD model in a single kinematic point making use of GPD
+evolution. The result of this scenario is
+printed out to the standard output. These are the values for all
+defined in the GPD models, including singlet and
+non-singlet combinations for quarks. Note that you can use this way of
+configuration to include the GPD evolution in any
+calculation of CFFs or observables.
+-->
+
+<!-- Scenario starts here -->
+<!-- For your convenience and for bookkeeping provide creation date and unique description -->
+<scenario date="2020-07-27" description="GPD evaluation for single kinematics example with evolution">
+
+   <!-- First task: evaluate GPD model for a single kinematics --> 
+   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
+   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+
+      <!-- Define GPD kinematics -->
+      <kinematics type="GPDKinematic">
+         <param name="x" value="0.1" />
+         <param name="xi" value="0.2" />
+         <param name="t" value="-0.1" />
+         <param name="MuF2" value="40." />
+         <param name="MuR2" value="40." />
+      </kinematics>
+
+      <!-- Define physics assumptions -->
+       <computation_configuration>
+
+         <!-- Select GPD model -->
+         <module type="GPDModule" name="GPDGK16">
+
+	    <!-- Select GPD evolution model -->
+            <module type="GPDEvolutionModule" name="GPDEvolutionApfel">
+
+               <param name="muF2Ref" value="1.677025" />
+               <param name="qcd_order_type" value="LO" />
+               <param name="collinear_distribution_type" value="UnpolPDF" />
+               <param name="thresholds" value="0 0 0 1.3 4.75 172" />
+               <param name="masses" value="0 0 0 1.3 4.75 172" />
+               <param name="subgridNodes" value="100 60 50 50" />
+               <param name="subgridLowerBounds" value="0.0001 0.1 0.6 0.8" />
+               <param name="subgridInterDegrees" value="3 3 3 3" />
+	       <param name="tabNodes" value="100" />
+	       <param name="tabLowerBound" value="1" />
+	       <param name="tabUpperBound" value="1000" />
+	       <param name="tabInterDegree" value="3" />
+
+	       <!-- Select alpha_s model -->
+               <module type="RunningAlphaStrongModule" name="RunningAlphaStrongApfel">
+                  <param name="qcd_order_type" value="LO" />
+		  <param name="alphasRef" value="0.118" />
+		  <param name="muRef" value="91.1876" />
+		  <param name="thresholds" value="0 0 0 1.3 4.75 172" />
+		  <param name="masses" value="0 0 0 1.3 4.75 172" />
+		  <param name="tabNodes" value="100" />
+		  <param name="tabLowerBound" value="0.5" />
+		  <param name="tabUpperBound" value="1000" />
+		  <param name="tabInterDegree" value="3" />
+               </module>
+
+	       <!-- Select model defining number of active flavors -->	
+               <module type="ActiveFlavorsThresholdsModule" name="ActiveFlavorsThresholdsQuarkMasses">
+               </module>
+
+            </module>
+
+         </module>
+
+      </computation_configuration>
+
+   </task>
+
+   <!-- Second task: print results of the last computation into standard output --> 
+   <task service="GPDService" method="printResults">
+   </task>
+
+</scenario>

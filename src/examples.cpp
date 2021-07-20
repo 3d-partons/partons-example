@@ -46,6 +46,38 @@
 #include <partons/ServiceObjectRegistry.h>
 #include <partons/utils/type/PhysicalType.h>
 #include <partons/utils/type/PhysicalUnit.h>
+#include <partons/modules/collinear_distribution/CollinearDistributionLHAPDF.h>
+#include <partons/services/CollinearDistributionService.h>
+
+void computeSingleKinematicsForCollinearDistribution() {
+
+    // Retrieve CollinearDistribution service
+    PARTONS::CollinearDistributionService* pCollinearDistributionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getCollinearDistributionService();
+
+    // Create CollinearDistribution module with the BaseModuleFactory
+    PARTONS::CollinearDistributionModule* pCollinearDistributionModel =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newCollinearDistributionModule(
+                    PARTONS::CollinearDistributionLHAPDF::classId);
+
+    // Create a CollinearDistributionKinematic(x, MuF2, MuR2) to compute
+    PARTONS::CollinearDistributionKinematic colldistKinematic(0.1, 2., 2.);
+
+    // Run computation
+    PARTONS::CollinearDistributionResult colldistResult =
+            pCollinearDistributionService->computeSingleKinematic(
+                    colldistKinematic, pCollinearDistributionModel);
+
+    // Print results
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            colldistResult.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pCollinearDistributionModel, 0);
+    pCollinearDistributionModel = 0;
+}
 
 void computeSingleKinematicsForGPD() {
 
