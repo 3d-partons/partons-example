@@ -89,6 +89,25 @@ find_package(LHAPDF REQUIRED)
 # directories containing headers 
 include_directories(${QT_INCLUDE_DIRS} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${SFML_INCLUDE_DIR} ${CLN_INCLUDE_DIR} $(GSL_INCLUDE_DIRS) ${Apfel++_INCLUDE_DIR} ${LHAPDF_INCLUDE_DIR})
 
+# ENVIRONMENT VARIABLES ========================================================================
+
+execute_process(COMMAND bash -c "cd ../../elementary-utils/; git branch | grep '\*' | cut -d ' ' -f2" OUTPUT_VARIABLE ELEMUTILS_BRANCH)
+execute_process(COMMAND bash -c "cd ../../elementary-utils/; git rev-parse HEAD;"             OUTPUT_VARIABLE ELEMUTILS_REVISION)
+string(REGEX REPLACE "\n$" "" ELEMUTILS_BRANCH "${ELEMUTILS_BRANCH}")
+string(REGEX REPLACE "\n$" "" ELEMUTILS_REVISION "${ELEMUTILS_REVISION}")
+
+execute_process(COMMAND bash -c "cd ../../numa/; git branch | grep '\*' | cut -d ' ' -f2" OUTPUT_VARIABLE NUMA_BRANCH)
+execute_process(COMMAND bash -c "cd ../../numa/; git rev-parse HEAD;"             OUTPUT_VARIABLE NUMA_REVISION)
+string(REGEX REPLACE "\n$" "" NUMA_BRANCH "${NUMA_BRANCH}")
+string(REGEX REPLACE "\n$" "" NUMA_REVISION "${NUMA_REVISION}")
+
+execute_process(COMMAND bash -c "git branch | grep '\*' | cut -d ' ' -f2" OUTPUT_VARIABLE PARTONS_BRANCH)
+execute_process(COMMAND bash -c "git rev-parse HEAD"             OUTPUT_VARIABLE PARTONS_REVISION)
+string(REGEX REPLACE "\n$" "" PARTONS_BRANCH "${PARTONS_BRANCH}")
+string(REGEX REPLACE "\n$" "" PARTONS_REVISION "${PARTONS_REVISION}")
+
+configure_file("${CMAKE_SOURCE_DIR}/bin/environment_configuration.dat.in" "${CMAKE_SOURCE_DIR}/bin/environment_configuration.dat")
+
 # FINALIZE ==================================================================================
 
 # generate list of source files
