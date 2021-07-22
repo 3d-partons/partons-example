@@ -37,6 +37,7 @@ calculation of CFFs or observables.
 	    <!-- Select GPD evolution model -->
             <module type="GPDEvolutionModule" name="GPDEvolutionApfel">
 
+	       <!-- Select pQCD order -->
                <param name="qcd_order_type" value="LO" />
 
 	       <!-- Select alpha_s model -->

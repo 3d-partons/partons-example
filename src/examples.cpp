@@ -19,6 +19,7 @@
 #include <partons/beans/observable/ObservableResult.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsConstant.h>
+#include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsQuarkMasses.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
 #include <partons/modules/convol_coeff_function/DVMP/DVMPCFFGK06.h>
@@ -59,6 +60,27 @@ void computeSingleKinematicsForCollinearDistribution() {
     PARTONS::CollinearDistributionModule* pCollinearDistributionModel =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newCollinearDistributionModule(
                     PARTONS::CollinearDistributionLHAPDF::classId);
+
+    // Create parameters to configure later GPDEvolutionModule
+    ElemUtils::Parameters parameters;
+
+    parameters.add(
+            ElemUtils::Parameter(
+                    PARTONS::CollinearDistributionType::COLLINEAR_DISTRIBUTION_TYPE_DB_COLUMN_NAME,
+                    PARTONS::CollinearDistributionType::Type::UnpolPDF));
+
+    parameters.add(
+            ElemUtils::Parameter(
+		    PARTONS::CollinearDistributionLHAPDF::PARAM_NAME_SET_NAME,
+                    "CT14nnlo"));
+
+    parameters.add(
+            ElemUtils::Parameter(
+		    PARTONS::CollinearDistributionLHAPDF::PARAM_NAME_SET_MEMBER,
+                    0));
+
+    // Configure collinear-distribution module with previous parameters.
+    pCollinearDistributionModel->configure(parameters);
 
     // Create a CollinearDistributionKinematic(x, MuF2, MuR2) to compute
     PARTONS::CollinearDistributionKinematic colldistKinematic(0.1, 2., 2.);

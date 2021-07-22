@@ -6,6 +6,13 @@
 // ******************************************************
 
 /**
+ * This function demonstrates a simple task as the evaluation of collinear distributions in a single kinematic point.
+ * The result of this function is printed out to the standard output.
+ * These are the values for all defined in the collinear distributions, including singlet and non-singlet combinations for quarks.
+ */
+void computeSingleKinematicsForCollinearDistribution();
+
+/**
  * This function demonstrates a simple task as the evaluation of GPD model in a single kinematic point.
  * The result of this function is printed out to the standard output.
  * These are the values for all defined in the model GPDs, including singlet and non-singlet combinations for quarks.
