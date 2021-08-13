@@ -1,13 +1,22 @@
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/logger/LoggerManager.h>
+#include <ElementaryUtils/parameters/Parameters.h>
+#include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
+#include <partons/beans/convol_coeff_function/GAM2/GAM2ConvolCoeffFunctionKinematic.h>
+#include <partons/beans/gpd/GPDType.h>
+#include <partons/beans/List.h>
+#include <partons/beans/PerturbativeQCDOrderType.h>
+#include <partons/beans/PolarizationType.h>
+#include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
+#include <partons/modules/convol_coeff_function/GAM2/GAM2CFFStandard.h>
+#include <partons/modules/gpd/GPDGK16.h>
+#include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
-#include <partons/services/automation/AutomationService.h>
-#include <partons/ServiceObjectRegistry.h>
 #include <QtCore/qcoreapplication.h>
 #include <string>
 #include <vector>
 
-#include "../include/examples.h"
+using namespace PARTONS;
 
 /*
  * Parse XML scenarios.
@@ -29,51 +38,63 @@ int main(int argc, char** argv) {
 
     // Init Qt4
     QCoreApplication a(argc, argv);
-    PARTONS::Partons* pPartons = 0;
+    Partons* pPartons = 0;
 
     try {
 
         // Init PARTONS application
-        pPartons = PARTONS::Partons::getInstance();
+        pPartons = Partons::getInstance();
         pPartons->init(argc, argv);
 
-        // ******************************************************
-        // RUN XML SCENARIO *************************************
-        // ******************************************************
+        // Create GPD module with the BaseModuleFactory
+        GPDModule* pGPDModule =
+                Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                        GPDGK16::classId);
 
-        // You need to provide at least one scenario via executable argument
-        if (argc <= 1) {
+        // Create CFF module with the BaseModuleFactory
+        GAM2ConvolCoeffFunctionModule* pGAM2CFFModule =
+                static_cast<GAM2ConvolCoeffFunctionModule*>(Partons::getInstance()->getModuleObjectFactory()->newModuleObject(
+                        GAM2CFFStandard::classId));
 
-            throw ElemUtils::CustomException("main", __func__,
-                    "Missing argument, please provide one or more than one XML scenario file.");
-        }
+        // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
+        ElemUtils::Parameters parameters(
+                PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+                PerturbativeQCDOrderType::LO);
 
-        // Parse arguments to retrieve xml file path list.
-        std::vector<std::string> xmlScenarioFilePathList = parseArguments(argc,
-                argv);
+        // Configure DVCSCFFModule with previous parameters.
+        pGAM2CFFModule->configure(parameters);
 
-        // Retrieve automation service parse scenario xml file and play it.
-        PARTONS::AutomationService* pAutomationService =
-                pPartons->getServiceObjectRegistry()->getAutomationService();
+        // Link modules (set physics assumptions of your computation)
+        pGAM2CFFModule->setGPDModule(pGPDModule);
 
-        for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
-            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
-                    xmlScenarioFilePathList[i]);
-            pAutomationService->playScenario(pScenario);
-        }
+        // Create kinematic
+        GAM2ConvolCoeffFunctionKinematic cffKinematic =
+                GAM2ConvolCoeffFunctionKinematic(0.01, -0.1, -0.2, 2., 2., 2.,
+                        PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS);
 
-        // ******************************************************
-        // RUN CPP CODE *****************************************
-        // ******************************************************
+        // Run computation
+        List<GPDType> gpdList;
+        gpdList.add(GPDType::H);
+        gpdList.add(GPDType::Ht);
 
-        // You can put your own code here and build a stand-alone program based on PARTONS library.
-        // To learn how you can use PARTONS library study provided examples of functions to be found in
-        // include/examples.h (header) and src/examples.cpp (source) files.
-        // To run these examples just call them here, e.g.:
+        GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
+                cffKinematic, gpdList);
 
-        // computeSingleKinematicsForGPD();
+        // Print results for DVCSCFFModule
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                cffResult.toString());
 
-        // Note, that you may need to comment out the part responsible for the running of XML scenarios.
+        // Remove pointer references
+        // Module pointers are managed by PARTONS
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pGAM2CFFModule, 0);
+        pGAM2CFFModule = 0;
+
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pGPDModule, 0);
+        pGPDModule = 0;
 
     }
     // Appropriate catching of exceptions is crucial for working of PARTONS.
