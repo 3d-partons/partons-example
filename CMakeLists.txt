@@ -94,7 +94,7 @@ find_package(Apfel++ REQUIRED)
 find_package(LHAPDF REQUIRED)
 
 # directories containing headers 
-include_directories(${QT_INCLUDE_DIRS} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${SFML_INCLUDE_DIR} ${CLN_INCLUDE_DIR} $(GSL_INCLUDE_DIRS) ${Apfel++_INCLUDE_DIR} ${LHAPDF_INCLUDE_DIR})
+include_directories(${QT_INCLUDE_DIRS} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${SFML_INCLUDE_DIR} ${CLN_INCLUDE_DIR} ${GSL_INCLUDE_DIRS} ${Apfel++_INCLUDE_DIR} ${LHAPDF_INCLUDE_DIR})
 
 # ENVIRONMENT VARIABLES ========================================================================
 
