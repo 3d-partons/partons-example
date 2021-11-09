@@ -10,11 +10,15 @@
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/GAM2/GAM2CFFStandard.h>
 #include <partons/modules/gpd/GPDGK16.h>
+#include <partons/modules/process/GAM2/GAM2ProcessGPSSW21.h>
+#include <partons/modules/xi_converter/GAM2/GAM2XiConverterExact.h>
+#include <partons/modules/scales/GAM2/GAM2ScalesMgg2Multiplier.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <QtCore/qcoreapplication.h>
 #include <string>
 #include <vector>
+#include <tuple>
 
 using namespace PARTONS;
 
@@ -56,6 +60,27 @@ int main(int argc, char** argv) {
                 static_cast<GAM2ConvolCoeffFunctionModule*>(Partons::getInstance()->getModuleObjectFactory()->newModuleObject(
                         GAM2CFFStandard::classId));
 
+        // Create XiConverterModule
+        PARTONS::GAM2XiConverterModule* pXiConverterModule =
+                PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGAM2XiConverterModule(
+                        PARTONS::GAM2XiConverterExact::classId);
+
+        // Create ScalesModule
+        PARTONS::GAM2ScalesModule* pScalesModule =
+                PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGAM2ScalesModule(
+                        PARTONS::GAM2ScalesMgg2Multiplier::classId);
+
+        // Set its lambda parameter, so MuF2 = MuR2 = lambda * Mgg2
+        pScalesModule->configure(
+                ElemUtils::Parameter(
+                        PARTONS::GAM2ScalesMgg2Multiplier::PARAMETER_NAME_LAMBDA,
+                        1.));
+
+        // Create ProcessModule
+        PARTONS::GAM2ProcessModule* pProcessModule =
+                PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGAM2ProcessModule(
+                        PARTONS::GAM2ProcessGPSSW21::classId);
+
         // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
         ElemUtils::Parameters parameters(
                 PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
@@ -66,28 +91,109 @@ int main(int argc, char** argv) {
 
         // Link modules (set physics assumptions of your computation)
         pGAM2CFFModule->setGPDModule(pGPDModule);
+        pProcessModule->setScaleModule(pScalesModule);
+        pProcessModule->setXiConverterModule(pXiConverterModule);
+        pProcessModule->setConvolCoeffFunctionModule(pGAM2CFFModule);
 
-        // Create kinematic
-        GAM2ConvolCoeffFunctionKinematic cffKinematic =
-                GAM2ConvolCoeffFunctionKinematic(0.01, -0.1, -0.2, 2., 2., 2.,
+        //evaluate
+        std::cout
+                << pProcessModule->compute(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_MINUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS);
+                        PolarizationType::LIN_TRANS_X_PLUS,
+                        NumA::Vector3D(0., 0., 0.),
+                        GAM2ObservableKinematic(-0.1, -2., 3., 11., 0., 0.)).toString()
+                << std::endl;
 
-        // Run computation
-        List<GPDType> gpdList;
-        gpdList.add(GPDType::H);
-        gpdList.add(GPDType::Ht);
+//        std::vector<
+//                std::tuple<PolarizationType::Type, PolarizationType::Type,
+//                        PolarizationType::Type> > polarizations;
 
-        GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
-                cffKinematic, gpdList);
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS,
+//                        PolarizationType::LIN_TRANS_X_MINUS));
 
-        // Print results for DVCSCFFModule
-        Partons::getInstance()->getLoggerManager()->info("main", __func__,
-                cffResult.toString());
+//        size_t n = 4;
+//
+//        for (size_t i = 0; i <= n; i++) {
+//
+//            double xi = pow(10., -2. + i * (log10(0.95) + 2.) / double(n));
+//
+//            // Create kinematic
+//            GAM2ConvolCoeffFunctionKinematic cffKinematic =
+//                    GAM2ConvolCoeffFunctionKinematic(xi, -0.1, -2., 3., 3., 3.,
+//                            PolarizationType::LIN_TRANS_X_PLUS,
+//                            PolarizationType::LIN_TRANS_X_PLUS,
+//                            PolarizationType::LIN_TRANS_X_PLUS);
+//
+//            // Run computation
+//            List<GPDType> gpdList;
+//            gpdList.add(GPDType::H);
+//
+//            GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
+//                    cffKinematic, gpdList);
+//
+//            std::cout << "PAWEL" << xi << "\t"
+//                    << cffResult.getResult(GPDType::H).real() << "\t"
+//                    << cffResult.getResult(GPDType::H).imag() << std::endl;
+//        }
 
-        // Remove pointer references
-        // Module pointers are managed by PARTONS
+//        for (size_t i = 0; i < polarizations.size(); i++) {
+//
+//            //Create kinematic
+//            GAM2ConvolCoeffFunctionKinematic cffKinematic =
+//                    GAM2ConvolCoeffFunctionKinematic(0.05, -0.1, -2., 3., 3.,
+//                            3., std::get<0>(polarizations.at(i)),
+//                            std::get<1>(polarizations.at(i)),
+//                            std::get<2>(polarizations.at(i)));
+//
+//            // Run computation
+//            List<GPDType> gpdList;
+//            gpdList.add(GPDType::H);
+//
+//            GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
+//                    cffKinematic, gpdList);
+//
+//            std::cout
+//                    << PolarizationType(std::get<0>(polarizations.at(i))).toString()
+//                    << "\t"
+//                    << PolarizationType(std::get<1>(polarizations.at(i))).toString()
+//                    << "\t"
+//                    << PolarizationType(std::get<2>(polarizations.at(i))).toString()
+//                    << "\t" << cffResult.getResult(GPDType::H).real() << "\t"
+//                    << cffResult.getResult(GPDType::H).imag() << std::endl;
+//        }
+
+// Remove pointer references
+// Module pointers are managed by PARTONS
         Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
                 pGAM2CFFModule, 0);
         pGAM2CFFModule = 0;
