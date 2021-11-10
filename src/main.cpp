@@ -96,12 +96,15 @@ int main(int argc, char** argv) {
         pProcessModule->setConvolCoeffFunctionModule(pGAM2CFFModule);
 
         //evaluate
+        List<GPDType> gpdList;
+        gpdList.add(GPDType::H);
+
         std::cout
                 << pProcessModule->compute(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         NumA::Vector3D(0., 0., 0.),
-                        GAM2ObservableKinematic(-0.1, -2., 3., 11., 0., 0.)).toString()
+                        GAM2ObservableKinematic(-0.1, -2., 3., 11., 0., 0.), gpdList).toString()
                 << std::endl;
 
 //        std::vector<
