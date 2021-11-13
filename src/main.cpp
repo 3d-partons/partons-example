@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
                         NumA::Vector3D(0., 0., 0.),
                         GAM2ObservableKinematic(-0.1, -2., 3., 11., 0., 0.), gpdList).toString()
                 << std::endl;
-
+//
 //        std::vector<
 //                std::tuple<PolarizationType::Type, PolarizationType::Type,
 //                        PolarizationType::Type> > polarizations;
