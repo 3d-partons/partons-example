@@ -112,32 +112,32 @@ int main(int argc, char** argv) {
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS,
+                        PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS));
+                        PolarizationType::LIN_TRANS_Y_MINUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS));
+                        PolarizationType::LIN_TRANS_Y_MINUS,
+                        PolarizationType::LIN_TRANS_Y_MINUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
+                        PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS));
+                        PolarizationType::LIN_TRANS_Y_MINUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS,
-                        PolarizationType::LIN_TRANS_Y_PLUS));
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
+                        PolarizationType::LIN_TRANS_Y_MINUS,
+                        PolarizationType::LIN_TRANS_Y_MINUS));
 
 
         size_t n = 20;
