@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
                         PolarizationType::LIN_TRANS_Y_PLUS));
 
 
-        size_t n = 40;
+        size_t n = 20;
         double min = -3.;
         double max = -1.;
 
