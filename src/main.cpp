@@ -95,105 +95,92 @@ int main(int argc, char** argv) {
         pProcessModule->setXiConverterModule(pXiConverterModule);
         pProcessModule->setConvolCoeffFunctionModule(pGAM2CFFModule);
 
-        //evaluate
+        //GPD
         List<GPDType> gpdList;
         gpdList.add(GPDType::H);
+        gpdList.add(GPDType::Ht);
 
-        std::cout
-                << pProcessModule->compute(PolarizationType::LIN_TRANS_X_PLUS,
+        //polarization states
+        std::vector<
+                std::tuple<PolarizationType::Type, PolarizationType::Type,
+                        PolarizationType::Type> > polarizations;
+
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_PLUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_PLUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_MINUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_MINUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_PLUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_PLUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_PLUS,
+                        PolarizationType::LIN_TRANS_X_MINUS));
+        polarizations.push_back(
+                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_X_MINUS));
+
+
+        size_t n = 20;
+        double min = -3.;
+        double max = -1.;
+
+        double capS = 20.;
+        double capMgg2 = 4.; 
+        double capM = 0.938272013;
+
+        double xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
+        xi = -((pow(capM,2) - capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS));
+        double s = ((pow(capM,2) - capS)*(-pow(capM,2) + capMgg2 - 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+        s = -((pow(capM,2) - capS)*(pow(capM,2) - capMgg2 + 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+
+        double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
+        double E = (s - pow(capM, 2)) / (2*capM);
+
+        std::cout << "xi: " << xi << std::endl;
+        std::cout << "t: " << t << std::endl;
+        std::cout << "E: " << E << std::endl;
+
+        for (size_t i = 0; i <= n; i++) {
+
+            double uPrim = min + i * (max - min) / double(n);
+
+            double Mgg2 = 4.;
+
+            double result = 0.;
+
+            for (size_t j = 0; j < polarizations.size(); j++) {
+
+                result += 
+                pProcessModule->compute(
+                        std::get<0>(polarizations.at(j)),
+                        std::get<1>(polarizations.at(j)),
+                        std::get<2>(polarizations.at(j)),
                         NumA::Vector3D(0., 0., 0.),
-                        GAM2ObservableKinematic(-0.1, -2., 3., 11., 0., 0.), gpdList).toString()
-                << std::endl;
-//
-//        std::vector<
-//                std::tuple<PolarizationType::Type, PolarizationType::Type,
-//                        PolarizationType::Type> > polarizations;
+                        GAM2ObservableKinematic(t, uPrim, capMgg2, E, 0., 0.), gpdList).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue();
+            }
 
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_PLUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS));
-//        polarizations.push_back(
-//                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS,
-//                        PolarizationType::LIN_TRANS_X_MINUS));
+            std::cout << uPrim << "\t" << result/8. << std::endl;
+        }
 
-//        size_t n = 4;
-//
-//        for (size_t i = 0; i <= n; i++) {
-//
-//            double xi = pow(10., -2. + i * (log10(0.95) + 2.) / double(n));
-//
-//            // Create kinematic
-//            GAM2ConvolCoeffFunctionKinematic cffKinematic =
-//                    GAM2ConvolCoeffFunctionKinematic(xi, -0.1, -2., 3., 3., 3.,
-//                            PolarizationType::LIN_TRANS_X_PLUS,
-//                            PolarizationType::LIN_TRANS_X_PLUS,
-//                            PolarizationType::LIN_TRANS_X_PLUS);
-//
-//            // Run computation
-//            List<GPDType> gpdList;
-//            gpdList.add(GPDType::H);
-//
-//            GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
-//                    cffKinematic, gpdList);
-//
-//            std::cout << "PAWEL" << xi << "\t"
-//                    << cffResult.getResult(GPDType::H).real() << "\t"
-//                    << cffResult.getResult(GPDType::H).imag() << std::endl;
-//        }
-
-//        for (size_t i = 0; i < polarizations.size(); i++) {
-//
-//            //Create kinematic
-//            GAM2ConvolCoeffFunctionKinematic cffKinematic =
-//                    GAM2ConvolCoeffFunctionKinematic(0.05, -0.1, -2., 3., 3.,
-//                            3., std::get<0>(polarizations.at(i)),
-//                            std::get<1>(polarizations.at(i)),
-//                            std::get<2>(polarizations.at(i)));
-//
-//            // Run computation
-//            List<GPDType> gpdList;
-//            gpdList.add(GPDType::H);
-//
-//            GAM2ConvolCoeffFunctionResult cffResult = pGAM2CFFModule->compute(
-//                    cffKinematic, gpdList);
-//
-//            std::cout
-//                    << PolarizationType(std::get<0>(polarizations.at(i))).toString()
-//                    << "\t"
-//                    << PolarizationType(std::get<1>(polarizations.at(i))).toString()
-//                    << "\t"
-//                    << PolarizationType(std::get<2>(polarizations.at(i))).toString()
-//                    << "\t" << cffResult.getResult(GPDType::H).real() << "\t"
-//                    << cffResult.getResult(GPDType::H).imag() << std::endl;
-//        }
 
 // Remove pointer references
 // Module pointers are managed by PARTONS
