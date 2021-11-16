@@ -101,6 +101,7 @@ int main(int argc, char** argv) {
         gpdList.add(GPDType::Ht);
 
         //polarization states
+        // X and Y PLUS polarizations !
         std::vector<
                 std::tuple<PolarizationType::Type, PolarizationType::Type,
                         PolarizationType::Type> > polarizations;
@@ -111,32 +112,32 @@ int main(int argc, char** argv) {
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_MINUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_MINUS));
+                        PolarizationType::LIN_TRANS_Y_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_MINUS,
-                        PolarizationType::LIN_TRANS_X_MINUS));
+                        PolarizationType::LIN_TRANS_Y_PLUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-                        PolarizationType::LIN_TRANS_X_MINUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_MINUS));
+                        PolarizationType::LIN_TRANS_Y_PLUS));
         polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_MINUS,
-                        PolarizationType::LIN_TRANS_X_MINUS,
-                        PolarizationType::LIN_TRANS_X_MINUS));
+                std::make_tuple(PolarizationType::LIN_TRANS_Y_PLUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS,
+                        PolarizationType::LIN_TRANS_Y_PLUS));
 
 
         size_t n = 20;
@@ -178,7 +179,7 @@ int main(int argc, char** argv) {
                         GAM2ObservableKinematic(t, uPrim, capMgg2, E, 0., 0.), gpdList).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue();
             }
 
-            std::cout << uPrim << "\t" << result/8. << std::endl;
+            std::cout << uPrim << "\t" << result/2. << std::endl; // over 2, not 8
         }
 
 
