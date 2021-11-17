@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
         //GPD
         List<GPDType> gpdList;
         gpdList.add(GPDType::H);
+        gpdList.add(GPDType::E);
         gpdList.add(GPDType::Ht);
 
         //polarization states
