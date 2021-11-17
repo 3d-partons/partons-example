@@ -148,18 +148,18 @@ int main(int argc, char** argv) {
         double capMgg2 = 4.; 
         double capM = 0.938272013;
 
-//        double xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
-//        xi = -((pow(capM,2) - capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS));
-//        double s = ((pow(capM,2) - capS)*(-pow(capM,2) + capMgg2 - 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
-//        s = -((pow(capM,2) - capS)*(pow(capM,2) - capMgg2 + 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
-//
-//        double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
-//        double E = (s - pow(capM, 2)) / (2*capM);
+        double xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
+        xi = -((pow(capM,2) - capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS));
+        double s = ((pow(capM,2) - capS)*(-pow(capM,2) + capMgg2 - 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+        s = -((pow(capM,2) - capS)*(pow(capM,2) - capMgg2 + 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+
+        double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
+        double E = (s - pow(capM, 2)) / (2*capM);
 
         // Simplified kinematics
-        double xi = capMgg2 / (2. * ( capS - std::pow(capM, 2) ) - capMgg2);
-        double t = - 4. * std::pow( xi * capM , 2) / ( 1. - xi*xi );
-        double E = ( capS - std::pow(capM, 2) ) / 2. / capM;
+//        double xi = capMgg2 / (2. * ( capS - std::pow(capM, 2) ) - capMgg2);
+//        double t = - 4. * std::pow( xi * capM , 2) / ( 1. - xi*xi );
+//        double E = ( capS - std::pow(capM, 2) ) / 2. / capM;
 
         std::cout << "xi: " << xi << std::endl;
         std::cout << "t: " << t << std::endl;
