@@ -140,13 +140,15 @@ int main(int argc, char** argv) {
                         PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_Y_MINUS));
 
+//  OLDER CODE
+//  u - dependence
 
         size_t n = 20;
         double min = -3.;
         double max = -1.;
 
         double capS = 20.;
-        double capMgg2 = 4.; 
+        double capMgg2 = 4.;
         double capM = 0.938272013;
 
         double xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
@@ -157,7 +159,7 @@ int main(int argc, char** argv) {
         double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
         double E = (s - pow(capM, 2)) / (2*capM);
 
-        // Simplified kinematics
+//         Simplified kinematics
 //        double xi = capMgg2 / (2. * ( capS - std::pow(capM, 2) ) - capMgg2);
 //        double t = - 4. * std::pow( xi * capM , 2) / ( 1. - xi*xi );
 //        double E = ( capS - std::pow(capM, 2) ) / 2. / capM;
@@ -176,7 +178,7 @@ int main(int argc, char** argv) {
 
             for (size_t j = 0; j < polarizations.size(); j++) {
 
-                result += 
+                result +=
                 pProcessModule->compute(
                         std::get<0>(polarizations.at(j)),
                         std::get<1>(polarizations.at(j)),
@@ -188,6 +190,138 @@ int main(int argc, char** argv) {
             std::cout << uPrim << "\t" << result/2. << std::endl; // over 2, not 8
         }
 
+// t-DEPENDENCE PART
+/*
+ * Figure 4 from the 2 photons paper
+ * t-dependence, unpolarized differential cross section
+ * SgN = 20 GeV^2, u' = -2 GeV^2, Mgg2 = 3 GeV^2
+ * t from -1 to -0.1 GeV^2
+ */
+//        n = 50;
+//        min = -1.;
+//        max = -0.02618 ;
+//
+//        capS = 20.;
+//        capMgg2 = 3.;
+//        capM = 0.938272013;
+//
+//        xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
+//        xi = -((pow(capM,2) - capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS));
+//        s = ((pow(capM,2) - capS)*(-pow(capM,2) + capMgg2 - 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+//        s = -((pow(capM,2) - capS)*(pow(capM,2) - capMgg2 + 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+//
+////        double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
+//        E = (s - pow(capM, 2)) / (2*capM);
+//
+//        double uPrim = -2.;
+
+
+        // Simplified kinematics
+//        double xi = capMgg2 / (2. * ( capS - std::pow(capM, 2) ) - capMgg2);
+//        double t = - 4. * std::pow( xi * capM , 2) / ( 1. - xi*xi );
+//        double E = ( capS - std::pow(capM, 2) ) / 2. / capM;
+
+//        std::cout << "t-dependence" << std::endl << "==========================" << std::endl;
+//        std::cout << "xi: " << xi << std::endl;
+//        std::cout << "u: " << uPrim << std::endl;
+//        std::cout << "E: " << E << std::endl;
+//
+//        for (size_t i = 0; i <= n; i++) {
+//
+//            t = min + i * (max - min) / double(n);
+//
+//            double Mgg2 = 3.;
+//
+//            double result = 0.;
+//
+//            for (size_t j = 0; j < polarizations.size(); j++) {
+//
+//                result +=
+//                pProcessModule->compute(
+//                        std::get<0>(polarizations.at(j)),
+//                        std::get<1>(polarizations.at(j)),
+//                        std::get<2>(polarizations.at(j)),
+//                        NumA::Vector3D(0., 0., 0.),
+//                        GAM2ObservableKinematic(t, uPrim, capMgg2, E, 0., 0.), gpdList).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue();
+//            }
+//
+//            std::cout << t << "\t" << result/2. << std::endl; // over 2, not 8
+//        }
+
+        // END OF THE t-DEPENDENCE PART
+
+
+/*
+ * Figure 7 from the paper
+ * Angular dependence of d sigma / dt du dMgg2 dphi on phi
+ * phi is an angle between polarization vector of the initial photon
+ * and the transverse component of the outgoing photon 1
+ * Sgn = 20, Mgg2 = 3, u = -2 [GeV^2], t = t_min
+ */
+
+        //polarization states
+        // X and Y PLUS polarizations for outgoing photons
+        // Incoming photon -
+//        std::vector<
+//                std::tuple<PolarizationType::Type, PolarizationType::Type,
+//                        PolarizationType::Type> > polarizations;
+//
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::UNDEFINED,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::UNDEFINED,
+//                        PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::UNDEFINED,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::UNDEFINED,
+//                        PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS));
+//
+//        size_t n = 20;
+//        double min = 0.;
+//        double max = 2. * 3.14159265;
+//
+//        double capS = 20.;
+//        double capMgg2 = 3.;
+//        double capM = 0.938272013;
+//
+//        double xi = (-pow(capM,2) + capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS);
+//        xi = -((pow(capM,2) - capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS)))/(2*pow(capM,2) - capMgg2 + 2*capS));
+//        double s = ((pow(capM,2) - capS)*(-pow(capM,2) + capMgg2 - 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+//        s = -((pow(capM,2) - capS)*(pow(capM,2) - capMgg2 + 3*capS + sqrt(pow(capM,4) + pow(capMgg2 - capS,2) - 2*pow(capM,2)*(capMgg2 + capS))))/(4.*capS);
+//
+//        double t = - pow(2*xi*capM, 2)/(1. - pow(xi, 2));
+//        double E = (s - pow(capM, 2)) / (2*capM);
+//
+//        double uPrim = -2.;
+//
+//                for (size_t i = 0; i <= n; i++) {
+//
+//                    double phi = min + i * (max - min) / double(n);
+//
+//                    double Mgg2 = capMgg2;
+//
+//                    double result = 0.;
+//
+//                    for (size_t j = 0; j < polarizations.size(); j++) {
+//
+//                        result +=
+//                        pProcessModule->compute(
+//                                std::get<0>(polarizations.at(j)),
+//                                std::get<1>(polarizations.at(j)),
+//                                std::get<2>(polarizations.at(j)),
+//                                NumA::Vector3D(0., 0., 0.),
+//                                GAM2ObservableKinematic(t, uPrim, capMgg2, E, 0., 0.), gpdList).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue();
+//                    }
+//
+//                    std::cout << phi << "\t" << result / 2. / 3.14159265 << std::endl;
+//                }
 
 // Remove pointer references
 // Module pointers are managed by PARTONS
