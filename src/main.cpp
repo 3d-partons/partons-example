@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
         // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
         ElemUtils::Parameters parameters(
                 PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
-                PerturbativeQCDOrderType::LO);
+                PerturbativeQCDOrderType::NLO);
 
         // Configure DVCSCFFModule with previous parameters.
         pGAM2CFFModule->configure(parameters);
@@ -111,22 +111,22 @@ int main(int argc, char** argv) {
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_Y_MINUS,
-                        PolarizationType::LIN_TRANS_X_PLUS));
-        polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_Y_MINUS));
-        polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_Y_MINUS,
-                        PolarizationType::LIN_TRANS_Y_MINUS));
-        polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
-                        PolarizationType::LIN_TRANS_X_PLUS,
-                        PolarizationType::LIN_TRANS_X_PLUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS,
+//                        PolarizationType::LIN_TRANS_X_PLUS));
         polarizations.push_back(
                 std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_Y_MINUS,
@@ -135,10 +135,10 @@ int main(int argc, char** argv) {
                 std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
                         PolarizationType::LIN_TRANS_X_PLUS,
                         PolarizationType::LIN_TRANS_Y_MINUS));
-        polarizations.push_back(
-                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
-                        PolarizationType::LIN_TRANS_Y_MINUS,
-                        PolarizationType::LIN_TRANS_Y_MINUS));
+//        polarizations.push_back(
+//                std::make_tuple(PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS,
+//                        PolarizationType::LIN_TRANS_Y_MINUS));
 
 //  OLDER CODE
 //  u - dependence
