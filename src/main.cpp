@@ -1,13 +1,31 @@
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/logger/LoggerManager.h>
+#include <ElementaryUtils/parameters/Parameter.h>
+#include <ElementaryUtils/string_utils/Formatter.h>
+#include <NumA/linear_algebra/vector/Vector3D.h>
+#include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
+#include <partons/beans/convol_coeff_function/DDVCS/DDVCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/gpd/GPDType.h>
+#include <partons/beans/List.h>
+#include <partons/beans/observable/DDVCS/DDVCSObservableKinematic.h>
+#include <partons/beans/observable/ObservableResult.h>
+#include <partons/beans/process/VCSSubProcessType.h>
+#include <partons/beans/PerturbativeQCDOrderType.h>
+#include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
+#include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
+#include <partons/modules/gpd/GPDGK16.h>
+#include <partons/modules/process/DDVCS/DDVCSProcessTEST.h>
+#include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
+#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTEST.h>
+#include <partons/ModuleObjectFactory.h>
+#include <partons/beans/Scales.h>
 #include <partons/Partons.h>
-#include <partons/services/automation/AutomationService.h>
-#include <partons/ServiceObjectRegistry.h>
+#include <partons/utils/type/PhysicalType.h>
 #include <QtCore/qcoreapplication.h>
 #include <string>
 #include <vector>
 
-#include "../include/examples.h"
+using namespace PARTONS;
 
 /*
  * Parse XML scenarios.
@@ -38,42 +56,124 @@ int main(int argc, char** argv) {
         pPartons->init(argc, argv);
 
         // ******************************************************
-        // RUN XML SCENARIO *************************************
+        // CODE *************************************************
         // ******************************************************
 
-        // You need to provide at least one scenario via executable argument
-        if (argc <= 1) {
+        // Create GPDModule
+        GPDModule* pGPDModule =
+                Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                        GPDGK16::classId);
 
-            throw ElemUtils::CustomException("main", __func__,
-                    "Missing argument, please provide one or more than one XML scenario file.");
-        }
+        // Create CFF module
+        DDVCSConvolCoeffFunctionModule* pDDVCSCFFModel =
+                Partons::getInstance()->getModuleObjectFactory()->newDDVCSConvolCoeffFunctionModule(
+                        DDVCSCFFTEST::classId);
 
-        // Parse arguments to retrieve xml file path list.
-        std::vector<std::string> xmlScenarioFilePathList = parseArguments(argc,
-                argv);
+        // Set its PerturbativeQCDOrder
+        pDDVCSCFFModel->configure(
+                ElemUtils::Parameter(
+                        PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+                        PerturbativeQCDOrderType::LO));
 
-        // Retrieve automation service parse scenario xml file and play it.
-        PARTONS::AutomationService* pAutomationService =
-                pPartons->getServiceObjectRegistry()->getAutomationService();
+        // Create XiConverterModule
+        DDVCSXiConverterModule* pXiConverterModule =
+                Partons::getInstance()->getModuleObjectFactory()->newDDVCSXiConverterModule(
+                        DDVCSXiConverterTEST::classId);
 
-        for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
-            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
-                    xmlScenarioFilePathList[i]);
-            pAutomationService->playScenario(pScenario);
-        }
+        // Create ScalesModule
+        DDVCSScalesModule* pScalesModule =
+                Partons::getInstance()->getModuleObjectFactory()->newDDVCSScalesModule(
+                        DDVCSScalesTEST::classId);
 
-        // ******************************************************
-        // RUN CPP CODE *****************************************
-        // ******************************************************
+        // Create ProcessModule
+        DDVCSProcessModule* pProcessModule =
+                Partons::getInstance()->getModuleObjectFactory()->newDDVCSProcessModule(
+                        DDVCSProcessTEST::classId);
 
-        // You can put your own code here and build a stand-alone program based on PARTONS library.
-        // To learn how you can use PARTONS library study provided examples of functions to be found in
-        // include/examples.h (header) and src/examples.cpp (source) files.
-        // To run these examples just call them here, e.g.:
+        // Link modules (set physics assumptions of your computation)
+        pProcessModule->setScaleModule(pScalesModule);
+        pProcessModule->setXiConverterModule(pXiConverterModule);
+        pProcessModule->setConvolCoeffFunctionModule(pDDVCSCFFModel);
+        pDDVCSCFFModel->setGPDModule(pGPDModule);
 
-        // computeSingleKinematicsForGPD();
+        // -----------------------------------------------
 
-        // Note, that you may need to comment out the part responsible for the running of XML scenarios.
+        // Kinematics
+        DDVCSObservableKinematic processKinematic(0.2, -0.1, 2., 3., 6., 0.,
+                0.);
+
+        // GPD list
+        List<GPDType> gpdTypes;
+        gpdTypes.add(GPDType::H);
+
+        // -----------------------------------------------
+
+        // Test xi converter
+        PhysicalType<double> xiConverterResult = pXiConverterModule->compute(
+                processKinematic);
+
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                ElemUtils::Formatter() << "xi converter test: "
+                        << xiConverterResult.toString());
+
+        // -----------------------------------------------
+
+        // Test scales converter
+        Scales scalesResult = pScalesModule->compute(processKinematic);
+
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                ElemUtils::Formatter() << "scales test: "
+                        << scalesResult.toString());
+
+        // -----------------------------------------------
+
+        //CFF kinematics
+        DDVCSConvolCoeffFunctionKinematic cffKinematics(
+                xiConverterResult.getValue(), 0.1, processKinematic.getT().getValue(),
+                processKinematic.getQ2().getValue(), processKinematic.getQ2Prim().getValue(),
+                scalesResult.getMuF2().getValue(), scalesResult.getMuR2().getValue());
+
+        // Test CFF module
+        DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
+                cffKinematics, gpdTypes);
+
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                ElemUtils::Formatter() << "cff test: " << cffResult.toString());
+
+        // -----------------------------------------------
+
+        // Test process result
+        PARTONS::DDVCSObservableResult processResult = pProcessModule->compute(
+                1., 1., NumA::Vector3D(0., 0., 0.), processKinematic, gpdTypes,
+                VCSSubProcessType::ALL);
+
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                ElemUtils::Formatter() << "process converter test: "
+                        << processResult.toString());
+
+        // -----------------------------------------------
+
+        // Remove pointer references
+        // Module pointers are managed by PARTONS
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pGPDModule, 0);
+        pGPDModule = 0;
+
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pDDVCSCFFModel, 0);
+        pDDVCSCFFModel = 0;
+
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pXiConverterModule, 0);
+        pXiConverterModule = 0;
+
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pScalesModule, 0);
+        pScalesModule = 0;
+
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pProcessModule, 0);
+        pProcessModule = 0;
 
     }
     // Appropriate catching of exceptions is crucial for working of PARTONS.
