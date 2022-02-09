@@ -99,6 +99,7 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         // Kinematics
+        //DDVCSObservableKinematic processKinematic(0.2, -0.1, 2., 3., 6., 0., 0.);
         DDVCSObservableKinematic processKinematic(0.175257269, -0.15, 1.25, 0.428846154, 11., 0., 0.);
 
         // GPD list
