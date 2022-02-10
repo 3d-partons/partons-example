@@ -99,7 +99,8 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         // Kinematics
-        DDVCSObservableKinematic processKinematic(0.175257269, -0.15, 1.25, 0.428846154, 11., 0., 0.);
+        DDVCSObservableKinematic processKinematic(0.175257269, -0.15, 1.25,
+                0.428846154, 11., 0.1, 0.2, 0.3);
 
         // GPD list
         List<GPDType> gpdTypes;
@@ -108,12 +109,15 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         // Test xi converter
-        PhysicalType<double> xiConverterResult = pXiConverterModule->compute(
+        PhysicalType<double> xiConverterResult_xi = pXiConverterModule->compute(
                 processKinematic);
+        PhysicalType<double> xiConverterResult_eta =
+                pXiConverterModule->computeEta(processKinematic);
 
         Partons::getInstance()->getLoggerManager()->info("main", __func__,
-                ElemUtils::Formatter() << "xi converter test: "
-                        << xiConverterResult.toString());
+                ElemUtils::Formatter() << "xi converter test: xi: "
+                        << xiConverterResult_xi.toString() << " eta: "
+                        << xiConverterResult_eta.toString());
 
         // -----------------------------------------------
 
@@ -128,9 +132,13 @@ int main(int argc, char** argv) {
 
         //CFF kinematics
         DDVCSConvolCoeffFunctionKinematic cffKinematics(
-                xiConverterResult.getValue(), 0.1, processKinematic.getT().getValue(),
-                processKinematic.getQ2().getValue(), processKinematic.getQ2Prim().getValue(),
-                scalesResult.getMuF2().getValue(), scalesResult.getMuR2().getValue());
+                xiConverterResult_xi.getValue(),
+                xiConverterResult_eta.getValue(),
+                processKinematic.getT().getValue(),
+                processKinematic.getQ2().getValue(),
+                processKinematic.getQ2Prim().getValue(),
+                scalesResult.getMuF2().getValue(),
+                scalesResult.getMuR2().getValue());
 
         // Test CFF module
         DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
@@ -144,7 +152,7 @@ int main(int argc, char** argv) {
         // Test process result
         PARTONS::DDVCSObservableResult processResult = pProcessModule->compute(
                 1., 1., NumA::Vector3D(0., 0., 0.), processKinematic, gpdTypes,
-                VCSSubProcessType::ALL);
+                VCSSubProcessType::DDVCS);
 
         Partons::getInstance()->getLoggerManager()->info("main", __func__,
                 ElemUtils::Formatter() << "process converter test: "
