@@ -105,6 +105,11 @@ int main(int argc, char** argv) {
         // GPD list
         List<GPDType> gpdTypes;
         gpdTypes.add(GPDType::H);
+        gpdTypes.add(GPDType::E);
+        gpdTypes.add(GPDType::Ht);
+        gpdTypes.add(GPDType::Et);
+        gpdTypes.add(GPDType::HL);
+        gpdTypes.add(GPDType::EL);
 
         // -----------------------------------------------
 
@@ -149,14 +154,14 @@ int main(int argc, char** argv) {
 
         // -----------------------------------------------
 
-        // Test process result
-        PARTONS::DDVCSObservableResult processResult = pProcessModule->compute(
-                1., 1., NumA::Vector3D(0., 0., 0.), processKinematic, gpdTypes,
-                VCSSubProcessType::DDVCS);
-
-        Partons::getInstance()->getLoggerManager()->info("main", __func__,
-                ElemUtils::Formatter() << "process converter test: "
-                        << processResult.toString());
+//        // Test process result
+//        PARTONS::DDVCSObservableResult processResult = pProcessModule->compute(
+//                1., 1., NumA::Vector3D(0., 0., 0.), processKinematic, gpdTypes,
+//                VCSSubProcessType::DDVCS);
+//
+//        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//                ElemUtils::Formatter() << "process converter test: "
+//                        << processResult.toString());
 
         // -----------------------------------------------
 
