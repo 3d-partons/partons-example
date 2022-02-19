@@ -105,24 +105,24 @@ int main(int argc, char** argv) {
         // GPD list
         List<GPDType> gpdTypes;
         gpdTypes.add(GPDType::H);
-        gpdTypes.add(GPDType::E);
-        gpdTypes.add(GPDType::Ht);
-        gpdTypes.add(GPDType::Et);
-        gpdTypes.add(GPDType::HL);
-        gpdTypes.add(GPDType::EL);
+//        gpdTypes.add(GPDType::E);
+//        gpdTypes.add(GPDType::Ht);
+//        gpdTypes.add(GPDType::Et);
+//        gpdTypes.add(GPDType::HL);
+//        gpdTypes.add(GPDType::EL);
 
         // -----------------------------------------------
 
         // Test xi converter
-        PhysicalType<double> xiConverterResult_xi = pXiConverterModule->compute(
-                processKinematic);
-        PhysicalType<double> xiConverterResult_eta =
-                pXiConverterModule->computeEta(processKinematic);
+//        PhysicalType<double> xiConverterResult_xi = pXiConverterModule->compute(
+//                processKinematic);
+//        PhysicalType<double> xiConverterResult_eta =
+//                pXiConverterModule->computeEta(processKinematic);
 
-        Partons::getInstance()->getLoggerManager()->info("main", __func__,
-                ElemUtils::Formatter() << "xi converter test: xi: "
-                        << xiConverterResult_xi.toString() << " eta: "
-                        << xiConverterResult_eta.toString());
+//        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//                ElemUtils::Formatter() << "xi converter test: xi: "
+//                        << xiConverterResult_xi.toString() << " eta: "
+//                        << xiConverterResult_eta.toString());
 
         // -----------------------------------------------
 
@@ -136,32 +136,94 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         //CFF kinematics
-        DDVCSConvolCoeffFunctionKinematic cffKinematics(
-                xiConverterResult_xi.getValue(),
-                xiConverterResult_eta.getValue(),
-                processKinematic.getT().getValue(),
-                processKinematic.getQ2().getValue(),
-                processKinematic.getQ2Prim().getValue(),
-                scalesResult.getMuF2().getValue(),
-                scalesResult.getMuR2().getValue());
+//        DDVCSConvolCoeffFunctionKinematic cffKinematics(
+//                xiConverterResult_xi.getValue(),
+//                xiConverterResult_eta.getValue(),
+//                processKinematic.getT().getValue(),
+//                processKinematic.getQ2().getValue(),
+//                processKinematic.getQ2Prim().getValue(),
+//                scalesResult.getMuF2().getValue(),
+//                scalesResult.getMuR2().getValue());
+//
+//        // Test CFF module
+//        DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
+//                cffKinematics, gpdTypes);
+//
+//        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//                ElemUtils::Formatter() << "cff test: " << cffResult.toString());
 
-        // Test CFF module
-        DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
-                cffKinematics, gpdTypes);
+        int total = 100;
+        for (int i = 0; i <= total; i++) {
+            double xiMin = 0.01;
+            double xiMax = 0.5;
+            double thisXi = xiMin + i * (xiMax - xiMin) / total;
+            double thisEta = thisXi * (1.25 - 0.428846154 - 0.15 / 2)
+                    / (1.25 + 0.428846154);
+            double thisXb = ((thisEta + thisXi) * 0.5
+                    * (1.25 - 0.428846154 - 0.15 / 2) - thisEta * (-0.15) / 4.)
+                    / ((1. + thisXi) * 0.5 * (1.25 - 0.428846154 - 0.15 / 2)
+                            - thisEta * (-0.15) / 2.);
 
-        Partons::getInstance()->getLoggerManager()->info("main", __func__,
-                ElemUtils::Formatter() << "cff test: " << cffResult.toString());
+            DDVCSObservableKinematic thisprocessKinematic(thisXb, -0.15, 1.25,
+                    0.428846154, 11., 0.1, 0.2, 0.3);
+
+            PhysicalType<double> xiConverterResult_xi =
+                    pXiConverterModule->compute(thisprocessKinematic);
+            PhysicalType<double> xiConverterResult_eta =
+                    pXiConverterModule->computeEta(thisprocessKinematic);
+
+            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(
+                    xiConverterResult_xi.getValue(),
+                    xiConverterResult_eta.getValue(),
+                    thisprocessKinematic.getT().getValue(),
+                    thisprocessKinematic.getQ2().getValue(),
+                    thisprocessKinematic.getQ2Prim().getValue(),
+                    scalesResult.getMuF2().getValue(),
+                    scalesResult.getMuR2().getValue());
+
+            DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
+                    thiscffKinematics, gpdTypes);
+
+            //xi vs real and imaginary parts of CFF_H
+            std::cout << thisXi << " " << cffResult.getResult(GPDType::H).real()
+                    << " " << "xi" << " realCFF_H" << std::endl;
+
+            std::cout << thisXi << " " << cffResult.getResult(GPDType::H).imag()
+                                << " " << "xi" << " imagCFF_H" << std::endl;
+
+//            Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//                    ElemUtils::Formatter() << "cff test: "
+//                            << cffResult.toString());
+
+        }
 
         // -----------------------------------------------
 
-//        // Test process result
-//        PARTONS::DDVCSObservableResult processResult = pProcessModule->compute(
-//                1., 1., NumA::Vector3D(0., 0., 0.), processKinematic, gpdTypes,
-//                VCSSubProcessType::DDVCS);
+        // Test process result
+//        int total = 200;
+//        for (int i = 0; i <= total; i++) {
+//            double xBMin = 0.07;
+//            double xBMax = 0.24;
+//            double thisXb = xBMin + i * (xBMax - xBMin) / total;
 //
-//        Partons::getInstance()->getLoggerManager()->info("main", __func__,
-//                ElemUtils::Formatter() << "process converter test: "
-//                        << processResult.toString());
+//            DDVCSObservableKinematic thisprocessKinematic(thisXb, -0.15, 1.25,
+//                    0.428846154, 11., 0.1, 0.2, 0.3);
+//
+//            PARTONS::DDVCSObservableResult processResult =
+//                    pProcessModule->compute(1., 1., NumA::Vector3D(0., 0., 0.),
+//                            thisprocessKinematic, gpdTypes,
+//                            VCSSubProcessType::BH);
+//
+//            //xB vs xsec7 in pb/GeV^6
+//            std::cout << thisXb << " "
+//                    << processResult.getValue().makeSameUnitAs(PhysicalUnit::PB).getValue()
+//                    << " " << "xB" << " xsec7_BH" << std::endl;
+//
+//            /*Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//             ElemUtils::Formatter() << "process converter test: "
+//             << processResult.toString());*/
+//
+//        }
 
         // -----------------------------------------------
 
