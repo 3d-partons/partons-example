@@ -153,43 +153,31 @@ int main(int argc, char** argv) {
 //                ElemUtils::Formatter() << "cff test: " << cffResult.toString());
 
         int total = 100;
+
         for (int i = 0; i <= total; i++) {
+
             double xiMin = 0.01;
-            double xiMax = 0.5;
-            double thisXi = xiMin + i * (xiMax - xiMin) / total;
-            double thisEta = thisXi * (1.25 - 0.428846154 - 0.15 / 2)
-                    / (1.25 + 0.428846154);
-            double thisXb = ((thisEta + thisXi) * 0.5
-                    * (1.25 - 0.428846154 - 0.15 / 2) - thisEta * (-0.15) / 4.)
-                    / ((1. + thisXi) * 0.5 * (1.25 - 0.428846154 - 0.15 / 2)
-                            - thisEta * (-0.15) / 2.);
+            double xiMax = 0.95;
 
-            DDVCSObservableKinematic thisprocessKinematic(thisXb, -0.15, 1.25,
-                    0.428846154, 11., 0.1, 0.2, 0.3);
+            double xi = xiMin + i * (xiMax - xiMin) / total;
+            double eta = 0.1;
+            double t = -0.15;
+            double Q2 = 1.25;
+            double Q2Prim = 0.5;
+            double mu = Q2 + Q2Prim;
 
-            PhysicalType<double> xiConverterResult_xi =
-                    pXiConverterModule->compute(thisprocessKinematic);
-            PhysicalType<double> xiConverterResult_eta =
-                    pXiConverterModule->computeEta(thisprocessKinematic);
-
-            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(
-                    xiConverterResult_xi.getValue(),
-                    xiConverterResult_eta.getValue(),
-                    thisprocessKinematic.getT().getValue(),
-                    thisprocessKinematic.getQ2().getValue(),
-                    thisprocessKinematic.getQ2Prim().getValue(),
-                    scalesResult.getMuF2().getValue(),
-                    scalesResult.getMuR2().getValue());
+            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, eta, t, Q2,
+                    Q2Prim, mu, mu);
 
             DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
                     thiscffKinematics, gpdTypes);
 
             //xi vs real and imaginary parts of CFF_H
-            std::cout << thisXi << " " << cffResult.getResult(GPDType::H).real()
+            std::cout << xi << " " << cffResult.getResult(GPDType::H).real()
                     << " " << "xi" << " realCFF_H" << std::endl;
 
-            std::cout << thisXi << " " << cffResult.getResult(GPDType::H).imag()
-                                << " " << "xi" << " imagCFF_H" << std::endl;
+            std::cout << xi << " " << cffResult.getResult(GPDType::H).imag()
+                    << " " << "xi" << " imagCFF_H" << std::endl;
 
 //            Partons::getInstance()->getLoggerManager()->info("main", __func__,
 //                    ElemUtils::Formatter() << "cff test: "
