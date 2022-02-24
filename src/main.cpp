@@ -116,13 +116,10 @@ int main(int argc, char** argv) {
         // Test xi converter
 //        PhysicalType<double> xiConverterResult_xi = pXiConverterModule->compute(
 //                processKinematic);
-//        PhysicalType<double> xiConverterResult_eta =
-//                pXiConverterModule->computeEta(processKinematic);
 
 //        Partons::getInstance()->getLoggerManager()->info("main", __func__,
 //                ElemUtils::Formatter() << "xi converter test: xi: "
-//                        << xiConverterResult_xi.toString() << " eta: "
-//                        << xiConverterResult_eta.toString());
+//                        << xiConverterResult_xi.toString());
 
         // -----------------------------------------------
 
@@ -138,7 +135,6 @@ int main(int argc, char** argv) {
         //CFF kinematics
 //        DDVCSConvolCoeffFunctionKinematic cffKinematics(
 //                xiConverterResult_xi.getValue(),
-//                xiConverterResult_eta.getValue(),
 //                processKinematic.getT().getValue(),
 //                processKinematic.getQ2().getValue(),
 //                processKinematic.getQ2Prim().getValue(),
@@ -160,13 +156,12 @@ int main(int argc, char** argv) {
             double xiMax = 0.95;
 
             double xi = xiMin + i * (xiMax - xiMin) / total;
-            double eta = 0.1;
             double t = -0.15;
             double Q2 = 1.25;
             double Q2Prim = 0.5;
             double mu = Q2 + Q2Prim;
 
-            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, eta, t, Q2,
+            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t, Q2,
                     Q2Prim, mu, mu);
 
             DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
