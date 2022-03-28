@@ -1,26 +1,14 @@
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/logger/LoggerManager.h>
+#include <partons/beans/gpd/GPDKinematic.h>
+#include <partons/modules/gpd/GPDGK16.h>
+#include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
-#include <partons/services/automation/AutomationService.h>
+#include <partons/services/GPDService.h>
 #include <partons/ServiceObjectRegistry.h>
 #include <QtCore/qcoreapplication.h>
-#include <string>
-#include <vector>
 
-#include "../include/examples.h"
-
-/*
- * Parse XML scenarios.
- */
-std::vector<std::string> parseArguments(int argc, char** argv) {
-    std::vector<std::string> xmlScenarios(argc - 1);
-
-    for (unsigned int i = 1; i < argc; i++) {
-        xmlScenarios[i - 1] = argv[i];
-    }
-
-    return xmlScenarios;
-}
+using namespace PARTONS;
 
 /*
  * Main function.
@@ -29,51 +17,44 @@ int main(int argc, char** argv) {
 
     // Init Qt4
     QCoreApplication a(argc, argv);
-    PARTONS::Partons* pPartons = 0;
+    Partons* pPartons = 0;
 
     try {
 
         // Init PARTONS application
-        pPartons = PARTONS::Partons::getInstance();
+        pPartons = Partons::getInstance();
         pPartons->init(argc, argv);
 
-        // ******************************************************
-        // RUN XML SCENARIO *************************************
-        // ******************************************************
+        // Retrieve GPD service
+        GPDService* pGPDService =
+                Partons::getInstance()->getServiceObjectRegistry()->getGPDService();
 
-        // You need to provide at least one scenario via executable argument
-        if (argc <= 1) {
+        // Create GPD module with the BaseModuleFactory
+        GPDModule* pGPDModel =
+                Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                        GPDGK16::classId);
 
-            throw ElemUtils::CustomException("main", __func__,
-                    "Missing argument, please provide one or more than one XML scenario file.");
-        }
+        // Create a GPDKinematic(x, xi, t, MuF2, MuR2) to compute
+        GPDKinematic gpdKinematic(0.1, 0.2, -0.1, 2., 2.);
 
-        // Parse arguments to retrieve xml file path list.
-        std::vector<std::string> xmlScenarioFilePathList = parseArguments(argc,
-                argv);
+        // Run computation
+        GPDResult gpdResult = pGPDService->computeSingleKinematic(gpdKinematic,
+                pGPDModel);
 
-        // Retrieve automation service parse scenario xml file and play it.
-        PARTONS::AutomationService* pAutomationService =
-                pPartons->getServiceObjectRegistry()->getAutomationService();
+        // Print results
+        Partons::getInstance()->getLoggerManager()->info("main", __func__,
+                gpdResult.toString());
 
-        for (unsigned int i = 0; i < xmlScenarioFilePathList.size(); i++) {
-            PARTONS::Scenario* pScenario = pAutomationService->parseXMLFile(
-                    xmlScenarioFilePathList[i]);
-            pAutomationService->playScenario(pScenario);
-        }
+        // Print something more specific
+        std::cout << "GPD H for up quarks is: "
+                << gpdResult.getPartonDistribution(GPDType::H).getQuarkDistribution(
+                        QuarkFlavor::UP).getQuarkDistribution() << std::endl;
 
-        // ******************************************************
-        // RUN CPP CODE *****************************************
-        // ******************************************************
-
-        // You can put your own code here and build a stand-alone program based on PARTONS library.
-        // To learn how you can use PARTONS library study provided examples of functions to be found in
-        // include/examples.h (header) and src/examples.cpp (source) files.
-        // To run these examples just call them here, e.g.:
-
-        // computeSingleKinematicsForGPD();
-
-        // Note, that you may need to comment out the part responsible for the running of XML scenarios.
+        // Remove pointer references
+        // Module pointers are managed by PARTONS
+        Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+                pGPDModel, 0);
+        pGPDModel = 0;
 
     }
     // Appropriate catching of exceptions is crucial for working of PARTONS.
