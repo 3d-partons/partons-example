@@ -26,11 +26,9 @@
 #include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/gpd/GPDGK16Numerical.h>
 
-#include <partons/modules/gpd/pionGPD/saturatedModel_Ding.h>
-#include <partons/modules/gpd/pionGPD/algebraicToyModel.h>
-#include <partons/modules/gpd/pionGPD/pionPDFtest.h>
+
 #include <partons/modules/gpd/pionGPD/Simple_RDDA.h>
-#include <partons/modules/gpd/pionGPD/Gegenbauer_Model.h>
+//#include <partons/modules/gpd/pionGPD/Gegenbauer_Model.h>
 
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongApfel.h>
 
@@ -192,6 +190,7 @@ void ConformalMoments::setEvolution()
     //set Alpha_S in Apfel
 	parameters.add(PARTONS::RunningAlphaStrongApfel::PARAM_NAME_ALPHAS_REF, 0.513993) ;
 	parameters.add(PARTONS::RunningAlphaStrongApfel::PARAM_NAME_MU_REF, 1.) ;
+	parameters.add(PARTONS::RunningAlphaStrongApfel::PARAM_NAME_THRESHOLDS, "0 0 0") ;
     m_pRunningAlphaStrongModule->configure(parameters) ;
 
 }
@@ -206,13 +205,11 @@ void ConformalMoments::setMu2(double mu2)
 	m_mu2 = mu2 ;
 }
 
-double ConformalMoments::getConformalMoment(double xi, double mu2)
+void ConformalMoments::print2DConformalMoments(double mu2)
 {
-	setXi(xi);
 	setMu2(mu2);
 
 	ComputeConformalMoments();
-    return m_ConfMom ;
 }
 
 double ConformalMoments::getAnomalousDimension()
@@ -229,7 +226,7 @@ double ConformalMoments::getAnomalousDimension()
 
 
 
-double ConformalMoments::ProductGegenbauerGPD(double x, vector<double> Para)
+double ConformalMoments::ProductGegenbauerGPD(double x, std::vector<double> Para)
 {
 	double GegenbauerTemp = pow(m_xi,m_nGegenbauer) * boost::math::gegenbauer(m_nGegenbauer, 1.5, x/m_xi);
 
@@ -272,16 +269,16 @@ void ConformalMoments::ComputeConformalMoments()
 	        const double t = 0.;
 
 	        //Exporting results
-	        const int nmu = 30 ;
+	        const int nmu = 2 ;
 	        const double mu2min = 1. ;
-	        const double mu2max = 10000. ;
+	        const double mu2max = m_mu2 ;
 	        const double mu2stp = exp( log(mu2max / mu2min) / (nmu));
 
-	        const int nxi = 30;
+	        const int nxi = 2;
 	        const double ximin = 5e-2;
 	        const double ximax = 1.;
 	        const double xistp = exp( log(ximax / ximin) / (nxi -1 ));
-	        vector<double> refConfMom = {};
+	        std::vector<double> refConfMom = {};
 	        double dummyConfMom ;
 
 	        double GammaERBL = getAnomalousDimension();
@@ -299,7 +296,7 @@ void ConformalMoments::ComputeConformalMoments()
 			ElemUtils::FileUtils* outputFile;
 	        std::ofstream evolutionOutputFile_gegenbauerModel;
 	        outputFile->open( evolutionOutputFile_gegenbauerModel,
-	        		"/local/home/cmezrag/git/Jose_Manuel_Project/partons_computations/results/evolution/ConformalMomentC4.dat", std::ios_base::out );
+	        		"/local/home/cmezrag/git/partons-example/results/evolution/ConformalMomentC4.dat", std::ios_base::out );
 
 
 			//Running computations
@@ -351,7 +348,7 @@ void ConformalMoments::ComputeConformalMoments()
 	        			// PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__, gpdResult.toString());
 
 	        			// Print results to outputfile (xi - mu2 - C_m(mu) - C-m(mu_0) - Error - GammaERBL)
-	        			outputFile->write( evolutionOutputFile_gegenbauerModel, ElemUtils::Formatter() << to_string(m_xi) << " " << to_string(m_mu2)
+	        			outputFile->write( evolutionOutputFile_gegenbauerModel, ElemUtils::Formatter() << std::to_string(m_xi) << " " << std::to_string(m_mu2)
 	        					<< " " << dummyConfMom
 								<< " " << refConfMom.at(iConfMom)
 								<< " " << 1. - dummyConfMom / (GammaERBL * refConfMom.at(iConfMom) )
@@ -362,8 +359,8 @@ void ConformalMoments::ComputeConformalMoments()
 	        		auto stop = std::chrono::high_resolution_clock::now();
 	        		auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
 
-	        		cout << "Time taken by function: "
-	        				<< duration.count() << " seconds" << endl;
+	        		std::cout << "Time taken by function: "
+	        				<< duration.count() << " seconds" << std::endl;
 
 	        }
 

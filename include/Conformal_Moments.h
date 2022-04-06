@@ -27,11 +27,8 @@
 #include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/gpd/GPDGK16Numerical.h>
 
-#include <partons/modules/gpd/pionGPD/saturatedModel_Ding.h>
-#include <partons/modules/gpd/pionGPD/algebraicToyModel.h>
-#include <partons/modules/gpd/pionGPD/pionPDFtest.h>
 #include <partons/modules/gpd/pionGPD/Simple_RDDA.h>
-#include <partons/modules/gpd/pionGPD/Gegenbauer_Model.h>
+//#include <partons/modules/gpd/pionGPD/Gegenbauer_Model.h>
 
 #include <partons/modules/running_alpha_strong/RunningAlphaStrongApfel.h>
 
@@ -55,6 +52,8 @@
 #include <apfel/betaqcd.h>
 #include <math.h>
 
+#include "/local/home/cmezrag/Téléchargements/boost_1_76_0/boost/math/special_functions/gegenbauer.hpp"
+
 class ConformalMoments{
 
 public:
@@ -63,7 +62,7 @@ public:
 
 	virtual ~ConformalMoments();
 
-	double getConformalMoment(double xi, double mu2);
+	void print2DConformalMoments(double mu2);
 	double getAnomalousDimension();
 
 	void setMomentOrder(double nOrder);
@@ -92,6 +91,7 @@ void setPARTONS();
 //Evolution Setter
 void setEvolution();
 
+
 //PARTONS GPD Declaration
 PARTONS::GPDService* m_pGPDService ;
 PARTONS::GPDModule* m_pGPDModel ;
@@ -108,6 +108,7 @@ NumA::FunctionType1D* m_pProductFunctor;
 // Declaration of integrator
 NumA::Integrator1D* m_pIntegrator;
 NumA::IntegratorType1D::Type m_integratorType;
+
 
 
 };

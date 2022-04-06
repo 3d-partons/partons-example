@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../include/examples.h"
+#include "../include/Conformal_Moments.h"
 
 /*
  * Parse XML scenarios.
@@ -42,7 +43,7 @@ int main(int argc, char** argv) {
         // ******************************************************
 
         // You need to provide at least one scenario via executable argument
-        if (argc <= 1) {
+       /* if (argc <= 1) {
 
             throw ElemUtils::CustomException("main", __func__,
                     "Missing argument, please provide one or more than one XML scenario file.");
@@ -61,7 +62,7 @@ int main(int argc, char** argv) {
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
-
+        */
         // ******************************************************
         // RUN CPP CODE *****************************************
         // ******************************************************
@@ -71,7 +72,8 @@ int main(int argc, char** argv) {
         // include/examples.h (header) and src/examples.cpp (source) files.
         // To run these examples just call them here, e.g.:
 
-        // computeSingleKinematicsForGPD();
+        ConformalMoments ConfMom ;
+        ConfMom.print2DConformalMoments(10000.) ;
 
         // Note, that you may need to comment out the part responsible for the running of XML scenarios.
 
