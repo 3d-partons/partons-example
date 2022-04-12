@@ -1,29 +1,34 @@
+#include "examples.h"
 #include <ElementaryUtils/logger/CustomException.h>
 #include <ElementaryUtils/logger/LoggerManager.h>
 #include <ElementaryUtils/parameters/Parameter.h>
 #include <ElementaryUtils/string_utils/Formatter.h>
-#include <NumA/linear_algebra/vector/Vector3D.h>
 #include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
 #include <partons/beans/convol_coeff_function/DDVCS/DDVCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionResult.h>
+#include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionResult.h>
 #include <partons/beans/gpd/GPDType.h>
 #include <partons/beans/List.h>
 #include <partons/beans/observable/DDVCS/DDVCSObservableKinematic.h>
-#include <partons/beans/observable/ObservableResult.h>
-#include <partons/beans/process/VCSSubProcessType.h>
+#include <partons/beans/observable/TCS/TCSObservableKinematic.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
 #include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/process/DDVCS/DDVCSProcessTEST.h>
 #include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
+#include <partons/beans/Scales.h>
 #include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTEST.h>
 #include <partons/ModuleObjectFactory.h>
-#include <partons/beans/Scales.h>
 #include <partons/Partons.h>
-#include <partons/utils/type/PhysicalType.h>
 #include <QtCore/qcoreapplication.h>
+#include <complex>
+#include <iostream>
 #include <string>
 #include <vector>
+
+
 
 using namespace PARTONS;
 
@@ -133,7 +138,7 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         //CFF kinematics
-//        DDVCSConvolCoeffFunctionKinematic cffKinematics(
+        //       DDVCSConvolCoeffFunctionKinematic cffKinematics(
 //                xiConverterResult_xi.getValue(),
 //                processKinematic.getT().getValue(),
 //                processKinematic.getQ2().getValue(),
@@ -148,40 +153,132 @@ int main(int argc, char** argv) {
 //        Partons::getInstance()->getLoggerManager()->info("main", __func__,
 //                ElemUtils::Formatter() << "cff test: " << cffResult.toString());
 
-        int total = 100;
+
+        /*int total = 150;
 
         for (int i = 0; i <= total; i++) {
 
-            double xiMin = 0.01;
-            double xiMax = 0.95;
+            double Q2PrimMin = 0.;
+            double Q2PrimMax = 1.;
 
-            double xi = xiMin + i * (xiMax - xiMin) / total;
-            double t = -0.15;
-            double Q2 = 1.25;
-            double Q2Prim = 0.5;
-            double mu = Q2 + Q2Prim;
+            double Q2Prim = Q2PrimMin + i * (Q2PrimMax - Q2PrimMin) / total;
+            double t = -0.1;
+            double Q2 = 1.;
+            double xi = 0.01;
+            double muF2 = Q2 + Q2Prim; //scales defined here. They're also used in examples.cpp for computing DVCS and TCS point
+            double muR2 = Q2 + Q2Prim;
+            //double eta = xi*(Q2 - Q2Prim + t/2.)/(Q2 + Q2Prim);//if I include this line, I get two different eta values for real and imag parts of CFF H
 
-            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t, Q2,
-                    Q2Prim, mu, mu);
+            if (Q2Prim == 0.) { //DVCS point
+                PARTONS::DVCSConvolCoeffFunctionResult cffDVCSpoint =
+                        computeSingleKinematicsForDVCSComptonFormFactor(xi, t,
+                                Q2, muF2, muR2);
 
-            DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
-                    thiscffKinematics, gpdTypes);
+                //Q'2 vs real and imaginary parts of CFF_H
+                std::cout << Q2Prim << " "
+                        << cffDVCSpoint.getResult(GPDType::H).real() << " Q'2"
+                        << " realCFF_H" << std::endl;
 
-            //xi vs real and imaginary parts of CFF_H
-            std::cout << xi << " " << cffResult.getResult(GPDType::H).real()
-                    << " " << "xi" << " realCFF_H" << std::endl;
+                std::cout << Q2Prim << " "
+                        << cffDVCSpoint.getResult(GPDType::H).imag() << " Q'2"
+                        << " imagCFF_H" << std::endl;
 
-            std::cout << xi << " " << cffResult.getResult(GPDType::H).imag()
-                    << " " << "xi" << " imagCFF_H" << std::endl;
+            } else {
+                DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t, Q2,
+                        Q2Prim, muF2, muR2);
 
-//            Partons::getInstance()->getLoggerManager()->info("main", __func__,
-//                    ElemUtils::Formatter() << "cff test: "
-//                            << cffResult.toString());
+                DDVCSConvolCoeffFunctionResult cffResult =
+                        pDDVCSCFFModel->compute(thiscffKinematics, gpdTypes);
+
+                //Q'2 vs real and imaginary parts of CFF_H
+                std::cout << Q2Prim << " "
+                        << cffResult.getResult(GPDType::H).real() << " Q'2"
+                        << " realCFF_H" << std::endl;
+
+                std::cout << Q2Prim << " "
+                        << cffResult.getResult(GPDType::H).imag() << " Q'2"
+                        << " imagCFF_H" << std::endl;
+            }
+
+        }*/
+
+
+        int total = 150;
+
+        for (int i = 0; i <= total; i++) {
+
+            double Q2Min = 0.;
+            double Q2Max = 1.;
+
+            double Q2 = Q2Min + i * (Q2Max - Q2Min) / total;
+            double t = -0.1;
+            double Q2Prim = 1.;
+            double xi = 0.1;
+            double muF2 = Q2 + Q2Prim;
+            double muR2 = Q2 + Q2Prim;
+            //double eta = xi*(Q2 - Q2Prim + t/2.)/(Q2 + Q2Prim);//if I include this line, I get two different eta values for real and imag parts of CFF H
+
+            if (Q2 == 0.) { //TCS point
+                PARTONS::TCSConvolCoeffFunctionResult cffTCSpoint =
+                        computeSingleKinematicsForTCSComptonFormFactor(xi, t,
+                                Q2Prim, muF2, muR2);
+
+                //Q2 vs real and imaginary parts of CFF_H
+                std::cout << Q2 << " "
+                        << cffTCSpoint.getResult(GPDType::H).real() << " Q2"
+                        << " realCFF_H" << std::endl;
+
+                std::cout << Q2 << " "
+                        << cffTCSpoint.getResult(GPDType::H).imag() << " Q2"
+                        << " imagCFF_H" << std::endl;
+            } else {
+
+                DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t, Q2,
+                        Q2Prim, muF2, muR2);
+
+                DDVCSConvolCoeffFunctionResult cffResult =
+                        pDDVCSCFFModel->compute(thiscffKinematics, gpdTypes);
+
+                //Q2 vs real and imaginary parts of CFF_H
+                std::cout << Q2 << " " << cffResult.getResult(GPDType::H).real()
+                        << " Q2" << " realCFF_H" << std::endl;
+
+                std::cout << Q2 << " " << cffResult.getResult(GPDType::H).imag()
+                        << " Q2" << " imagCFF_H" << std::endl;
+            }
 
         }
 
-        // -----------------------------------------------
+//        for (int i = 0; i <= total; i++) {
+//
+//            double xiMin = 0.14;
+//            double xiMax = 0.95;
+//
+//            double xi = xiMin + i * (xiMax - xiMin) / total;
+//            double t = -0.15;
+//            double xB = 0.175257269;
+//            double Q2Prim = 0.5;
+//            double Q2 = (xi*(Q2Prim - t) + Q2Prim)/((2./xB - 1.)*xi - 1.);
+//            double mu = Q2 + Q2Prim;
+//
+//            DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t, Q2,
+//                    Q2Prim, mu, mu);
+//
+//            DDVCSConvolCoeffFunctionResult cffResult = pDDVCSCFFModel->compute(
+//                    thiscffKinematics, gpdTypes);
+//
+//            //xi vs real and imaginary parts of CFF_H
+//            std::cout << xi << " " << Q2 << " " << cffResult.getResult(GPDType::H).real()
+//                    << " " << "xi" << " Q2" << " realCFF_H" << std::endl;
+//
+//            std::cout << xi << " " << Q2 << " " << cffResult.getResult(GPDType::H).imag()
+//                    << " " << "xi" << " Q2" << " imagCFF_H" << std::endl;
+//            Partons::getInstance()->getLoggerManager()->info("main", __func__,
+//                    ElemUtils::Formatter() << "cff test: "
+//                            << cffResult.toString());
+//              }
 
+        // -----------------------------------------------
         // Test process result
 //        int total = 200;
 //        for (int i = 0; i <= total; i++) {
@@ -207,9 +304,7 @@ int main(int argc, char** argv) {
 //             << processResult.toString());*/
 //
 //        }
-
         // -----------------------------------------------
-
         // Remove pointer references
         // Module pointers are managed by PARTONS
         Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
