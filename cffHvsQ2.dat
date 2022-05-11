@@ -1,393 +1,291 @@
-12-04-2022 09:56:34 [INFO] (Partons::printVersion) PARTONS 3.0.0 (http://partons.cea.fr) distributed under GNU Public License
-12-04-2022 09:56:34 [INFO] (Partons::printVersion) Git branch and revision of this version is ddvcs/f4eb30a909cc18bba4716ee16df547a63683aa33
-12-04-2022 09:56:34 [INFO] (Partons::printVersion) Built using Elementary-Utils 3.0.0 (master/6ceb8c427b8f4110c32770d8159515539e13f995) and NumA++ 3.0.0 (master/16aa03a0c9b3e9382615007d7b6ed00d4cc689e0)
-12-04-2022 09:56:34 [INFO] (DatabaseManager::init) Database connection OK
-12-04-2022 09:56:34 [INFO] (DDVCSCFFTEST::configure) qcd_order_type configured with value = LO
-12-04-2022 09:56:34 [INFO] (DDVCSProcessTEST::setScaleModule) DDVCSScalesModule is set to: DDVCSScalesTEST
-12-04-2022 09:56:34 [INFO] (DDVCSProcessTEST::setXiConverterModule) XiConverterModule is set to: DDVCSXiConverterTEST
-12-04-2022 09:56:34 [INFO] (DDVCSProcessTEST::setConvolCoeffFunctionModule) ConvolCoeffFunctionModule is set to: DDVCSCFFTEST
-12-04-2022 09:56:34 [INFO] (main::main) scales test: m_MuF2 = 1.678846154 [GeV2]  m_MuR2 = 1.678846154 [GeV2]
-12-04-2022 09:56:34 [INFO] (TCSCFFStandard::configure) qcd_order_type configured with value = LO
-[33m12-04-2022 09:56:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0 0.603092 Q2 realCFF_H
-0 -14.6467 Q2 imagCFF_H
-[33m12-04-2022 09:56:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-[33m12-04-2022 09:56:44 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.00666667 0.662317 Q2 realCFF_H
-0.00666667 -13.7543 Q2 imagCFF_H
-[33m12-04-2022 09:56:52 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0133333 0.61127 Q2 realCFF_H
-0.0133333 -13.9911 Q2 imagCFF_H
-[33m12-04-2022 09:57:00 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.02 0.558405 Q2 realCFF_H
-0.02 -14.2489 Q2 imagCFF_H
-[33m12-04-2022 09:57:09 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0266667 0.498329 Q2 realCFF_H
-0.0266667 -14.5417 Q2 imagCFF_H
-[33m12-04-2022 09:57:18 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0333333 0.398489 Q2 realCFF_H
-0.0333333 -14.8673 Q2 imagCFF_H
-[33m12-04-2022 09:57:26 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.04 0.256261 Q2 realCFF_H
-0.04 -15.2004 Q2 imagCFF_H
-[33m12-04-2022 09:57:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0466667 0.0732569 Q2 realCFF_H
-0.0466667 -15.5325 Q2 imagCFF_H
-0.0533333 -0.0940358 Q2 realCFF_H
-0.0533333 -15.859 Q2 imagCFF_H
-[33m12-04-2022 09:57:45 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.06 -0.376364 Q2 realCFF_H
-0.06 -16.1766 Q2 imagCFF_H
-[33m12-04-2022 09:57:54 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0666667 -0.59935 Q2 realCFF_H
-0.0666667 -16.4831 Q2 imagCFF_H
-0.0733333 -0.836888 Q2 realCFF_H
-0.0733333 -16.7771 Q2 imagCFF_H
-[33m12-04-2022 09:58:04 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.08 -1.13549 Q2 realCFF_H
-0.08 -17.0575 Q2 imagCFF_H
-0.0866667 -1.43718 Q2 realCFF_H
-0.0866667 -17.3234 Q2 imagCFF_H
-[33m12-04-2022 09:58:21 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.0933333 -1.75572 Q2 realCFF_H
-0.0933333 -17.5744 Q2 imagCFF_H
-0.1 -2.07506 Q2 realCFF_H
-0.1 -17.8102 Q2 imagCFF_H
-[33m12-04-2022 09:58:30 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.106667 -2.44764 Q2 realCFF_H
-0.106667 -18.0306 Q2 imagCFF_H
-[33m12-04-2022 09:58:39 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.113333 -2.80526 Q2 realCFF_H
-0.113333 -18.2356 Q2 imagCFF_H
-[33m12-04-2022 09:58:47 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.12 -3.13902 Q2 realCFF_H
-0.12 -18.4254 Q2 imagCFF_H
-[33m12-04-2022 09:58:56 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.126667 -3.49291 Q2 realCFF_H
-0.126667 -18.5999 Q2 imagCFF_H
-[33m12-04-2022 09:59:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.133333 -3.85906 Q2 realCFF_H
-0.133333 -18.7595 Q2 imagCFF_H
-[33m12-04-2022 09:59:13 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.14 -4.23276 Q2 realCFF_H
-0.14 -18.9044 Q2 imagCFF_H
-[33m12-04-2022 09:59:22 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.146667 -4.61463 Q2 realCFF_H
-0.146667 -19.0348 Q2 imagCFF_H
-0.153333 -4.98147 Q2 realCFF_H
-0.153333 -19.1512 Q2 imagCFF_H
-[33m12-04-2022 09:59:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.16 -5.37634 Q2 realCFF_H
-0.16 -19.2539 Q2 imagCFF_H
-[33m12-04-2022 09:59:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.166667 -5.74857 Q2 realCFF_H
-0.166667 -19.3433 Q2 imagCFF_H
-[33m12-04-2022 09:59:49 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.173333 -6.12825 Q2 realCFF_H
-0.173333 -19.4196 Q2 imagCFF_H
-[33m12-04-2022 09:59:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.18 -6.51026 Q2 realCFF_H
-0.18 -19.4834 Q2 imagCFF_H
-[33m12-04-2022 10:00:06 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.186667 -6.89478 Q2 realCFF_H
-0.186667 -19.535 Q2 imagCFF_H
-[33m12-04-2022 10:00:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.193333 -7.28027 Q2 realCFF_H
-0.193333 -19.5747 Q2 imagCFF_H
-[33m12-04-2022 10:00:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.2 -7.64973 Q2 realCFF_H
-0.2 -19.6031 Q2 imagCFF_H
-[33m12-04-2022 10:00:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.206667 -8.02239 Q2 realCFF_H
-0.206667 -19.6205 Q2 imagCFF_H
-0.213333 -8.3939 Q2 realCFF_H
-0.213333 -19.6273 Q2 imagCFF_H
-[33m12-04-2022 10:00:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.22 -8.76598 Q2 realCFF_H
-0.22 -19.6239 Q2 imagCFF_H
-[33m12-04-2022 10:00:51 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.226667 -9.13466 Q2 realCFF_H
-0.226667 -19.6106 Q2 imagCFF_H
-[33m12-04-2022 10:00:59 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.233333 -9.49681 Q2 realCFF_H
-0.233333 -19.5878 Q2 imagCFF_H
-0.24 -9.85604 Q2 realCFF_H
-0.24 -19.556 Q2 imagCFF_H
-0.246667 -10.2123 Q2 realCFF_H
-0.246667 -19.5154 Q2 imagCFF_H
-[33m12-04-2022 10:01:25 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.253333 -10.5643 Q2 realCFF_H
-0.253333 -19.4665 Q2 imagCFF_H
-[33m12-04-2022 10:01:33 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.26 -10.9103 Q2 realCFF_H
-0.26 -19.4095 Q2 imagCFF_H
-0.266667 -11.257 Q2 realCFF_H
-0.266667 -19.3448 Q2 imagCFF_H
-[33m12-04-2022 10:01:46 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.273333 -11.5944 Q2 realCFF_H
-0.273333 -19.2727 Q2 imagCFF_H
-[33m12-04-2022 10:01:54 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.28 -11.9301 Q2 realCFF_H
-0.28 -19.1936 Q2 imagCFF_H
-0.286667 -12.2618 Q2 realCFF_H
-0.286667 -19.1077 Q2 imagCFF_H
-[33m12-04-2022 10:02:04 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.293333 -12.5814 Q2 realCFF_H
-0.293333 -19.0154 Q2 imagCFF_H
-0.3 -12.908 Q2 realCFF_H
-0.3 -18.9168 Q2 imagCFF_H
-[33m12-04-2022 10:02:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.306667 -13.2174 Q2 realCFF_H
-0.306667 -18.8124 Q2 imagCFF_H
-[33m12-04-2022 10:02:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.313333 -13.5308 Q2 realCFF_H
-0.313333 -18.7024 Q2 imagCFF_H
-[33m12-04-2022 10:02:31 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.32 -13.8363 Q2 realCFF_H
-0.32 -18.5871 Q2 imagCFF_H
-[33m12-04-2022 10:02:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.326667 -14.1338 Q2 realCFF_H
-0.326667 -18.4666 Q2 imagCFF_H
-[33m12-04-2022 10:02:49 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.333333 -14.4192 Q2 realCFF_H
-0.333333 -18.3413 Q2 imagCFF_H
-[33m12-04-2022 10:02:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.34 -14.713 Q2 realCFF_H
-0.34 -18.2113 Q2 imagCFF_H
-[33m12-04-2022 10:03:06 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.346667 -15.0054 Q2 realCFF_H
-0.346667 -18.077 Q2 imagCFF_H
-[33m12-04-2022 10:03:15 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.353333 -15.2873 Q2 realCFF_H
-0.353333 -17.9385 Q2 imagCFF_H
-0.36 -15.5669 Q2 realCFF_H
-0.36 -17.7961 Q2 imagCFF_H
-[33m12-04-2022 10:03:25 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.366667 -15.8253 Q2 realCFF_H
-0.366667 -17.6499 Q2 imagCFF_H
-0.373333 -16.1014 Q2 realCFF_H
-0.373333 -17.5002 Q2 imagCFF_H
-[33m12-04-2022 10:03:36 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.38 -16.347 Q2 realCFF_H
-0.38 -17.3471 Q2 imagCFF_H
-[33m12-04-2022 10:03:45 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.386667 -16.6091 Q2 realCFF_H
-0.386667 -17.1908 Q2 imagCFF_H
-[33m12-04-2022 10:03:53 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.393333 -16.8609 Q2 realCFF_H
-0.393333 -17.0316 Q2 imagCFF_H
-0.4 -17.1118 Q2 realCFF_H
-0.4 -16.8695 Q2 imagCFF_H
-[33m12-04-2022 10:04:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.406667 -17.3408 Q2 realCFF_H
-0.406667 -16.7048 Q2 imagCFF_H
-[33m12-04-2022 10:04:12 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.413333 -17.5653 Q2 realCFF_H
-0.413333 -16.5375 Q2 imagCFF_H
-0.42 -17.8176 Q2 realCFF_H
-0.42 -16.368 Q2 imagCFF_H
-[33m12-04-2022 10:04:22 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.426667 -18.0278 Q2 realCFF_H
-0.426667 -16.1962 Q2 imagCFF_H
-[33m12-04-2022 10:04:31 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.433333 -18.2546 Q2 realCFF_H
-0.433333 -16.0224 Q2 imagCFF_H
-[33m12-04-2022 10:04:39 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.44 -18.4728 Q2 realCFF_H
-0.44 -15.8467 Q2 imagCFF_H
-[33m12-04-2022 10:04:48 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.446667 -18.6843 Q2 realCFF_H
-0.446667 -15.6691 Q2 imagCFF_H
-[33m12-04-2022 10:04:56 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.453333 -18.8894 Q2 realCFF_H
-0.453333 -15.49 Q2 imagCFF_H
-[33m12-04-2022 10:05:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.46 -19.0877 Q2 realCFF_H
-0.46 -15.3092 Q2 imagCFF_H
-[33m12-04-2022 10:05:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.466667 -19.278 Q2 realCFF_H
-0.466667 -15.1271 Q2 imagCFF_H
-[33m12-04-2022 10:05:22 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.473333 -19.4634 Q2 realCFF_H
-0.473333 -14.9436 Q2 imagCFF_H
-[33m12-04-2022 10:05:31 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.48 -19.6526 Q2 realCFF_H
-0.48 -14.7589 Q2 imagCFF_H
-[33m12-04-2022 10:05:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.486667 -19.8439 Q2 realCFF_H
-0.486667 -14.5732 Q2 imagCFF_H
-[33m12-04-2022 10:05:48 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.493333 -20.0301 Q2 realCFF_H
-0.493333 -14.3864 Q2 imagCFF_H
-[33m12-04-2022 10:05:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.5 -20.21 Q2 realCFF_H
-0.5 -14.1987 Q2 imagCFF_H
-[33m12-04-2022 10:06:06 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.506667 -20.3842 Q2 realCFF_H
-0.506667 -14.0102 Q2 imagCFF_H
-[33m12-04-2022 10:06:15 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.513333 -20.5535 Q2 realCFF_H
-0.513333 -13.821 Q2 imagCFF_H
-[33m12-04-2022 10:06:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.52 -20.7182 Q2 realCFF_H
-0.52 -13.6312 Q2 imagCFF_H
-[33m12-04-2022 10:06:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.526667 -20.8786 Q2 realCFF_H
-0.526667 -13.4407 Q2 imagCFF_H
-[33m12-04-2022 10:06:41 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.533333 -21.0349 Q2 realCFF_H
-0.533333 -13.2498 Q2 imagCFF_H
-0.54 -21.1938 Q2 realCFF_H
-0.54 -13.0585 Q2 imagCFF_H
-[33m12-04-2022 10:06:50 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.546667 -21.3358 Q2 realCFF_H
-0.546667 -12.8668 Q2 imagCFF_H
-[33m12-04-2022 10:07:00 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.553333 -21.4804 Q2 realCFF_H
-0.553333 -12.6749 Q2 imagCFF_H
-[33m12-04-2022 10:07:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.56 -21.6212 Q2 realCFF_H
-0.56 -12.4827 Q2 imagCFF_H
-[33m12-04-2022 10:07:20 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.566667 -21.758 Q2 realCFF_H
-0.566667 -12.2904 Q2 imagCFF_H
-[33m12-04-2022 10:07:33 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.573333 -21.8905 Q2 realCFF_H
-0.573333 -12.0981 Q2 imagCFF_H
-[33m12-04-2022 10:07:45 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.58 -22.0182 Q2 realCFF_H
-0.58 -11.9057 Q2 imagCFF_H
-[33m12-04-2022 10:07:54 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.586667 -22.1403 Q2 realCFF_H
-0.586667 -11.7133 Q2 imagCFF_H
-[33m12-04-2022 10:08:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.593333 -22.2566 Q2 realCFF_H
-0.593333 -11.521 Q2 imagCFF_H
-[33m12-04-2022 10:08:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.6 -22.3746 Q2 realCFF_H
-0.6 -11.3289 Q2 imagCFF_H
-[33m12-04-2022 10:08:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.606667 -22.5003 Q2 realCFF_H
-0.606667 -11.1369 Q2 imagCFF_H
-[33m12-04-2022 10:08:33 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.613333 -22.6223 Q2 realCFF_H
-0.613333 -10.9451 Q2 imagCFF_H
-[33m12-04-2022 10:08:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.62 -22.7364 Q2 realCFF_H
-0.62 -10.7536 Q2 imagCFF_H
-[33m12-04-2022 10:08:51 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.626667 -22.8435 Q2 realCFF_H
-0.626667 -10.5625 Q2 imagCFF_H
-[33m12-04-2022 10:09:00 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.633333 -22.9417 Q2 realCFF_H
-0.633333 -10.3716 Q2 imagCFF_H
-0.64 -23.0582 Q2 realCFF_H
-0.64 -10.1812 Q2 imagCFF_H
-[33m12-04-2022 10:09:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.646667 -23.1418 Q2 realCFF_H
-0.646667 -9.99119 Q2 imagCFF_H
-[33m12-04-2022 10:09:31 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.653333 -23.2445 Q2 realCFF_H
-0.653333 -9.80164 Q2 imagCFF_H
-0.66 -23.3462 Q2 realCFF_H
-0.66 -9.61258 Q2 imagCFF_H
-[33m12-04-2022 10:09:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.666667 -23.4091 Q2 realCFF_H
-0.666667 -9.42405 Q2 imagCFF_H
-[33m12-04-2022 10:09:54 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.673333 -23.5118 Q2 realCFF_H
-0.673333 -9.23608 Q2 imagCFF_H
-[33m12-04-2022 10:10:10 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.68 -23.5986 Q2 realCFF_H
-0.68 -9.04869 Q2 imagCFF_H
-[33m12-04-2022 10:10:21 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.686667 -23.6644 Q2 realCFF_H
-0.686667 -8.86192 Q2 imagCFF_H
-[33m12-04-2022 10:10:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.693333 -23.7593 Q2 realCFF_H
-0.693333 -8.67578 Q2 imagCFF_H
-[33m12-04-2022 10:10:44 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.7 -23.8335 Q2 realCFF_H
-0.7 -8.4903 Q2 imagCFF_H
-[33m12-04-2022 10:10:53 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.706667 -23.9031 Q2 realCFF_H
-0.706667 -8.3055 Q2 imagCFF_H
-[33m12-04-2022 10:11:02 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.713333 -23.9831 Q2 realCFF_H
-0.713333 -8.12142 Q2 imagCFF_H
-[33m12-04-2022 10:11:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.72 -24.0409 Q2 realCFF_H
-0.72 -7.93806 Q2 imagCFF_H
-[33m12-04-2022 10:11:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.726667 -24.1198 Q2 realCFF_H
-0.726667 -7.75546 Q2 imagCFF_H
-[33m12-04-2022 10:11:28 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.733333 -24.1763 Q2 realCFF_H
-0.733333 -7.57362 Q2 imagCFF_H
-[33m12-04-2022 10:11:37 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.74 -24.2442 Q2 realCFF_H
-0.74 -7.39256 Q2 imagCFF_H
-0.746667 -24.3163 Q2 realCFF_H
-0.746667 -7.21231 Q2 imagCFF_H
-[33m12-04-2022 10:11:46 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.753333 -24.3518 Q2 realCFF_H
-0.753333 -7.03287 Q2 imagCFF_H
-[33m12-04-2022 10:11:55 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.76 -24.4202 Q2 realCFF_H
-0.76 -6.85427 Q2 imagCFF_H
-0.766667 -24.4848 Q2 realCFF_H
-0.766667 -6.67652 Q2 imagCFF_H
-[33m12-04-2022 10:12:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.773333 -24.5197 Q2 realCFF_H
-0.773333 -6.49962 Q2 imagCFF_H
-[33m12-04-2022 10:12:13 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.78 -24.5645 Q2 realCFF_H
-0.78 -6.3236 Q2 imagCFF_H
-[33m12-04-2022 10:12:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.786667 -24.6182 Q2 realCFF_H
-0.786667 -6.14846 Q2 imagCFF_H
-[33m12-04-2022 10:12:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.793333 -24.6676 Q2 realCFF_H
-0.793333 -5.97422 Q2 imagCFF_H
-[33m12-04-2022 10:12:41 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.8 -24.7127 Q2 realCFF_H
-0.8 -5.80088 Q2 imagCFF_H
-0.806667 -24.764 Q2 realCFF_H
-0.806667 -5.62846 Q2 imagCFF_H
-[33m12-04-2022 10:12:50 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.813333 -24.793 Q2 realCFF_H
-0.813333 -5.45696 Q2 imagCFF_H
-[33m12-04-2022 10:12:58 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.82 -24.8271 Q2 realCFF_H
-0.82 -5.2864 Q2 imagCFF_H
-0.826667 -24.8779 Q2 realCFF_H
-0.826667 -5.11677 Q2 imagCFF_H
-[33m12-04-2022 10:13:09 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.833333 -24.9035 Q2 realCFF_H
-0.833333 -4.94809 Q2 imagCFF_H
-[33m12-04-2022 10:13:18 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.84 -24.9381 Q2 realCFF_H
-0.84 -4.78037 Q2 imagCFF_H
-[33m12-04-2022 10:13:27 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.846667 -24.9606 Q2 realCFF_H
-0.846667 -4.6136 Q2 imagCFF_H
-[33m12-04-2022 10:13:35 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.853333 -24.9997 Q2 realCFF_H
-0.853333 -4.44779 Q2 imagCFF_H
-[33m12-04-2022 10:13:44 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.86 -25.0194 Q2 realCFF_H
-0.86 -4.28296 Q2 imagCFF_H
-[33m12-04-2022 10:13:53 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.866667 -25.0524 Q2 realCFF_H
-0.866667 -4.1191 Q2 imagCFF_H
-[33m12-04-2022 10:14:02 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
-0.873333 -25.079 Q2 realCFF_H
-0.873333 -3.95621 Q2 imagCFF_H
-0.88 -25.1076 Q2 realCFF_H
-0.88 -3.79431 Q2 imagCFF_H
+15-04-2022 06:13:18 [INFO] (Partons::printVersion) PARTONS 3.0.0 (http://partons.cea.fr) distributed under GNU Public License
+15-04-2022 06:13:18 [INFO] (Partons::printVersion) Git branch and revision of this version is ddvcs/5845feb108064462189f364ce566e81a950b8694
+15-04-2022 06:13:18 [INFO] (Partons::printVersion) Built using Elementary-Utils 3.0.0 (master/6ceb8c427b8f4110c32770d8159515539e13f995) and NumA++ 3.0.0 (master/16aa03a0c9b3e9382615007d7b6ed00d4cc689e0)
+15-04-2022 06:13:18 [INFO] (DatabaseManager::init) Database connection OK
+15-04-2022 06:13:18 [INFO] (DDVCSCFFTEST::configure) qcd_order_type configured with value = LO
+15-04-2022 06:13:18 [INFO] (DDVCSProcessTEST::setScaleModule) DDVCSScalesModule is set to: DDVCSScalesTEST
+15-04-2022 06:13:18 [INFO] (DDVCSProcessTEST::setXiConverterModule) XiConverterModule is set to: DDVCSXiConverterTEST
+15-04-2022 06:13:18 [INFO] (DDVCSProcessTEST::setConvolCoeffFunctionModule) ConvolCoeffFunctionModule is set to: DDVCSCFFTEST
+15-04-2022 06:13:18 [INFO] (TCSCFFStandard::configure) qcd_order_type configured with value = LO
+[33m15-04-2022 06:13:18 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:18 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0 1 0.602789 -14.6459
+[33m15-04-2022 06:13:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0001 1 0.718451 -13.5368 Q2 Q2Prim Re(H) Im(H)
+0.000106333 1 0.718399 -13.537 Q2 Q2Prim Re(H) Im(H)
+0.000113066 1 0.718343 -13.5372 Q2 Q2Prim Re(H) Im(H)
+0.000120226 1 0.718283 -13.5374 Q2 Q2Prim Re(H) Im(H)
+0.00012784 1 0.71822 -13.5377 Q2 Q2Prim Re(H) Im(H)
+0.000135936 1 0.718152 -13.5379 Q2 Q2Prim Re(H) Im(H)
+0.000144544 1 0.718081 -13.5382 Q2 Q2Prim Re(H) Im(H)
+0.000153697 1 0.718004 -13.5385 Q2 Q2Prim Re(H) Im(H)
+0.000163431 1 0.717923 -13.5388 Q2 Q2Prim Re(H) Im(H)
+0.00017378 1 0.717837 -13.5392 Q2 Q2Prim Re(H) Im(H)
+0.000184785 1 0.717745 -13.5395 Q2 Q2Prim Re(H) Im(H)
+0.000196487 1 0.717647 -13.5399 Q2 Q2Prim Re(H) Im(H)
+0.00020893 1 0.717543 -13.5403 Q2 Q2Prim Re(H) Im(H)
+0.00022216 1 0.717432 -13.5407 Q2 Q2Prim Re(H) Im(H)
+0.000236229 1 0.717314 -13.5412 Q2 Q2Prim Re(H) Im(H)
+0.000251189 1 0.717188 -13.5416 Q2 Q2Prim Re(H) Im(H)
+0.000267096 1 0.717054 -13.5422 Q2 Q2Prim Re(H) Im(H)
+0.00028401 1 0.716912 -13.5427 Q2 Q2Prim Re(H) Im(H)
+0.000301995 1 0.71676 -13.5433 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:13:55 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000321119 1 0.70706 -13.5439 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:01 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000341455 1 0.70662 -13.5445 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000363078 1 0.706135 -13.5452 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000386071 1 0.7056 -13.546 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:20 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000410519 1 0.705007 -13.5468 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:26 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000436516 1 0.704348 -13.5476 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000464159 1 0.703612 -13.5485 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:38 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000493552 1 0.702788 -13.5494 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:44 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000524807 1 0.701861 -13.5505 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:51 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000558042 1 0.700813 -13.5515 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:14:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000593381 1 0.699624 -13.5527 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000630957 1 0.698267 -13.5539 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:09 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000670914 1 0.696712 -13.5552 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:15 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0007134 1 0.694922 -13.5565 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:22 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000758578 1 0.692854 -13.558 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:28 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000806616 1 0.690463 -13.5595 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000857696 1 0.687705 -13.5612 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000912011 1 0.684549 -13.563 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:46 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.000969765 1 0.681001 -13.5648 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:53 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00103118 1 0.677154 -13.5668 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:15:59 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00109648 1 0.673245 -13.5689 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00116591 1 0.669726 -13.5712 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00123975 1 0.66726 -13.5736 Q2 Q2Prim Re(H) Im(H)
+0.00131826 1 0.707579 -13.5761 Q2 Q2Prim Re(H) Im(H)
+0.00140174 1 0.706934 -13.5788 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:24 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0014905 1 0.671255 -13.5817 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:30 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00158489 1 0.675642 -13.5848 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:36 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00168526 1 0.680214 -13.5881 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00179198 1 0.68431 -13.5915 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:48 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00190546 1 0.687613 -13.5952 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:16:55 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00202613 1 0.690056 -13.5992 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:01 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00215443 1 0.691704 -13.6034 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:07 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00229087 1 0.692662 -13.6079 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:13 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00243594 1 0.693036 -13.6126 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:19 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0025902 1 0.692905 -13.6177 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:26 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00275423 1 0.692321 -13.6231 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:32 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00292864 1 0.691297 -13.6288 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:38 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00311411 1 0.689801 -13.6349 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:44 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00331131 1 0.687733 -13.6415 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:50 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00352101 1 0.684862 -13.6484 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:17:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00374398 1 0.680692 -13.6558 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00398107 1 0.674147 -13.6637 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:09 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00423318 1 0.663101 -13.6721 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:15 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00450125 1 0.646679 -13.6811 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:21 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0047863 1 0.640277 -13.6906 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:28 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0050894 1 0.653263 -13.7008 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0054117 1 0.66331 -13.7117 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0057544 1 0.666733 -13.7233 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:46 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00611881 1 0.666471 -13.7356 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:52 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00650629 1 0.663928 -13.7489 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:18:58 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00691831 1 0.658986 -13.763 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00735642 1 0.649101 -13.778 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00782228 1 0.625666 -13.7941 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:17 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00831764 1 0.617062 -13.8113 Q2 Q2Prim Re(H) Im(H)
+0.00884437 1 0.651834 -13.8297 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:25 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.00940445 1 0.64058 -13.8494 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:31 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.01 1 0.636947 -13.8705 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:37 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0106333 1 0.626702 -13.893 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:43 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0113066 1 0.594248 -13.9172 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:49 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0120226 1 0.60306 -13.9431 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:19:55 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.012784 1 0.614069 -13.9708 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:02 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0135936 1 0.608463 -14.0007 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0144544 1 0.584706 -14.0327 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:14 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0153697 1 0.571652 -14.0672 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:20 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0163431 1 0.586907 -14.1044 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:27 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.017378 1 0.575463 -14.1445 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:33 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0184785 1 0.527451 -14.1878 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:39 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0196487 1 0.559613 -14.2346 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:45 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.020893 1 0.545777 -14.2855 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:51 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.022216 1 0.511682 -14.341 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:20:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0236229 1 0.52851 -14.4017 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0251189 1 0.471124 -14.469 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:10 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0267096 1 0.498102 -14.5437 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:16 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.028401 1 0.445141 -14.6249 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:22 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0301995 1 0.452537 -14.7125 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:28 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0321119 1 0.371903 -14.8068 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:34 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0341455 1 0.387384 -14.9077 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:40 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0363078 1 0.327991 -15.0156 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:46 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0386071 1 0.276589 -15.1307 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:53 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0410519 1 0.241293 -15.253 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:21:59 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0436516 1 0.171125 -15.3828 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:05 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0464159 1 0.0623789 -15.5201 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0493552 1 -0.0211698 -15.6651 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:17 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0524807 1 -0.0924795 -15.8177 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0558042 1 -0.193638 -15.9779 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:30 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0593381 1 -0.315596 -16.1455 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:36 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0630957 1 -0.461176 -16.3204 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0670914 1 -0.642546 -16.5023 Q2 Q2Prim Re(H) Im(H)
+0.07134 1 -0.754478 -16.6906 Q2 Q2Prim Re(H) Im(H)
+0.0758578 1 -0.943809 -16.8849 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:50 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0806616 1 -1.17714 -17.0845 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:22:56 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0857696 1 -1.4033 -17.2885 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:02 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0912011 1 -1.66053 -17.4958 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.0969765 1 -1.9337 -17.7051 Q2 Q2Prim Re(H) Im(H)
+0.103118 1 -2.23274 -17.9152 Q2 Q2Prim Re(H) Im(H)
+0.109648 1 -2.5711 -18.1242 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:17 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.116591 1 -2.96292 -18.3303 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.123975 1 -3.3682 -18.5312 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:30 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.131826 1 -3.79561 -18.7247 Q2 Q2Prim Re(H) Im(H)
+0.140174 1 -4.23714 -18.9079 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:37 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.14905 1 -4.75343 -19.0781 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:43 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.158489 1 -5.27957 -19.2318 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:49 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.168526 1 -5.85806 -19.3658 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:23:55 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.179198 1 -6.47167 -19.4764 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:01 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.190546 1 -7.11334 -19.5595 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.202613 1 -7.79409 -19.6112 Q2 Q2Prim Re(H) Im(H)
+0.215443 1 -8.5118 -19.6273 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:17 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.229087 1 -9.26504 -19.6034 Q2 Q2Prim Re(H) Im(H)
+0.243594 1 -10.0487 -19.5352 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:27 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.25902 1 -10.8598 -19.4184 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:33 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.275423 1 -11.7002 -19.2487 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:39 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.292864 1 -12.5538 -19.0221 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:45 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.311411 1 -13.433 -18.7347 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:51 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.331131 1 -14.3351 -18.3832 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:24:57 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.352101 1 -15.23 -17.9644 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:03 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.374398 1 -16.1367 -17.4759 Q2 Q2Prim Re(H) Im(H)
+0.398107 1 -17.043 -16.9158 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:11 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.423318 1 -17.9102 -16.2828 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:17 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.450125 1 -18.792 -15.5764 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:23 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.47863 1 -19.6349 -14.797 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:29 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.50894 1 -20.4433 -13.9458 Q2 Q2Prim Re(H) Im(H)
+0.54117 1 -21.219 -13.0249 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:36 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.57544 1 -21.9333 -12.0373 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:42 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.611881 1 -22.5922 -10.9869 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:48 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.650629 1 -23.2061 -9.87847 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:25:54 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.691831 1 -23.7357 -8.71767 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:26:00 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.735642 1 -24.1927 -7.51082 Q2 Q2Prim Re(H) Im(H)
+0.782228 1 -24.6007 -6.26497 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:26:08 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.831764 1 -24.8977 -4.98772 Q2 Q2Prim Re(H) Im(H)
+0.884437 1 -25.1249 -3.68711 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:26:15 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+0.940445 1 -25.2473 -2.3715 Q2 Q2Prim Re(H) Im(H)
+[33m15-04-2022 06:26:21 [WARN] (DExpIntegrator1D::integrate) Cannot reach tolerances ![0m
+1 1 -25.2955 -1.04943 Q2 Q2Prim Re(H) Im(H)
+15-04-2022 06:26:22 [INFO] (DDVCSProcessTEST::setScaleModule) DDVCSScalesModule is set to: 0
+15-04-2022 06:26:22 [INFO] (DDVCSProcessTEST::setXiConverterModule) XiConverterModule is set to: 0
+15-04-2022 06:26:22 [INFO] (DDVCSProcessTEST::setConvolCoeffFunctionModule) ConvolCoeffFunctionModule is set to: 0
+15-04-2022 06:26:22 [INFO] (LoggerManager::close) ... Closed properly ...
