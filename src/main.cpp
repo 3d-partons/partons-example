@@ -16,7 +16,7 @@
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
 #include <partons/modules/gpd/GPDGK16.h>
-#include <partons/modules/process/DDVCS/DDVCSProcessTEST.h>
+#include <partons/modules/process/DDVCS/DDVCSProcessDMSW22.h>
 #include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
 #include <partons/beans/Scales.h>
 #include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTEST.h>
@@ -89,9 +89,14 @@ int main(int argc, char** argv) {
                         DDVCSScalesTEST::classId);
 
         // Create ProcessModule
+
+        std::string method = "DDVCSProcessDMSW22";//"DDVCSProcessDMSW22" for KS' spinor techniques; "DDVCSProcessTEST" for BM2003 formulae
+
+        std::cout << method << " <--- METHOD TO COMPUTE THE CROSS-SECTION" << std::endl;
+
         DDVCSProcessModule* pProcessModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSProcessModule(
-                        DDVCSProcessTEST::classId);
+                        method);
 
         // Link modules (set physics assumptions of your computation)
         pProcessModule->setScaleModule(pScalesModule);
@@ -107,8 +112,8 @@ int main(int argc, char** argv) {
 
         //------------------------------------------------
 
-        //Computation of 7-fold xsec:
-        int total = 20;
+        //Computation of the 7-fold xsec:
+        int total = 25;
 
         double ml = 0.;
         double Ebeam = 11.;
@@ -119,18 +124,15 @@ int main(int argc, char** argv) {
         double Mll2 = 0.428846154;
         double phil = M_PI / 3.;
         double thetal = M_PI / 6.;
-        int beamSign = -1;
-        int polariz = 0;
+        double phi;
+        double xsec;
 
         for (int i = 0; i <= total; i++) {
 
-            double phi = -M_PI + 2.*M_PI*i/total;
+            phi = -M_PI + 2.*M_PI*i/total; //Trento's value
 
-            DDVCSProcessTEST::computeInternalVariables(ml, Ebeam, Mnucleon, xB,
-                    t, Qcal2, Mll2, phi, phil, thetal);
-
-            DDVCSProcessTEST::crossSectionBH(ml, Ebeam, Mnucleon, xB, t, Qcal2,
-                    Mll2, phi, phil, thetal, beamSign, polariz);
+            std::cout << phi << " " << pProcessModule-> compute(1, -1, NumA::Vector3D(0., 0., 0.), DDVCSObservableKinematic(xB, t, Qcal2, Mll2,
+                    Ebeam, phi, phil, thetal), gpdTypes, VCSSubProcessType::BH).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue() << " phi xsec7_BH" << std::endl;
 
         }
 
