@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
         //------------------------------------------------
 
         //Computation of the 7-fold xsec:
-        int total = 25;
+        int total = 1;
 
         double ml = 0.;
         double Ebeam = 11.;
@@ -127,9 +127,11 @@ int main(int argc, char** argv) {
         double phi;
         double xsec;
 
-        for (int i = 0; i <= total; i++) {
+        for (int i = 0; i < total; i++) {
 
             phi = -M_PI + 2.*M_PI*i/total; //Trento's value
+
+            phi = 1.234; // DEBUG
 
             std::cout << phi << " " << pProcessModule-> compute(1, -1, NumA::Vector3D(0., 0., 0.), DDVCSObservableKinematic(xB, t, Qcal2, Mll2,
                     Ebeam, phi, phil, thetal), gpdTypes, VCSSubProcessType::BH).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue() << " phi xsec7_BH" << std::endl;
