@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
 
             phi = -M_PI + 2.*M_PI*i/total; //Trento's value
 
-            phi = 1.234; // DEBUG
+            phi = 1.234; //DEBUG
 
             std::cout << phi << " " << pProcessModule-> compute(1, -1, NumA::Vector3D(0., 0., 0.), DDVCSObservableKinematic(xB, t, Qcal2, Mll2,
                     Ebeam, phi, phil, thetal), gpdTypes, VCSSubProcessType::BH).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue() << " phi xsec7_BH" << std::endl;
