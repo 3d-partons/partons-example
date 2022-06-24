@@ -80,17 +80,25 @@ int main(int argc, char** argv) {
 
         for (size_t i = 0; i < c_nPar_x_eq_xi_with_pos; i++) {
             parameters.at(i) = c_par_x_eq_xi_with_pos[iReplica][i];
+            std::cout << "Parameter at " << i << " = " << parameters.at(i) << std::endl ;
         }
 
         static_cast<GPDANNDD*>(pGPDModelANN)->setParameters(parameters);
+
+        std::cout << "Computing results for ANN replica" << std::endl;
 
         // Run computation
         GPDResult gpdResultANN = pGPDService->computeSingleKinematic(
                 gpdKinematic, pGPDModelANN);
 
+        std::cout << "Printing results for ANN replica" << std::endl;
+
         // Print results
         Partons::getInstance()->getLoggerManager()->info("main", __func__,
                 gpdResultANN.toString());
+
+        std::cout << "End of result printing" << std::endl;
+
 
         // Remove pointer references
         // Module pointers are managed by PARTONS
@@ -130,4 +138,17 @@ int main(int argc, char** argv) {
     }
 
     return 0;
+}
+
+void PrintReplica(){
+
+	  std::ofstream myfile;
+	  myfile.open ("./results/Replica.dat");
+
+
+
+	  myfile << "Writing this to a file.\n";
+	  myfile.close();
+	  return 0;
+
 }
