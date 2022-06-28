@@ -120,7 +120,7 @@ double getSigma(const std::vector<std::vector<double> >& replicasValues, size_t 
 
 	//init
 	double result = 0;
-	double sumOfWeights = 0.;
+	double sumOfWeights2 = 0.;
 
 	//get mean
 	double mean = getMean(replicasValues, iNewPoint, weights);
@@ -128,15 +128,14 @@ double getSigma(const std::vector<std::vector<double> >& replicasValues, size_t 
 	//loop
 	for(size_t i = 0; i < replicasValues.size(); i++){
 
-		double weight = 1.;
-		if(weights.size() > 0) weight = weights.at(i);
+		double weight = (weights.size() == 0) ? (1 / double(replicasValues.size())) : (weights.at(i));
 
 		result += weight * pow(mean - replicasValues.at(i).at(iNewPoint), 2);
-		sumOfWeights += weight;
+		sumOfWeights2 += pow(weight, 2);
 	}
 
 	//return
-	return sqrt(result / sumOfWeights);
+	return sqrt(result / (1. - sumOfWeights2));
 }
 
 int main(){
@@ -195,7 +194,7 @@ int main(){
 		std::cout << "weight: " << i << ' ' << weights.at(i) << std::endl;
 	}
 
-	std::cout << "number of eff. replicas: " << getEffectiveNumberOfReplicas(weights) << std::endl;
+	std::cout << "effective number of replicas: " << getEffectiveNumberOfReplicas(weights) << std::endl;
 
 	for(size_t i = 0; i < nNewPoints; i++){
 
