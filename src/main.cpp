@@ -27,6 +27,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "leptonCMframe.h"
 
 using namespace PARTONS;
 
@@ -90,9 +91,9 @@ int main(int argc, char** argv) {
 
         // Create ProcessModule
 
-        std::string method = "DDVCSProcessDMSW22";//"DDVCSProcessDMSW22" for KS' spinor techniques; "DDVCSProcessTEST" for BM2003 formulae
+        std::string method = "DDVCSProcessDMSW22"; //"DDVCSProcessDMSW22" for KS' spinor techniques; "DDVCSProcessTEST" for BM2003 formulae
 
-        std::cout << method << " <--- METHOD TO COMPUTE THE CROSS-SECTION" << std::endl;
+        std::cout << method << " method_for_cross-section" << std::endl;
 
         DDVCSProcessModule* pProcessModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSProcessModule(
@@ -109,6 +110,12 @@ int main(int argc, char** argv) {
         // GPD list
         List<GPDType> gpdTypes;
         gpdTypes.add(GPDType::H);
+        gpdTypes.add(GPDType::E);
+//        gpdTypes.add(GPDType::Ht);
+//        gpdTypes.add(GPDType::Et);
+//        gpdTypes.add(GPDType::HL);
+//        gpdTypes.add(GPDType::EL);
+
 
         //------------------------------------------------
 
@@ -127,14 +134,39 @@ int main(int argc, char** argv) {
         double phi;
         double xsec;
 
-        for (int i = 0; i < total; i++) {
+        //DEBUG kin in Pawel's slides
+        Ebeam = 12.;
+        xB = 5.*pow(10., -4.);
+        Qcal2 = 5.*pow(10., -3.);
+        Mll2 = 1.;
+        thetal = 3.*M_PI/4.;
+        t = -0.015;
+        //END DEBUG
 
-            phi = -M_PI + 2.*M_PI*i/total; //Trento's value
+        for (int i = 0; i <= total; i++) {
 
-            phi = 1.234; //DEBUG
+            phi = -M_PI + 2. * M_PI * i / total; //Trento's value
 
-            std::cout << phi << " " << pProcessModule-> compute(1, -1, NumA::Vector3D(0., 0., 0.), DDVCSObservableKinematic(xB, t, Qcal2, Mll2,
-                    Ebeam, phi, phil, thetal), gpdTypes, VCSSubProcessType::BH).getValue().makeSameUnitAs(PhysicalUnit::PB).getValue() << " phi xsec7_BH" << std::endl;
+            phi = M_PI / 7.; //DEBUG
+
+            //DEBUG getting BDP2001 phi and theta from BM2003's phil and thetal
+            leptons lep;
+            lep.computeConverterVariables(xB, t, Qcal2, Mll2, Mnucleon);
+            double phiBDP, thetaBDP;
+            phiBDP = lep.leptonCMconverter(phil, thetal).first;
+            thetaBDP = lep.leptonCMconverter(phil, thetal).second;
+            std::cout << phiBDP << " " << thetaBDP << " " << phil << " " << thetal << " phiBDP, thetaBDP, phiL, thetaL" << std::endl;
+            //END DEBUG
+
+
+            std::cout << phi << " "
+                    << pProcessModule->compute(1, -1,
+                            NumA::Vector3D(0., 0., 0.),
+                            DDVCSObservableKinematic(xB, t, Qcal2, Mll2, Ebeam,
+                                    phi, phil, thetal), gpdTypes,
+                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
+                            PhysicalUnit::PB).getValue() << " phi xsec7"
+                    << std::endl;
 
         }
 
