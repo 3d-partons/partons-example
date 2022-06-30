@@ -28,7 +28,8 @@
 //double s2;
 //double c2;
 
-std::pair<double, double> leptons::leptonCMconverter(double phil, double thetal) {
+std::pair<double, double> leptons::leptonCMconverter(double phil,
+        double thetal) {
 
     double phiBDP, thetaBDP; //returns; angles in lepton-CM frame in BDP2001 paper
 
@@ -78,17 +79,59 @@ std::pair<double, double> leptons::leptonCMconverter(double phil, double thetal)
 
 }
 
-void leptons::computeConverterVariables(double xB, double t, double Qcal2, double Mll2, double Mnucleon) {
+double leptons::jacobianLeptonCM(double phil, double thetal) {
+
+    double jac; //the return. jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
+
+    double thetaThetaL; //dcos(thetaBDP)/dcos(thetal)
+    double thetaPhiL; //dcos(thetaBDP)/dcos(phil)
+    double phiThetaL; //dcos(phiBDP)/dcos(thetal)
+    double phiPhiL; //dcos(phiBDP)/dcos(phil)
+
+    double cotgThetal = cos(thetal) / sin(thetal);
+    double sinTheta = sqrt(
+            pow(c2 * sin(thetal) * cos(phil) + s2 * cos(thetal), 2.)
+                    + pow(sin(thetal) * sin(phil), 2.));
+    double sinPhi = sin(thetal)*sin(phil)/sinTheta;
+
+    thetaThetaL = s2 * cos(phil) * cotgThetal + c2;
+    thetaPhiL = -s2 * sin(thetal);
+    phiThetaL = (-c2 * cotgThetal * cos(phil) + s2) / sinTheta;
+    phiThetaL += (pow(cos(thetal), 2.) * (c2 * tan(thetal) * cos(phil) + s2)
+            * (c2 * c2 * pow(cos(phil), 2.) + pow(sin(phil), 2.)
+                    + s2 * c2
+                            * (cotgThetal * cos(phil) - tan(thetal) * cos(phil))
+                    - s2 * s2)) / pow(sinTheta, 3.);
+    phiPhiL = c2 * sin(thetal) / sinTheta;
+    phiPhiL -= (pow(sin(thetal), 2.)
+            * (c2 * sin(thetal) * cos(phil) + s2 * cos(thetal))
+            * (c2 * c2 * cos(phil) + s2 * c2 * cotgThetal - cos(phil)))
+            / pow(sinTheta, 3.);
+
+    jac = thetaThetaL * phiPhiL - thetaPhiL * phiThetaL;
+
+    jac = fabs(jac)*sin(thetal)*sin(phil)/(sinTheta*sinPhi);
+
+    return jac;
+}
+
+void leptons::computeConverterVariables(double xB, double t, double Qcal2,
+        double Mll2, double Mnucleon) {
 
     Epsilon2 = 4. * pow(xB * Mnucleon, 2.) / Qcal2;
     W1 = sqrt(Qcal2 / Epsilon2); //eq 11 BM2003
-    W2 = sqrt(Qcal2 / Epsilon2) + t / (2. * Mnucleon);//eq 17 BM2003
-    Modv = sqrt(1. - Mll2 / pow(W2, 2.));//eq 17 BM2003
-    Zeta = atanh(Modv);//definition of Lorentz-rapidity
-    Q1z = sqrt(Qcal2 * (1. + Epsilon2) / Epsilon2);//eq 11 BM2003
-    CGamma = -(sqrt(Epsilon2) * (Qcal2 - Mll2 + t)
-            + 2. * sqrt(Qcal2) * W2)
-            / (2. * sqrt(Qcal2) * W2 * Modv * sqrt(1. + Epsilon2));//eq 18 BM2003
+    W2 = sqrt(Qcal2 / Epsilon2) + t / (2. * Mnucleon); //eq 17 BM2003
+    Modv = sqrt(1. - Mll2 / pow(W2, 2.)); //eq 17 BM2003
+
+    //DEBUG
+    std::cout << Modv << " " << Mll2 << " " << W2 << " " << W2 * W2
+            << " Modv Mll2 W2 W2^2" << std::endl;
+    //END DEBUG
+
+    Zeta = atanh(Modv); //definition of Lorentz-rapidity
+    Q1z = sqrt(Qcal2 * (1. + Epsilon2) / Epsilon2); //eq 11 BM2003
+    CGamma = -(sqrt(Epsilon2) * (Qcal2 - Mll2 + t) + 2. * sqrt(Qcal2) * W2)
+            / (2. * sqrt(Qcal2) * W2 * Modv * sqrt(1. + Epsilon2)); //eq 18 BM2003
     SGamma = sqrt(1. - CGamma * CGamma);
 
     p2x = Q1z * SGamma; // p2^{x'}: x'-component of outgoing-proton momentum from the POV of TRF-II frame (BM2003)
@@ -103,7 +146,10 @@ void leptons::computeConverterVariables(double xB, double t, double Qcal2, doubl
     c2 = -p2az / modp2a; // cos(phi2)
 
     //DEBUG
-    std::cout << s2 << " " << c2 << " sin(phi2) cos(phi2)" << std::endl;
+    std::cout << s2 << " " << c2 << " " << c2 * c2 + s2 * s2 << " " << CGamma
+            << " " << SGamma << " " << p2az
+            << " sin(phi2), cos(phi2), c2^2+s2^2, cGamma, sGamma, p2^{* z'}"
+            << std::endl;
     //END DEBUG
 }
 

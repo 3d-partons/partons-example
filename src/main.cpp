@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
         //------------------------------------------------
 
         //Computation of the 7-fold xsec:
-        int total = 1;
+        int total = 30;
 
         double ml = 0.;
         double Ebeam = 11.;
@@ -134,20 +134,22 @@ int main(int argc, char** argv) {
         double phi;
         double xsec;
 
-        //DEBUG kin in Pawel's slides
+        //DEBUG Pawel's kin
         Ebeam = 12.;
-        xB = 5.*pow(10., -4.);
-        Qcal2 = 5.*pow(10., -3.);
+        xB = 0.1 / 10. / 100. * 5;
+        Qcal2 = 0.1 / 100. * 5;
         Mll2 = 1.;
-        thetal = 3.*M_PI/4.;
-        t = -0.015;
+        thetal = M_PI/4.;
+        t = -0.4;
         //END DEBUG
 
         for (int i = 0; i <= total; i++) {
 
             phi = -M_PI + 2. * M_PI * i / total; //Trento's value
 
-            phi = M_PI / 7.; //DEBUG
+            phi = M_PI/7.; //DEBUG
+
+            phil = 2.*M_PI*i/total;
 
             //DEBUG getting BDP2001 phi and theta from BM2003's phil and thetal
             leptons lep;
@@ -155,7 +157,10 @@ int main(int argc, char** argv) {
             double phiBDP, thetaBDP;
             phiBDP = lep.leptonCMconverter(phil, thetal).first;
             thetaBDP = lep.leptonCMconverter(phil, thetal).second;
-            std::cout << phiBDP << " " << thetaBDP << " " << phil << " " << thetal << " phiBDP, thetaBDP, phiL, thetaL" << std::endl;
+
+            double Jac = lep.jacobianLeptonCM(phil, thetal); //jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
+
+            std::cout << phil << " " << thetal << " " << phiBDP << " " << thetaBDP << " " << Jac << " phiL, thetaL, phiBDP, thetaBDP, Jacobian" << std::endl;
             //END DEBUG
 
 

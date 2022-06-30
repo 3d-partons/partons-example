@@ -8,6 +8,7 @@ class leptons {
 public:
     //Functions
     std::pair<double, double> leptonCMconverter(double phil, double thetal);
+    double jacobianLeptonCM(double phil, double thetal);
     void computeConverterVariables(double xB, double t, double Qcal2,
             double Mll2, double Mnucleon);
 
