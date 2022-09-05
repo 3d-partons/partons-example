@@ -22,6 +22,7 @@
 #include "../include/FTGPD.h"
 #include "../include/gpd/xEqXi_with_pos_replicas.h"
 #include "../include/statistics.h"
+#include "../include/printreplica.h"
 
 using namespace PARTONS;
 
@@ -60,6 +61,14 @@ int main(int argc, char** argv) {
                 Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
                         GPDANNDD::classId);
 
+        //Output file for results
+        std::ofstream myfile;
+        myfile.open ("./results/Replica.dat");
+
+        //myfile << "Writing this to a file.\n";
+        //myfile.close();
+
+
         // Values of xi, t, and mu2 for which the evaluation will be done
         double xi = 0.5;
         double t = -0.1;
@@ -72,6 +81,11 @@ int main(int argc, char** argv) {
         double nuMin = 0.;
         double nuMax = 2.;
         size_t nuN = 4;
+
+        //Printing ANN replica
+        PrintReplica MyReplicaPrinter;
+        MyReplicaPrinter.GetReplicaPrinted(pGPDModelANN, xi, t, mu2, myfile);
+        myfile.close();
 
         for (size_t i = 0; i <= nuN; i++) {
 
@@ -90,6 +104,7 @@ int main(int argc, char** argv) {
             std::vector<double> resultANNRe(c_nRep_x_eq_xi_with_pos);
             std::vector<double> resultANNIm(c_nRep_x_eq_xi_with_pos);
 
+
             //loop over replicas
             for (size_t j = 0; j < c_nRep_x_eq_xi_with_pos; j++) {
 
@@ -103,28 +118,24 @@ int main(int argc, char** argv) {
                 //load
                 static_cast<GPDANNDD*>(pGPDModelANN)->setParameters(parameters);
 
-        for (size_t i = 0; i < c_nPar_x_eq_xi_with_pos; i++) {
-            parameters.at(i) = c_par_x_eq_xi_with_pos[iReplica][i];
-            std::cout << "Parameter at " << i << " = " << parameters.at(i) << std::endl ;
-        }
+
+                /*
+                //evaluate
+                std::complex<double> resultANN = ftGPD.getFT(pGPDModelANN, nu, xi, t, mu2);
 
                 std::cout << nu << ' ' << resultANN << std::endl;
-
-        std::cout << "Computing results for ANN replica" << std::endl;
 
                 //copy
                 resultANNRe.at(j) = resultANN.real();
                 resultANNIm.at(j) = resultANN.imag();
+                */
+
             }
 
-        std::cout << "Printing results for ANN replica" << std::endl;
-
+            /*
             //remove outliers
             Statistics::removeOutliers3Sigma(resultANNRe);
             Statistics::removeOutliers3Sigma(resultANNIm);
-
-        std::cout << "End of result printing" << std::endl;
-
 
             //print
             std::cout << nu << ' ';
@@ -132,6 +143,7 @@ int main(int argc, char** argv) {
 //            std::cout << resultMMS.imag() << ' ';
             std::cout << Statistics::getMean(resultANNIm) << ' ' << Statistics::getSigma(resultANNIm) << ' ';
             std::cout << std::endl;
+            */
         }
 
     }
@@ -168,15 +180,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-void PrintReplica(){
-
-	  std::ofstream myfile;
-	  myfile.open ("./results/Replica.dat");
-
-
-
-	  myfile << "Writing this to a file.\n";
-	  myfile.close();
-	  return 0;
-
-}
