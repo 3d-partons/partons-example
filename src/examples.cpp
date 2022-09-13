@@ -311,7 +311,7 @@ void computeSingleKinematicsForDVMPComptonFormFactor() {
     PARTONS::DVMPConvolCoeffFunctionKinematic cffKinematic =
             PARTONS::DVMPConvolCoeffFunctionKinematic(0.01, -0.1, 4., 4., 4.,
                     PARTONS::MesonType::PI0,
-                    PARTONS::MesonPolarization::UNDEFINED);
+                    PARTONS::PolarizationType::UNDEFINED);
 
     // Run computation
     PARTONS::DVMPConvolCoeffFunctionResult cffResult =
