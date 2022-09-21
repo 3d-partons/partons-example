@@ -132,6 +132,7 @@ string(REGEX REPLACE "\"" "" PARTONS_REVISION "${PARTONS_REVISION}")
 string(STRIP "${PARTONS_REVISION}" PARTONS_REVISION)
 
 configure_file("${CMAKE_SOURCE_DIR}/bin/environment_configuration.dat.in" "${CMAKE_SOURCE_DIR}/bin/environment_configuration.dat")
+configure_file("${CMAKE_SOURCE_DIR}/python_examples/environment_configuration.dat.in" "${CMAKE_SOURCE_DIR}/python_examples/environment_configuration.dat")
 
 # FINALIZE ==================================================================================
 
