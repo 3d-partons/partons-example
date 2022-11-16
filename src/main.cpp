@@ -27,7 +27,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "leptonCMframe.h"
+#include <include/analysis.h>
+#include <include/leptonCMframe.h>
 
 using namespace PARTONS;
 
@@ -111,69 +112,74 @@ int main(int argc, char** argv) {
         List<GPDType> gpdTypes;
         gpdTypes.add(GPDType::H);
         gpdTypes.add(GPDType::E);
-//        gpdTypes.add(GPDType::Ht);
-//        gpdTypes.add(GPDType::Et);
-//        gpdTypes.add(GPDType::HL);
-//        gpdTypes.add(GPDType::EL);
+        gpdTypes.add(GPDType::Ht);
+        gpdTypes.add(GPDType::Et);
+        gpdTypes.add(GPDType::HL);
+        gpdTypes.add(GPDType::EL);
+
+        //DVCS and TCS limits of DDVCS
+
+        int lim = 0; // 0 for DVCS, 1 for TCS
+        compareLimit(lim);
 
 
         //------------------------------------------------
 
         //Computation of the 7-fold xsec:
-        int total = 30;
-
-        double ml = 0.;
-        double Ebeam = 11.;
-        double Mnucleon = 0.938272081;
-        double xB = 0.175257269;
-        double t = -0.15;
-        double Qcal2 = 1.25;
-        double Mll2 = 0.428846154;
-        double phil = M_PI / 3.;
-        double thetal = M_PI / 6.;
-        double phi;
-        double xsec;
-
-        //DEBUG Pawel's kin
-        Ebeam = 12.;
-        xB = 0.1 / 10. / 100. * 5;
-        Qcal2 = 0.1 / 100. * 5;
-        Mll2 = 1.;
-        thetal = M_PI/4.;
-        t = -0.4;
-        //END DEBUG
-
-        for (int i = 0; i <= total; i++) {
-
-            phi = -M_PI + 2. * M_PI * i / total; //Trento's value
-
-            phi = M_PI/7.; //DEBUG
-
-            phil = 2.*M_PI*i/total;
-
-            //DEBUG getting BDP2001 phi and theta from BM2003's phil and thetal
-            leptons lep;
-            lep.computeConverterVariables(xB, t, Qcal2, Mll2, Mnucleon);
-            double phiBDP, thetaBDP;
-            phiBDP = lep.leptonCMconverter(phil, thetal).first;
-            thetaBDP = lep.leptonCMconverter(phil, thetal).second;
-
-            double Jac = lep.jacobianLeptonCM(phil, thetal); //jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
-
-            std::cout << phil << " " << thetal << " " << phiBDP << " " << thetaBDP << " " << Jac << " phiL, thetaL, phiBDP, thetaBDP, Jacobian" << std::endl;
-            //END DEBUG
-
-
-            std::cout << phi << " "
-                    << pProcessModule->compute(1, -1,
-                            NumA::Vector3D(0., 0., 0.),
-                            DDVCSObservableKinematic(xB, t, Qcal2, Mll2, Ebeam,
-                                    phi, phil, thetal), gpdTypes,
-                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
-                            PhysicalUnit::PB).getValue() << " phi xsec7"
-                    << std::endl;
-
-        }
+//        int total = 30;
+//
+//        double ml = 0.;
+//        double Ebeam = 11.;
+//        double Mnucleon = 0.938272081;
+//        double xB = 0.175257269;
+//        double t = -0.15;
+//        double Qcal2 = 1.25;
+//        double Mll2 = 0.428846154;
+//        double phil = M_PI / 3.;
+//        double thetal = M_PI / 6.;
+//        double phi;
+//        double xsec;
+//
+//        //DEBUG Pawel's kin
+//        Ebeam = 12.;
+//        xB = 0.1 / 10. / 100. * 5;
+//        Qcal2 = 0.1 / 100. * 5;
+//        Mll2 = 1.;
+//        thetal = M_PI/4.;
+//        t = -0.4;
+//        //END DEBUG
+//
+//        for (int i = 0; i <= total; i++) {
+//
+//            phi = -M_PI + 2. * M_PI * i / total; //Trento's value
+//
+//            phi = M_PI/7.; //DEBUG
+//
+//            phil = 2.*M_PI*i/total;
+//
+//            //DEBUG getting BDP2001 phi and theta from BM2003's phil and thetal
+//            leptons lep;
+//            lep.computeConverterVariables(xB, t, Qcal2, Mll2, Mnucleon);
+//            double phiBDP, thetaBDP;
+//            phiBDP = lep.leptonCMconverter(phil, thetal).first;
+//            thetaBDP = lep.leptonCMconverter(phil, thetal).second;
+//
+//            double Jac = lep.jacobianLeptonCM(phil, thetal); //jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
+//
+//            std::cout << phil << " " << thetal << " " << phiBDP << " " << thetaBDP << " " << Jac << " phiL, thetaL, phiBDP, thetaBDP, Jacobian" << std::endl;
+//            //END DEBUG
+//
+//
+//            std::cout << phi << " "
+//                    << pProcessModule->compute(1, -1,
+//                            NumA::Vector3D(0., 0., 0.),
+//                            DDVCSObservableKinematic(xB, t, Qcal2, Mll2, Ebeam,
+//                                    phi, phil, thetal), gpdTypes,
+//                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
+//                            PhysicalUnit::PB).getValue() << " phi xsec7"
+//                    << std::endl;
+//
+//        }
 
         //------------------------------------------------
 

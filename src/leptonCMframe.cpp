@@ -4,7 +4,7 @@
  * and the respective ones in BDP2001 (namely, phiBDP and thetaBDP).
  * phiBDP = \varphi, thetaBDP = \theta in BDP2001 paper; phil = \varphi_\ell, thetal = \theta_\ell in BM2003
  */
-#include "leptonCMframe.h"
+#include <include/leptonCMframe.h>
 #include <cmath>
 #include <complex>
 #include <iostream>
@@ -118,21 +118,30 @@ double leptons::jacobianLeptonCM(double phil, double thetal) {
 void leptons::computeConverterVariables(double xB, double t, double Qcal2,
         double Mll2, double Mnucleon) {
 
+    //Computation of tMin:
     Epsilon2 = 4. * pow(xB * Mnucleon, 2.) / Qcal2;
+
+    double tMin = -1. / (4. * xB * (1. - xB) + Epsilon2);
+    tMin *= (2. * ((1. - xB) * Qcal2 - xB * Mll2)
+                + Epsilon2 * (Qcal2 - Mll2)
+                - 2. * sqrt(1. + Epsilon2)
+                        * sqrt(
+                                pow((1. - xB) * Qcal2 - xB * Mll2, 2.)
+                                        - Epsilon2 * Qcal2 * Mll2));
+
     W1 = sqrt(Qcal2 / Epsilon2); //eq 11 BM2003
     W2 = sqrt(Qcal2 / Epsilon2) + t / (2. * Mnucleon); //eq 17 BM2003
     Modv = sqrt(1. - Mll2 / pow(W2, 2.)); //eq 17 BM2003
-
-    //DEBUG
-    std::cout << Modv << " " << Mll2 << " " << W2 << " " << W2 * W2
-            << " Modv Mll2 W2 W2^2" << std::endl;
-    //END DEBUG
 
     Zeta = atanh(Modv); //definition of Lorentz-rapidity
     Q1z = sqrt(Qcal2 * (1. + Epsilon2) / Epsilon2); //eq 11 BM2003
     CGamma = -(sqrt(Epsilon2) * (Qcal2 - Mll2 + t) + 2. * sqrt(Qcal2) * W2)
             / (2. * sqrt(Qcal2) * W2 * Modv * sqrt(1. + Epsilon2)); //eq 18 BM2003
     SGamma = sqrt(1. - CGamma * CGamma);
+
+    if (t == tMin) {
+        SGamma = 0.;//eq 21 in BM2003
+    }
 
     p2x = Q1z * SGamma; // p2^{x'}: x'-component of outgoing-proton momentum from the POV of TRF-II frame (BM2003)
     p20 = Mnucleon + W1 - W2; // p2^{0}
@@ -145,11 +154,5 @@ void leptons::computeConverterVariables(double xB, double t, double Qcal2,
     s2 = p2x / modp2a; // sin(phi2); phi2 is the angle between lepton-CM frame obtained by boosting TRF-II (BM2003), along z'-axis with rapidity Zeta, and the lepton-CM frame described in BDP2001
     c2 = -p2az / modp2a; // cos(phi2)
 
-    //DEBUG
-    std::cout << s2 << " " << c2 << " " << c2 * c2 + s2 * s2 << " " << CGamma
-            << " " << SGamma << " " << p2az
-            << " sin(phi2), cos(phi2), c2^2+s2^2, cGamma, sGamma, p2^{* z'}"
-            << std::endl;
-    //END DEBUG
 }
 
