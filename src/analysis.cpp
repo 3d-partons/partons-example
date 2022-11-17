@@ -1,4 +1,5 @@
 #include "../include/analysis.h"
+#include "examples.h"
 
 #include <ElementaryUtils/parameters/Parameter.h>
 #include <NumA/linear_algebra/vector/Vector3D.h>
@@ -12,6 +13,13 @@
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/FundamentalPhysicalConstants.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
+//
+#include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
+#include <partons/beans/convol_coeff_function/DDVCS/DDVCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionKinematic.h>
+#include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionResult.h>
+#include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionResult.h>
+//
 #include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
 #include <partons/modules/convol_coeff_function/TCS/TCSCFFStandard.h>
@@ -43,7 +51,7 @@
 
 using namespace PARTONS;
 
-void compareLimit(int lim) { // lim = 0 for DVCS limit, 1 for TCS
+void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff = 0 if you don't want cff to be computed but only xsec, 1 if you want only cff
 
     // ******************************************************
     // Modules **********************************************
@@ -166,17 +174,19 @@ void compareLimit(int lim) { // lim = 0 for DVCS limit, 1 for TCS
     pTCSCFFModel->setGPDModule(pGPDModule);
     pTCSObservableModule->setProcessModule(pTCSProcessModule);
 
-    //Get GPDs
+    //Get GPDs for xsec
     List<GPDType> gpdTypes;
 
-    gpdTypes.add(GPDType::H);
+//    gpdTypes.add(GPDType::H);
     gpdTypes.add(GPDType::E);
-    gpdTypes.add(GPDType::Ht);
-    gpdTypes.add(GPDType::Et);
-    gpdTypes.add(GPDType::HL);
-    gpdTypes.add(GPDType::EL);
+//    gpdTypes.add(GPDType::Ht);
+//    gpdTypes.add(GPDType::Et);
+//    gpdTypes.add(GPDType::HL);
+//    gpdTypes.add(GPDType::EL);
 
-
+    //Choose GPD for CFF
+    GPDType::Type currentGPD;
+    currentGPD = GPDType::E;
 
     // ******************************************************
     // DVCS limit  ******************************************
@@ -184,47 +194,104 @@ void compareLimit(int lim) { // lim = 0 for DVCS limit, 1 for TCS
 
     if (lim == 0) {
 
-        double xB = 0.04;
-        double t = -0.1;
-        double Q2 = 10.;
-        double Q2Prim = 100 * 2 * Constant::ELECTRON_MASS;
-        double E = 160.;
+        if (cff == 0) {
+            //xsec evaluation
 
-        for (size_t i = 0; i <= 50; i++) {
+            double xB = 0.04;
+            double t = -0.1;
+            double Q2 = 10.;
+            double Q2Prim = 100 * 2 * Constant::ELECTRON_MASS;
+            double E = 160.;
 
-            double phi = 0.001 + i * (2 * M_PI - 0.002)/ 50.;
+            for (size_t i = 0; i <= 50; i++) {
 
-//            double phi = 0.; //ignored
+                //double phi = 0.001 + i * (2 * M_PI - 0.002)/ 50.;
+
+                double phi = 0.; //ignored
 //            t = -1 * (0.01 + i * (0.5 - 0.02) / 50.);
 
 //            double phi = 0; //ignored
 //            t = -0.01;
-//            Q2Prim = 0.001 + 0.005 * i;
+                //Q2Prim = pow(10., -6.) + i * (0.001 - pow(10., -6.)) / 100;
+                Q2Prim = 0.0001 + i * (0.01 - 0.0001) / 20.;
 //            Q2Prim = 0.;
 
-            double NoverQPrim2 = Constant::FINE_STRUCTURE_CONSTANT / (4 * M_PI)
-                    * (4 / 3.) / Q2Prim;
+                double NoverQPrim2 = Constant::FINE_STRUCTURE_CONSTANT
+                        / (4 * M_PI) * (4 / 3.) / Q2Prim;
 
-            double ddvcsValue = pDDVCSObservableModuleDVCSLimit->compute(
-                    DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi, 0., 0.),
-                    gpdTypes).getValue().getValue();
+                double ddvcsValue = pDDVCSObservableModuleDVCSLimit->compute(
+                        DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi, 0.,
+                                0.), gpdTypes).getValue().getValue();
 
-            //DVCS
-            double A = pDVCSProcessModule->compute(1., -1,
-                    NumA::Vector3D(0., 0., 0.),
-                    DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                    VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
-                    PhysicalUnit::NB).getValue();
-            double B = pDVCSProcessModule->compute(-1., -1,
-                    NumA::Vector3D(0., 0., 0.),
-                    DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                    VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
-                    PhysicalUnit::NB).getValue();
+                //DVCS
+                double A = pDVCSProcessModule->compute(1., -1,
+                        NumA::Vector3D(0., 0., 0.),
+                        DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
+                        VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                        PhysicalUnit::NB).getValue();
+                double B = pDVCSProcessModule->compute(-1., -1,
+                        NumA::Vector3D(0., 0., 0.),
+                        DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
+                        VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                        PhysicalUnit::NB).getValue();
 
-            double dvcsValue = 2 * M_PI * (A + B) / 2.;
+                double dvcsValue = 2 * M_PI * (A + B) / 2.;
 
-            std::cout << Q2Prim << " " << phi << " " << 2 * M_PI * dvcsValue << " "
-                    << ddvcsValue / NoverQPrim2 / (2 * M_PI) << " Q2Prim phi dvcs ddvcs_in_lim_of_dvcs" << std::endl;
+                std::cout << Q2Prim << " " << phi << " " << 2 * M_PI * dvcsValue
+                        << " " << ddvcsValue / NoverQPrim2 / (2 * M_PI)
+                        << " Q2Prim phi dvcs ddvcs_in_lim_of_dvcs" << std::endl;
+            }
+        }
+
+        if (cff == 1) {
+            //CFF evaluation
+
+            int total = 50;
+
+            for (int i = -1; i <= total; i++) {
+
+                double log10Q2PrimMin = -4;
+                double log10Q2PrimMax = 0.;
+
+                double Q2Prim = pow(10.,
+                        log10Q2PrimMin
+                                + i * (log10Q2PrimMax - log10Q2PrimMin)
+                                        / total);
+                double Q2 = 1.;
+
+                double xi = 0.1;
+                double t = -0.1;
+                double muF2 = Q2 + Q2Prim;
+                double muR2 = Q2 + Q2Prim;
+
+                if (i == -1) { //DVCS point
+
+                    PARTONS::DVCSConvolCoeffFunctionResult cffResult =
+                            computeSingleKinematicsForDVCSComptonFormFactor(xi,
+                                    t, Q2, muF2, muR2);
+
+                    //Q2 vs real and imaginary parts of CFF_H
+                    std::cout << Q2 << ' ' << 0. << ' '
+                            << cffResult.getResult(currentGPD).real() << ' '
+                            << cffResult.getResult(currentGPD).imag() << ' '
+                            << "Q2 Q2Prim Re(cff) Im(cff) dvcs_point"
+                            << std::endl;
+                } else {
+
+                    DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t,
+                            Q2, Q2Prim, muF2, muR2);
+
+                    DDVCSConvolCoeffFunctionResult cffResult =
+                            pDDVCSCFFModel->compute(thiscffKinematics,
+                                    gpdTypes);
+
+                    //Q2 vs real and imaginary parts of CFF_H
+                    std::cout << Q2 << ' ' << Q2Prim << ' '
+                            << cffResult.getResult(currentGPD).real() << ' '
+                            << cffResult.getResult(currentGPD).imag() << ' '
+                            << "Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
+                }
+            }
         }
     }
 
@@ -236,70 +303,132 @@ void compareLimit(int lim) { // lim = 0 for DVCS limit, 1 for TCS
 
     if (lim == 1) {
 
-        double xB = 0.1 / 10. / 100. * 2;
-        double t = -0.5;
-        double Q2 = 0.1 / 100. * 2;
-        double Q2Prim = 1.;
-        double E = 12.;
-        double thetaL = 2 * M_PI / 4.;
+        if (cff == 0) {
+            //xsec evaluation
 
-        double nu = Q2 / (2 * Constant::PROTON_MASS * xB);
-        double y = nu / E;
+            double xB = 0.5 * pow(10., -5.);
+            double t = -0.01;
+            double Q2 = 0.5 * pow(10., -3.);
+            double Q2Prim = 10.;
+            double E = 60.;
+            double thetaL = 2.5 * M_PI / 4.;
 
-        std::cout << "nu: " << nu << std::endl;
-        std::cout << "y: " << y << std::endl;
+            double nu = Q2 / (2 * Constant::PROTON_MASS * xB);
+            double y = nu / E;
 
-        double Q2Min = pow(y * Constant::ELECTRON_MASS, 2) / (1. - y);
+            std::cout << "nu: " << nu << std::endl;
+            std::cout << "y: " << y << std::endl;
 
-        std::cout << "Q2Min: " << Q2Min << std::endl;
+            double Q2Min = pow(y * Constant::ELECTRON_MASS, 2) / (1. - y);
 
-        double flux = Constant::FINE_STRUCTURE_CONSTANT / (2 * M_PI * Q2)
-                * ((1. + pow(1. - y, 2)) / y - 2 * (1. - y) * Q2Min / (y * Q2));
+            std::cout << "Q2Min: " << Q2Min << std::endl;
 
-        flux *= Q2 / (2 * E * Constant::PROTON_MASS * xB * xB);
+            double flux = Constant::FINE_STRUCTURE_CONSTANT / (2 * M_PI * Q2)
+                    * ((1. + pow(1. - y, 2)) / y
+                            - 2 * (1. - y) * Q2Min / (y * Q2));
 
-        cmFrame.computeConverterVariables(xB, t, Q2, Q2Prim,
-                Constant::PROTON_MASS);
+            flux *= Q2 / (2 * E * Constant::PROTON_MASS * xB * xB);
 
-        for (size_t i = 0; i <= 50; i++) {
+            cmFrame.computeConverterVariables(xB, t, Q2, Q2Prim,
+                    Constant::PROTON_MASS);
 
-            double phiL = 0.001 + i * 2 * M_PI / 50.;
+            for (size_t i = 0; i <= 50; i++) {
 
-            std::pair<double, double> cmFrameResult = cmFrame.leptonCMconverter(
-                    phiL, thetaL);
+                //double phiL = 0.001 + i * (2 * M_PI - 0.002) / 50.;
+                double phiL = M_PI / 7.;
+                double thetaL = 0.001 + i * (M_PI - 0.002) / 50.;
 
-            double phiLBis = cmFrameResult.first;
-            double thetaLBis = -1 * cmFrameResult.second;
+                std::pair<double, double> cmFrameResult =
+                        cmFrame.leptonCMconverter(phiL, thetaL);
 
-            double ddvcsValue = pDDVCSObservableModuleTCSLimit->compute(
-                    DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, 0., phiL,
-                            thetaL), gpdTypes).getValue().getValue();
+                double phiLBis = cmFrameResult.first;
+                double thetaLBis = -1 * cmFrameResult.second;
 
-            double jac = cmFrame.jacobianLeptonCM(phiL, thetaL);
+                double ddvcsValue = pDDVCSObservableModuleTCSLimit->compute(
+                        DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, 0., phiL,
+                                thetaL), gpdTypes).getValue().getValue();
 
-            ddvcsValue /= jac; //differential xsec of ddvcs in angles of BDP2001 (phiLBis, thetaLBis)
+                double jac = cmFrame.jacobianLeptonCM(phiL, thetaL);
 
-            //TCS
-            double A = pTCSProcessModule->compute(1.,
-                    NumA::Vector3D(0., 0., 0.),
-                    TCSObservableKinematic(t, Q2Prim, nu, phiLBis, thetaLBis),
-                    gpdTypes, VCSSubProcessType::TCS).getValue().makeSameUnitAs(
-                    PhysicalUnit::NB).getValue();
-            double B = pTCSProcessModule->compute(-1.,
-                    NumA::Vector3D(0., 0., 0.),
-                    TCSObservableKinematic(t, Q2Prim, nu, phiLBis, thetaLBis),
-                    gpdTypes, VCSSubProcessType::TCS).getValue().makeSameUnitAs(
-                    PhysicalUnit::NB).getValue();
+                ddvcsValue /= jac; //differential xsec of ddvcs in angles of BDP2001 (phiLBis, thetaLBis)
 
-            double tcsValue = 2 * M_PI * (A + B) / 2.;
+                //TCS
+                double A =
+                        pTCSProcessModule->compute(1.,
+                                NumA::Vector3D(0., 0., 0.),
+                                TCSObservableKinematic(t, Q2Prim, nu, phiLBis,
+                                        thetaLBis), gpdTypes,
+                                VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                                PhysicalUnit::NB).getValue();
+                double B =
+                        pTCSProcessModule->compute(-1.,
+                                NumA::Vector3D(0., 0., 0.),
+                                TCSObservableKinematic(t, Q2Prim, nu, phiLBis,
+                                        thetaLBis), gpdTypes,
+                                VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                                PhysicalUnit::NB).getValue();
 
-            std::cout << phiL << " " << phiLBis << " " << tcsValue << " "
-                    << ddvcsValue / flux / (2 * M_PI) << " "
-                    << jac << " phiL phiLBis tcs ddvcs_in_lim_of_tcs jacobian" << std::endl;
+                double tcsValue = 2 * M_PI * (A + B) / 2.;
 
-            std::cout << thetaL << " " << thetaLBis << " " << tcsValue << " "
-                                << ddvcsValue / flux / (2 * M_PI) << " "
-                                << jac << " thetaL thetaLBis tcs ddvcs_in_lim_of_tcs jacobian" << std::endl;
+//            std::cout << phiL << " " << phiLBis << " " << tcsValue << " "
+//                    << ddvcsValue / flux / (2 * M_PI) << " " << jac
+//                    << " phiL phiLBis tcs ddvcs_in_lim_of_tcs jacobian"
+//                    << std::endl;
+
+                std::cout << thetaL << " " << thetaLBis << " " << tcsValue
+                        << " " << ddvcsValue / flux / (2 * M_PI) << " " << jac
+                        << " thetaL thetaLBis tcs ddvcs_in_lim_of_tcs jacobian"
+                        << std::endl;
+            }
+        }
+
+        if (cff == 1) {
+            //CFF evaluation
+
+            int total = 50;
+
+            for (int i = -1; i <= total; i++) {
+
+                double log10Q2Min = -4.;
+                double log10Q2Max = 0.;
+
+                double Q2 = pow(10.,
+                        log10Q2Min + i * (log10Q2Max - log10Q2Min) / total);
+                double Q2Prim = 3.;
+
+                double xi = 0.1;
+                double t = -0.1;
+                double muF2 = Q2 + Q2Prim;
+                double muR2 = Q2 + Q2Prim;
+
+                if (i == -1) { //TCS point
+
+                    PARTONS::TCSConvolCoeffFunctionResult cffResult =
+                            computeSingleKinematicsForTCSComptonFormFactor(xi,
+                                    t, Q2Prim, muF2, muR2);
+
+                    //Q2 vs real and imaginary parts of CFF_H
+                    std::cout << 0. << ' ' << Q2Prim << ' '
+                            << cffResult.getResult(currentGPD).real() << ' '
+                            << cffResult.getResult(currentGPD).imag() << ' '
+                            << "Q2 Q2Prim Re(cff) Im(cff) tcs_point"
+                            << std::endl;
+                } else {
+
+                    DDVCSConvolCoeffFunctionKinematic thiscffKinematics(xi, t,
+                            Q2, Q2Prim, muF2, muR2);
+
+                    DDVCSConvolCoeffFunctionResult cffResult =
+                            pDDVCSCFFModel->compute(thiscffKinematics,
+                                    gpdTypes);
+
+                    //Q2 vs real and imaginary parts of CFF_H
+                    std::cout << Q2 << ' ' << Q2Prim << ' '
+                            << cffResult.getResult(currentGPD).real() << ' '
+                            << cffResult.getResult(currentGPD).imag() << ' '
+                            << "Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
+                }
+            }
         }
     }
 
