@@ -19,7 +19,7 @@
 #include <partons/modules/process/DDVCS/DDVCSProcessDMSW22.h>
 #include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
 #include <partons/beans/Scales.h>
-#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTEST.h>
+#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTMin.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <QtCore/qcoreapplication.h>
@@ -29,6 +29,7 @@
 #include <vector>
 #include <include/analysis.h>
 #include <include/leptonCMframe.h>
+#include <partons/FundamentalPhysicalConstants.h>
 
 using namespace PARTONS;
 
@@ -83,7 +84,7 @@ int main(int argc, char** argv) {
         // Create XiConverterModule
         DDVCSXiConverterModule* pXiConverterModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSXiConverterModule(
-                        DDVCSXiConverterTEST::classId);
+                        DDVCSXiConverterTMin::classId);
 
         // Create ScalesModule
         DDVCSScalesModule* pScalesModule =
@@ -94,7 +95,7 @@ int main(int argc, char** argv) {
 
         std::string method = "DDVCSProcessDMSW22"; //"DDVCSProcessDMSW22" for KS' spinor techniques; "DDVCSProcessTEST" for BM2003 formulae
 
-        std::cout << method << " method_for_cross-section" << std::endl;
+        std::cout << "METHOD FOR COMPUTING CROSS-SECTION: " << method << std::endl;
 
         DDVCSProcessModule* pProcessModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSProcessModule(
@@ -109,76 +110,118 @@ int main(int argc, char** argv) {
         // -----------------------------------------------
 
         // GPD list
-        List<GPDType> gpdTypes;
-        gpdTypes.add(GPDType::H);
-        gpdTypes.add(GPDType::E);
-        gpdTypes.add(GPDType::Ht);
-        gpdTypes.add(GPDType::Et);
-        gpdTypes.add(GPDType::HL);
-        gpdTypes.add(GPDType::EL);
+//        List<GPDType> gpdTypes;
+//        gpdTypes.add(GPDType::H);
+//        gpdTypes.add(GPDType::E);
+//        gpdTypes.add(GPDType::Ht);
+//        gpdTypes.add(GPDType::Et);
+//        gpdTypes.add(GPDType::HL);
+//        gpdTypes.add(GPDType::EL);
 
         //DVCS and TCS limits of DDVCS
 
-        // lim = 0 for DVCS limit, 1 for TCS; cff = 0 if you don't want cff to be computed but only xsec, 1 if you want only cff
-        int lim = 0;
-        int cff = 1;
+        // lim = 0 for DVCS limit, 1 for TCS; cff = 0 if you want xsec, 1 if you want cff
+        int lim = 1;
+        int cff = 0;
         compareLimit(lim, cff);
 
         //------------------------------------------------
 
-        //Computation of the 7-fold xsec:
-//        int total = 30;
+        //differential xsec calculation
+
+//        //BEGIN Orsay kin
+//        double phi;
+//        double Q2Prim;
+//        double XI = 0.135; //Zhao's xi (same as xi in our paper and -eta in BM2003)
+//        double XIprime = 0.06; //Zhao's xi' (same as rho in our paper and xi in BM2003)
+//
+//        double phiL = M_PI / 3.;
+//        phiL += M_PI;
+//        double thetaL = M_PI / 6.;
+//        double E = 11.;
+//        double t = -0.15;
+//        double Q2 = 1.25;
+//
+//        Q2Prim = Q2 * (XI - XIprime) + XI * t / 2.;
+//        Q2Prim /= (XIprime + XI);
+//
+//        std::cout << Q2Prim << " =Q2Prim = 0.428846154 GeV^2" << std::endl;
+//
+//        double Qbar2 = 0.5 * (Q2 - Q2Prim + t / 2.);
+//        double xB = (XIprime + XI) * Qbar2 - XIprime * t / 4.; //using Zhao/Orsay notation
+//        xB /= ((1. + XI) * Qbar2 - XIprime * t / 2.);
+//
+//        std::cout << xB << " =xB = 0.175257269" << std::endl;
+//        //END Orsay kin
+//
+//        //Computation of the 7-fold xsec:
+//        int total = 36.;
 //
 //        double ml = 0.;
-//        double Ebeam = 11.;
-//        double Mnucleon = 0.938272081;
-//        double xB = 0.175257269;
-//        double t = -0.15;
-//        double Qcal2 = 1.25;
-//        double Mll2 = 0.428846154;
-//        double phil = M_PI / 3.;
-//        double thetal = M_PI / 6.;
-//        double phi;
-//        double xsec;
-//
-//        //DEBUG Pawel's kin
-//        Ebeam = 12.;
-//        xB = 0.1 / 10. / 100. * 5;
-//        Qcal2 = 0.1 / 100. * 5;
-//        Mll2 = 1.;
-//        thetal = M_PI/4.;
-//        t = -0.4;
-//        //END DEBUG
+//        //        double Ebeam = 11.;
+//        double Mnucleon = Constant::PROTON_MASS; // 0.938272081 GeV
+//        std::cout << Mnucleon << " =Mnucleon = 0.938272081 GeV" << std::endl;
+//        //        double xB = 0.175257269;
+//        //        double t = -0.15;
+//        //        double Qcal2 = 1.25;
+//        //        double Mll2 = 0.428846154;
+//        //        double phil = M_PI / 3.;
+//        //        double thetal = M_PI / 6.;
+//        //        double phi;
+//        double xsec7;
+//        //
+//        //        //DEBUG Pawel's kin
+//        //        Ebeam = 12.;
+//        //        xB = 0.1 / 10. / 100. * 5;
+//        //        Qcal2 = 0.1 / 100. * 5;
+//        //        Mll2 = 1.;
+//        //        thetal = M_PI/4.;
+//        //        t = -0.4;
+//        //        //END DEBUG
 //
 //        for (int i = 0; i <= total; i++) {
 //
-//            phi = -M_PI + 2. * M_PI * i / total; //Trento's value
+//            //phi = -M_PI + 2. * M_PI * i / total; //Trento's value
 //
-//            phi = M_PI/7.; //DEBUG
+//            double phi_deg = 10. * i; // in degrees and Trento convention bc later in the code will be changed to the BM2003 convention
+//            phi = phi_deg * M_PI / 180.; // in rad
 //
-//            phil = 2.*M_PI*i/total;
+//            //            phi = M_PI / 7.; //DEBUG
+//            //            phi_deg = phi * 180. / M_PI; //DEBUG
 //
-//            //DEBUG getting BDP2001 phi and theta from BM2003's phil and thetal
-//            leptons lep;
-//            lep.computeConverterVariables(xB, t, Qcal2, Mll2, Mnucleon);
-//            double phiBDP, thetaBDP;
-//            phiBDP = lep.leptonCMconverter(phil, thetal).first;
-//            thetaBDP = lep.leptonCMconverter(phil, thetal).second;
+//            //phiL = 2.*M_PI*i/total;
 //
-//            double Jac = lep.jacobianLeptonCM(phil, thetal); //jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
-//
-//            std::cout << phil << " " << thetal << " " << phiBDP << " " << thetaBDP << " " << Jac << " phiL, thetaL, phiBDP, thetaBDP, Jacobian" << std::endl;
+//            //DEBUG getting BDP2001 phi and theta from BM2003's phiL and thetaL
+//            //            leptons lep;
+//            //            lep.computeConverterVariables(xB, t, Q2, Q2Prim, Mnucleon);
+//            //            double phiBDP, thetaBDP;
+//            //            phiBDP = lep.leptonCMconverter(phiL, thetaL).first;
+//            //            thetaBDP = lep.leptonCMconverter(phiL, thetaL).second;
+//            //
+//            //            double Jac = lep.jacobianLeptonCM(phiL, thetaL); //jac's definition: d(xsec)/(... dthetal dphil) = jac * d(xsec)/(... dthetaBDP dphiBDP)
+//            //
+//            //            std::cout << phiL << " " << thetaL << " " << phiBDP << " " << thetaBDP << " " << Jac << " phiL, thetaL, phiBDP, thetaBDP, Jacobian" << std::endl;
 //            //END DEBUG
 //
+//            //phiL = -phiL; // to get xsec wrt to t instead of |t|
 //
-//            std::cout << phi << " "
-//                    << pProcessModule->compute(1, -1,
-//                            NumA::Vector3D(0., 0., 0.),
-//                            DDVCSObservableKinematic(xB, t, Qcal2, Mll2, Ebeam,
-//                                    phi, phil, thetal), gpdTypes,
-//                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
-//                            PhysicalUnit::PB).getValue() << " phi xsec7"
-//                    << std::endl;
+//            xsec7 =
+//                    pProcessModule->compute(1, -1, NumA::Vector3D(0., 0., 0.),
+//                            DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi,
+//                                    phiL, thetaL), gpdTypes,
+//                            VCSSubProcessType::BH).getValue().makeSameUnitAs(
+//                            PhysicalUnit::NB).getValue();
+//
+//            xsec7 = xsec7 / sin(thetaL); //differential xsec wrt lepton solid angle, xB, Qcal2, Mll2, phi and t (if phiL = -phiL is used) or |t| (if not).
+//
+//            //            if (phi_deg >= 0. && phi_deg <= 180.) {
+//            //                phi_deg += 180.;
+//            //            } else if (phi_deg > 180. && phi_deg <= 360.) {
+//            //                phi_deg -= 180;
+//            //            }
+//
+//            std::cout << phi_deg << " " << xsec7
+//                    << " phi(deg;Trento) xsec7" << std::endl;
 //
 //        }
 
@@ -186,9 +229,9 @@ int main(int argc, char** argv) {
 
         //Computation of CFF:
 
-//        //Choose GPD
+        //Choose GPD
 //        GPDType::Type currentGPD;
-//        currentGPD = GPDType::E;
+//        currentGPD = GPDType::H;
 //
 //        int total = 25;
 //
