@@ -20,12 +20,12 @@
 #include <partons/beans/convol_coeff_function/DVCS/DVCSConvolCoeffFunctionResult.h>
 #include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionResult.h>
 //
-#include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
+#include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFStandard.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
 #include <partons/modules/convol_coeff_function/TCS/TCSCFFStandard.h>
 
 #include <partons/modules/gpd/GPDGK16Numerical.h>
-//#include <partons/modules/gpd/GPDGK19COMPASS.h>
+#include <partons/modules/gpd/GPDVGG99.h>
 
 #include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionUUMinusDVCSLimit.h>
 #include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionUUMinusTCSLimit.h>
@@ -35,10 +35,11 @@
 #include <partons/modules/process/DDVCS/DDVCSProcessTEST.h>
 #include <partons/modules/process/DVCS/DVCSProcessBMJ12.h>
 #include <partons/modules/process/TCS/TCSProcessBDP01.h>
-#include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
+#include <partons/modules/scales/DDVCS/DDVCSScalesModule.h>
+#include <partons/modules/scales/DDVCS/DDVCSScalesVirtualitiesSum.h>
 #include <partons/modules/scales/DVCS/DVCSScalesQ2Multiplier.h>
 #include <partons/modules/scales/TCS/TCSScalesQ2PrimMultiplier.h>
-#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTMin.h>
+#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTNeglected.h>
 #include <partons/modules/xi_converter/DVCS/DVCSXiConverterXBToXi.h>
 #include <partons/modules/xi_converter/TCS/TCSXiConverterTauToXi.h>
 #include <partons/ModuleObjectFactory.h>
@@ -61,14 +62,22 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
     // ******************************************************
 
     // Create GPDModule
+    //GPD model : GK16
     GPDModule* pGPDModule =
             Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
                     GPDGK16Numerical::classId);
 
+    // Create GPDModule
+    //GPD model: VGG99
+//    GPDModule* pGPDModule =
+//            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+//                    GPDVGG99::classId);
+//    pGPDModule->configure(ElemUtils::Parameter("setName", "MSTW2008nlo68cl"));
+
     // Create CFF module
     DDVCSConvolCoeffFunctionModule* pDDVCSCFFModel =
             Partons::getInstance()->getModuleObjectFactory()->newDDVCSConvolCoeffFunctionModule(
-                    DDVCSCFFTEST::classId);
+                    DDVCSCFFStandard::classId);
 
     // Set its PerturbativeQCDOrder
     pDDVCSCFFModel->configure(
@@ -79,12 +88,12 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
     // Create XiConverterModule
     DDVCSXiConverterModule* pDDVCSXiConverterModule =
             Partons::getInstance()->getModuleObjectFactory()->newDDVCSXiConverterModule(
-                    DDVCSXiConverterTMin::classId);
+                    DDVCSXiConverterTNeglected::classId);
 
     // Create ScalesModule
     DDVCSScalesModule* pDDVCSScalesModule =
             Partons::getInstance()->getModuleObjectFactory()->newDDVCSScalesModule(
-                    DDVCSScalesTEST::classId);
+                    DDVCSScalesVirtualitiesSum::classId);
 
     // Create ProcessModule
     DDVCSProcessModule* pDDVCSProcessModule =
@@ -180,16 +189,16 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
     //Get GPDs for xsec
     List<GPDType> gpdTypes;
 
+    gpdTypes.add(GPDType::H);
+    gpdTypes.add(GPDType::E);
+    gpdTypes.add(GPDType::Ht);
     gpdTypes.add(GPDType::Et);
-//    gpdTypes.add(GPDType::E);
-//    gpdTypes.add(GPDType::Ht);
-//    gpdTypes.add(GPDType::Et);
 //    gpdTypes.add(GPDType::HL);
 //    gpdTypes.add(GPDType::EL);
 
     //Choose GPD for CFF (you need to have uncommented the corresponding gpdTypes.add() above
     GPDType::Type GPDforCFF;
-    GPDforCFF = GPDType::E;
+    GPDforCFF = GPDType::H;
 
     // ******************************************************
     // DVCS limit  ******************************************
@@ -200,12 +209,12 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
         if (cff == 0) {
             //xsec evaluation
 
-            double xB = 0.2;
-            double t = -0.5;
-            double Q2 = 40.;
-//            double xB = 0.04;
-//            double t = -0.1;
-//            double Q2 = 10.;
+            double xB = 0.04;
+            //            double t = -0.1;
+            //            double Q2 = 10.;
+            //double xB = 0.2;
+            double t = -0.1;            //-0.25
+            double Q2 = 10.;
             double Q2Prim = pow(10., -3.);
             double E = 160.;
             double phi = M_PI / 7.;
@@ -241,9 +250,13 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
 //            t = tMin;
             //END DEBUG
 
-            for (size_t i = 0; i <= 20; i++) {
+            int total = 40;
+            for (size_t i = 0; i <= total; i++) {
 
-                phi = 0.001 + i * (2 * M_PI - 0.002) / 20.;
+                phi = 0.001 + i * (2 * M_PI - 0.002) / total;
+
+//                Q2Prim = pow(10., -5.)
+//                        + i * (pow(10., -2.) - pow(10., -5.)) / total;
 
                 double NoverQPrim2 = Constant::FINE_STRUCTURE_CONSTANT
                         / (4 * M_PI) * (4 / 3.) / Q2Prim;
@@ -256,28 +269,36 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                 double A = pDVCSProcessModule->compute(1., -1,
                         NumA::Vector3D(0., 0., 0.),
                         DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                        VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                        VCSSubProcessType::BH).getValue().makeSameUnitAs(
                         PhysicalUnit::NB).getValue();
                 double B = pDVCSProcessModule->compute(-1., -1,
                         NumA::Vector3D(0., 0., 0.),
                         DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                        VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                        VCSSubProcessType::BH).getValue().makeSameUnitAs(
                         PhysicalUnit::NB).getValue();
 
                 double dvcsValue = 2 * M_PI * (A + B) / 2.;
 
                 std::cout << Q2Prim << " " << phi << " "
                         << /*2 * M_PI * */dvcsValue << " "
-                        << ddvcsValue / NoverQPrim2 / (2 * M_PI)
-                        << " Q2Prim phi dvcs ddvcs_in_lim_of_dvcs" << std::endl;
+                        << ddvcsValue / NoverQPrim2 / (2 * M_PI) << " "
+                        << 100.
+                                * fabs(
+                                        dvcsValue
+                                                - ddvcsValue / NoverQPrim2
+                                                        / (2 * M_PI))
+                                / dvcsValue
+                        << " Q2Prim phi dvcs ddvcs_in_lim_of_dvcs rel.error(%)"
+                        << std::endl;
             }
         }
 
         if (cff == 1) {
             //CFF evaluation
 
-            int total = 10;
+            int total = 60.;
 
+//            for (int i = -1; i <= total; i++) {
             for (int i = -1; i <= total; i++) {
 
                 double log10Q2PrimMin = -4.;
@@ -287,11 +308,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                 + i * (log10Q2PrimMax - log10Q2PrimMin)
                                         / total);
 
-                Q2Prim = 0.5 + 0.1*i;  //DEBUG
                 double Q2 = 1.;
 
-                double xi = 0.1;
-                double t = -0.25;
+                double xi = 0.4;
+                double t = -0.15;
                 double muF2 = Q2 + Q2Prim;
                 double muR2 = Q2 + Q2Prim;
 
@@ -323,10 +343,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                     t, Q2, muF2, muR2);
 
                     //Q2 vs real and imaginary parts of CFF_H
-                    std::cout << Q2 << ' ' << 0. << ' '
+                    std::cout << xi << ' ' << Q2 << ' ' << 0. << ' '
                             << cffResult.getResult(GPDforCFF).real() << ' '
                             << cffResult.getResult(GPDforCFF).imag() << ' '
-                            << "Q2 Q2Prim Re(cff) Im(cff) dvcs_point"
+                            << "xi Q2 Q2Prim Re(cff) Im(cff) dvcs_point"
                             << std::endl;
                 } else {
 
@@ -338,11 +358,12 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                     gpdTypes);
 
                     //Q2 vs real and imaginary parts of CFF_H
-                    std::cout << Q2 << ' ' << Q2Prim << ' '
+                    std::cout << xi << ' ' << Q2 << ' ' << Q2Prim << ' '
                             << cffResult.getResult(GPDforCFF).real() << ' '
                             << cffResult.getResult(GPDforCFF).imag() << ' '
-                            << "Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
+                            << "xi Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
                 }
+
             }
         }
     }
@@ -359,17 +380,18 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
             //xsec evaluation
 
             double phiL = M_PI / 7.;
-            double xB = pow(10., -4.);
+            double xB = 2.*pow(10., -4.);    //pow(10., -4.)
             double t = -0.5;
-            double Q2 = pow(10., -2.);
-            double Q2Prim = 33.;
-            double E = 160.;
+            double Q2 = 2.*pow(10., -3.);
+            double Q2Prim = 1.;
+            double E = 12.;    //160.
+            double thetaL = 1.04 * M_PI / 4.;
+
 //            double xB = 2.*pow(10., -4.);
 //            double t = -0.5;
 //            double Q2 = 2.*pow(10., -3.);
 //            double Q2Prim = 1.;
 //            double E = 12.;
-            double thetaL = 1.04 * M_PI / 4.;
 
             //DEBUG
             double eps2 = pow(2. * xB * Constant::PROTON_MASS, 2.) / Q2;
@@ -423,9 +445,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
             cmFrame.computeConverterVariables(xB, t, Q2, Q2Prim,
                     Constant::PROTON_MASS);
 
-            for (size_t i = 0; i <= 20; i++) {
+            int total = 40;
+            for (size_t i = 0; i <= total; i++) {
 
-                phiL = 0.001 + i * (2 * M_PI - 0.002) / 20.;
+                phiL = 0.001 + i * (2 * M_PI - 0.002) / total;
 
 //              thetaL = 0.001 + i * (M_PI - 0.002) / 30.;
 
@@ -441,6 +464,8 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
 
                 double jac = cmFrame.jacobianLeptonCM(phiL, thetaL);
 
+                //jac = 1.;//DEBUG
+
                 ddvcsValue /= jac; //differential xsec of ddvcs in angles of BDP2001 (phiLBis, thetaLBis)
 
                 //TCS
@@ -449,27 +474,40 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                 NumA::Vector3D(0., 0., 0.),
                                 TCSObservableKinematic(t, Q2Prim, nu, phiLBis,
                                         thetaLBis), gpdTypes,
-                                VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                                VCSSubProcessType::BH).getValue().makeSameUnitAs(
                                 PhysicalUnit::NB).getValue();
                 double B =
                         pTCSProcessModule->compute(-1.,
                                 NumA::Vector3D(0., 0., 0.),
                                 TCSObservableKinematic(t, Q2Prim, nu, phiLBis,
                                         thetaLBis), gpdTypes,
-                                VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                                VCSSubProcessType::BH).getValue().makeSameUnitAs(
                                 PhysicalUnit::NB).getValue();
 
                 double tcsValue = 2 * M_PI * (A + B) / 2.;
 
                 std::cout << phiL << " " << phiLBis << " " << (-1.) * tcsValue
                         << " " << ddvcsValue / flux / (2 * M_PI) << " " << jac
-                        << " phiL phiLBis tcs ddvcs_in_lim_of_tcs jacobian"
+                        << " "
+                        << 100.
+                                * fabs(
+                                        (-1.) * tcsValue
+                                                - ddvcsValue / flux
+                                                        / (2 * M_PI))
+                                / ((-1.) * tcsValue)
+                        << " phiL phiLBis tcs ddvcs_in_lim_of_tcs jacobian rel.error(%)"
                         << std::endl;
 
                 std::cout << thetaL << " " << thetaLBis << " "
                         << (-1.) * tcsValue << " "
-                        << ddvcsValue / flux / (2 * M_PI) << " " << jac
-                        << " thetaL thetaLBis tcs ddvcs_in_lim_of_tcs jacobian"
+                        << ddvcsValue / flux / (2 * M_PI) << " " << jac << " "
+                        << 100.
+                                * fabs(
+                                        (-1.) * tcsValue
+                                                - ddvcsValue / flux
+                                                        / (2 * M_PI))
+                                / ((-1.) * tcsValue)
+                        << " thetaL thetaLBis tcs ddvcs_in_lim_of_tcs jacobian rel.error(%)"
                         << std::endl;
             }
         }
@@ -477,7 +515,7 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
         if (cff == 1) {
             //CFF evaluation
 
-            int total = 10;
+            int total = 60;
 
             for (int i = -1; i <= total; i++) {
 
@@ -488,11 +526,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                         log10Q2Min + i * (log10Q2Max - log10Q2Min) / total);
 
                 double Q2Prim = 1.;
-                Q2 = 0.5 + 0.1*i;  //DEBUG
+                //Q2 = 0.5 + 0.1 * i;  //DEBUG
 
-
-                double xi = 0.1;
-                double t = -0.25;
+                double xi = 0.4;
+                double t = -0.15;
                 double muF2 = Q2 + Q2Prim;
                 double muR2 = Q2 + Q2Prim;
 
@@ -525,10 +562,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                     t, Q2Prim, muF2, muR2);
 
                     //Q2 vs real and imaginary parts of CFF_H
-                    std::cout << 0. << ' ' << Q2Prim << ' '
+                    std::cout << xi << ' ' << 0. << ' ' << Q2Prim << ' '
                             << cffResult.getResult(GPDforCFF).real() << ' '
                             << cffResult.getResult(GPDforCFF).imag() << ' '
-                            << "Q2 Q2Prim Re(cff) Im(cff) tcs_point"
+                            << "xi Q2 Q2Prim Re(cff) Im(cff) tcs_point"
                             << std::endl;
                 } else {
 
@@ -540,10 +577,10 @@ void compareLimit(int lim, int cff) { // lim = 0 for DVCS limit, 1 for TCS; cff 
                                     gpdTypes);
 
                     //Q2 vs real and imaginary parts of CFF_H
-                    std::cout << Q2 << ' ' << Q2Prim << ' '
+                    std::cout << xi << ' ' << Q2 << ' ' << Q2Prim << ' '
                             << cffResult.getResult(GPDforCFF).real() << ' '
                             << cffResult.getResult(GPDforCFF).imag() << ' '
-                            << "Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
+                            << "xi Q2 Q2Prim Re(cff) Im(cff)" << std::endl;
                 }
             }
         }

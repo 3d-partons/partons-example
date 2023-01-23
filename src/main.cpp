@@ -14,12 +14,13 @@
 #include <partons/beans/observable/TCS/TCSObservableKinematic.h>
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
-#include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFTEST.h>
-#include <partons/modules/gpd/GPDGK16.h>
+#include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFStandard.h>
+#include <partons/modules/gpd/GPDGK16Numerical.h>
+#include <partons/modules/gpd/GPDVGG99.h>
 #include <partons/modules/process/DDVCS/DDVCSProcessDMSW22.h>
-#include <partons/modules/scales/DDVCS/DDVCSScalesTEST.h>
+#include <partons/modules/scales/DDVCS/DDVCSScalesVirtualitiesSum.h>
 #include <partons/beans/Scales.h>
-#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTMin.h>
+#include <partons/modules/xi_converter/DDVCS/DDVCSXiConverterTNeglected.h>
 #include <partons/ModuleObjectFactory.h>
 #include <partons/Partons.h>
 #include <QtCore/qcoreapplication.h>
@@ -66,14 +67,24 @@ int main(int argc, char** argv) {
         // ******************************************************
 
         // Create GPDModule
+        //GPD model: GK16
         GPDModule* pGPDModule =
                 Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
-                        GPDGK16::classId);
+                        GPDGK16Numerical::classId);
+
+        // Create GPDModule
+        //GPD model: VGG99
+//        GPDModule* pGPDModule =
+//                Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+//                        GPDVGG99::classId);
+//        pGPDModule->configure(ElemUtils::Parameter(
+//                "setName",
+//                "MSTW2008nlo68cl"));
 
         // Create CFF module
         DDVCSConvolCoeffFunctionModule* pDDVCSCFFModel =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSConvolCoeffFunctionModule(
-                        DDVCSCFFTEST::classId);
+                        DDVCSCFFStandard::classId);
 
         // Set its PerturbativeQCDOrder
         pDDVCSCFFModel->configure(
@@ -84,18 +95,19 @@ int main(int argc, char** argv) {
         // Create XiConverterModule
         DDVCSXiConverterModule* pXiConverterModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSXiConverterModule(
-                        DDVCSXiConverterTMin::classId);
+                        DDVCSXiConverterTNeglected::classId);
 
         // Create ScalesModule
         DDVCSScalesModule* pScalesModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSScalesModule(
-                        DDVCSScalesTEST::classId);
+                        DDVCSScalesVirtualitiesSum::classId);
 
         // Create ProcessModule
 
         std::string method = "DDVCSProcessDMSW22"; //"DDVCSProcessDMSW22" for KS' spinor techniques; "DDVCSProcessTEST" for BM2003 formulae
 
-        std::cout << "METHOD FOR COMPUTING CROSS-SECTION: " << method << std::endl;
+        std::cout << "Method_for_computing_cross-section: " << method
+                << std::endl;
 
         DDVCSProcessModule* pProcessModule =
                 Partons::getInstance()->getModuleObjectFactory()->newDDVCSProcessModule(
@@ -136,11 +148,14 @@ int main(int argc, char** argv) {
 //        double XIprime = 0.06; //Zhao's xi' (same as rho in our paper and xi in BM2003)
 //
 //        double phiL = M_PI / 3.;
-//        phiL += M_PI;
+//        phiL += M_PI; // "apparent" correction wrt to Orsay's
 //        double thetaL = M_PI / 6.;
 //        double E = 11.;
 //        double t = -0.15;
 //        double Q2 = 1.25;
+//
+//        double ml = 0.;
+//        double Ebeam = 11.;
 //
 //        Q2Prim = Q2 * (XI - XIprime) + XI * t / 2.;
 //        Q2Prim /= (XIprime + XI);
@@ -152,13 +167,23 @@ int main(int argc, char** argv) {
 //        xB /= ((1. + XI) * Qbar2 - XIprime * t / 2.);
 //
 //        std::cout << xB << " =xB = 0.175257269" << std::endl;
+//
+//        double eps2 = pow(2. * xB * Constant::PROTON_MASS, 2.) / Q2;
+//        double y = sqrt(Q2 / eps2) * (1. / E);
+//        double w2 = sqrt(Q2 / eps2) + t / (2. * Constant::PROTON_MASS); //eq 17 in BM2003
+//        double v = sqrt(1. - Q2Prim / pow(w2, 2.));
+//        double yt = 1. + v * cos(thetaL);
+//        yt = yt / 2.;
+//        double a0vcsOverVVdagger = 0.5 * (2. - 2. * y + y * y)
+//                * (2. - 2. * yt + yt * yt);
+//
+//        std::cout << y << " =y; " << yt << " =yt; " << a0vcsOverVVdagger
+//                << " =a_0^VCS/(VVdagger) for GPD H only" << std::endl;
 //        //END Orsay kin
 //
 //        //Computation of the 7-fold xsec:
 //        int total = 36.;
 //
-//        double ml = 0.;
-//        //        double Ebeam = 11.;
 //        double Mnucleon = Constant::PROTON_MASS; // 0.938272081 GeV
 //        std::cout << Mnucleon << " =Mnucleon = 0.938272081 GeV" << std::endl;
 //        //        double xB = 0.175257269;
@@ -183,7 +208,7 @@ int main(int argc, char** argv) {
 //
 //            //phi = -M_PI + 2. * M_PI * i / total; //Trento's value
 //
-//            double phi_deg = 10. * i; // in degrees and Trento convention bc later in the code will be changed to the BM2003 convention
+//            double phi_deg = 10. * i; // in degrees and Trento convention bc later in the code it will be changed to the BM2003 convention
 //            phi = phi_deg * M_PI / 180.; // in rad
 //
 //            //            phi = M_PI / 7.; //DEBUG
@@ -209,7 +234,7 @@ int main(int argc, char** argv) {
 //                    pProcessModule->compute(1, -1, NumA::Vector3D(0., 0., 0.),
 //                            DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi,
 //                                    phiL, thetaL), gpdTypes,
-//                            VCSSubProcessType::BH).getValue().makeSameUnitAs(
+//                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
 //                            PhysicalUnit::NB).getValue();
 //
 //            xsec7 = xsec7 / sin(thetaL); //differential xsec wrt lepton solid angle, xB, Qcal2, Mll2, phi and t (if phiL = -phiL is used) or |t| (if not).
@@ -220,8 +245,8 @@ int main(int argc, char** argv) {
 //            //                phi_deg -= 180;
 //            //            }
 //
-//            std::cout << phi_deg << " " << xsec7
-//                    << " phi(deg;Trento) xsec7" << std::endl;
+//            std::cout << phi_deg << " " << xsec7 << " phi(deg;Trento) xsec7"
+//                    << std::endl;
 //
 //        }
 
