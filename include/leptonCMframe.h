@@ -8,7 +8,10 @@
 class leptons {
 public:
     //Functions
-    std::pair<double, double> leptonCMconverter(double phil, double thetal);
+    std::pair<double, double> leptonCMconverterToBDP01(double phil, double thetal);
+
+    std::pair<double, double> leptonCMconverterToBM03(double philBDP, double thetalBDP);
+
     double jacobianLeptonCM(double phil, double thetal);
     void computeConverterVariables(double xB, double t, double Qcal2,
             double Mll2, double Mnucleon);
@@ -30,6 +33,7 @@ private:
     double modp2a;
     double s2;
     double c2;
+    double tMin;
 
 };
 //std::pair<double, double> leptonCMconverter(double phil, double thetal);

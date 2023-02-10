@@ -28,7 +28,7 @@
 //double s2;
 //double c2;
 
-std::pair<double, double> leptons::leptonCMconverter(double phil,
+std::pair<double, double> leptons::leptonCMconverterToBDP01(double phil,
         double thetal) {
 
     double phiBDP, thetaBDP; //returns; angles in lepton-CM frame in BDP2001 paper
@@ -78,6 +78,58 @@ std::pair<double, double> leptons::leptonCMconverter(double phil,
     return std::make_pair(phiBDP, thetaBDP);
 
 }
+
+std::pair<double, double> leptons::leptonCMconverterToBM03(double phiBDP, double thetaBDP) {
+    //same as leptonCMconverterToBDP01() up to changes s2 <-> -s2, phil <-> phiBDP, thetal <-> thetaBDP
+
+    double phil, thetal; //returns; angles in lepton-CM frame in BM2003 paper
+
+    //The relation between (phil, thetal) and (phiBDP, thetaBDP) is given by the tangents tg(phil) = num1/den1 and tg(thetal) = num2/den2:
+    double num1 = sin(thetaBDP) * sin(phiBDP);
+    double den1 = c2 * sin(thetaBDP) * cos(phiBDP) - s2 * cos(thetaBDP);
+    double num2, den2;
+    num2 = pow(c2 * sin(thetaBDP) * cos(phiBDP) - s2 * cos(thetaBDP), 2.)
+            + pow(sin(thetaBDP) * sin(phiBDP), 2.);
+    num2 = sqrt(num2);
+    den2 = s2 * sin(thetaBDP) * cos(phiBDP) + c2 * cos(thetaBDP);
+
+    //Determination of phil and thetal for given phiBDP and thetaBDP
+    //phil:
+    if (num1 > 0. && den1 > 0.) {
+        phil = atan(num1 / den1);
+    } else if (num1 > 0. && den1 < 0.) {
+        phil = M_PI + atan(num1 / den1);
+    } else if (num1 < 0. && den1 < 0.) {
+        phil = M_PI + atan(num1 / den1);
+    } else if (num1 < 0. && den1 > 0.) {
+        phil = 2. * M_PI + atan(num1 / den1);
+    } else if (num1 == 0. && den1 == 1.) {
+        phil = 0.;
+    } else if (num1 == 0. && den1 == -1.) {
+        phil = M_PI;
+    } else if (num1 == 1. && den1 == 0.) {
+        phil = M_PI / 2.;
+    } else if (num1 == -1. && den1 == 0.) {
+        phil = 3. * M_PI / 2.;
+    }
+
+    //thetal (num2 >= 0 since sin(thetal) >= 0 for being thetal a polar angle):
+    if (num2 > 0. && den2 > 0.) {
+        thetal = atan(num2 / den2);
+    } else if (num2 > 0. && den2 < 0.) {
+        thetal = M_PI + atan(num2 / den2);
+    } else if (num2 == 0. && den2 == 1.) {
+        thetal = 0.;
+    } else if (num2 == 0. && den2 == -1.) {
+        thetal = M_PI;
+    } else if (num2 == 1. && den2 == 0.) {
+        thetal = M_PI / 2.;
+    }
+
+    return std::make_pair(phil, thetal);
+}
+
+
 
 double leptons::jacobianLeptonCM(double phil, double thetal) {
 

@@ -29,7 +29,8 @@
 #include <string>
 #include <vector>
 #include <include/analysis.h>
-#include <include/leptonCMframe.h>
+//#include <include/leptonCMframe.h>
+#include <partons/modules/observable/DDVCS/leptonCMframe.h>
 #include <partons/FundamentalPhysicalConstants.h>
 
 using namespace PARTONS;
@@ -130,12 +131,12 @@ int main(int argc, char** argv) {
 //        gpdTypes.add(GPDType::HL);
 //        gpdTypes.add(GPDType::EL);
 
-        //DVCS and TCS limits of DDVCS
-
-        // lim = 0 for DVCS limit, 1 for TCS; cff = 0 if you want xsec, 1 if you want cff
-        int lim = 1;
-        int cff = 0;
-        compareLimit(lim, cff);
+        //DVCS and TCS limits of DDVCS, CFFs and asymmetries computations
+        int lim = -1;
+        int cff = -1;
+        int asym = -1;
+        int intXsec = 0;
+        compareLimit(lim, cff, asym, intXsec);
 
         //------------------------------------------------
 
