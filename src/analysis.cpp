@@ -13,7 +13,7 @@
 #include <partons/beans/PerturbativeQCDOrderType.h>
 #include <partons/FundamentalPhysicalConstants.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
-//
+
 #include <partons/beans/convol_coeff_function/ConvolCoeffFunctionResult.h>
 #include <partons/beans/convol_coeff_function/DDVCS/DDVCSConvolCoeffFunctionKinematic.h>
 #include <partons/beans/convol_coeff_function/TCS/TCSConvolCoeffFunctionKinematic.h>
@@ -25,14 +25,20 @@
 #include <partons/modules/convol_coeff_function/TCS/TCSCFFStandard.h>
 
 #include <partons/modules/gpd/GPDGK16Numerical.h>
+#include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/gpd/GPDVGG99.h>
+#include <partons/modules/gpd/GPDMMS13.h>
+#include <partons/modules/gpd/GPDHM18.h>
 
 #include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionUUMinusDVCSLimit.h>
 #include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionUUMinusTCSLimit.h>
 #include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionTotal.h>
+
 #include <partons/modules/observable/DDVCS/asymmetry/DDVCSAluPhi.h>
 #include <partons/modules/observable/DDVCS/asymmetry/DDVCSAluPhiL.h>
-#include <partons/modules/observable/DDVCS/cross_section/DDVCSCrossSectionTotal.h>
+//#include <partons/modules/observable/TCS/asymmetry/TCSAcu.h>
+#include <partons/modules/observable/TCS/asymmetry/TCSAcuThetaIntegrated.h>
+
 #include <partons/modules/observable/Observable.h>
 #include <partons/modules/observable/TCS/cross_section/TCSCrossSectionUUThetaPhiIntegrated.h>
 #include <partons/modules/process/DDVCS/DDVCSProcessDMSW22.h>
@@ -55,6 +61,8 @@
 #include <iostream>
 #include <utility>
 
+#include <partons/modules/observable/DDVCS/leptonCMframe.h>
+
 using namespace PARTONS;
 
 /*
@@ -63,8 +71,8 @@ using namespace PARTONS;
  *            = (0, 1), CFF in DDVCS including DVCS point
  *            = (1, 1), CFF in DDVCS including TCS point
  *
- * asym = 0, phiL beam-spin asymmetry: A_LU(phiL)
- *      = 1, phi beam-spin asymmetry: A_LU(phiL)
+ * asym = 0, BDP's phiL beam-spin asymmetry: A_LU(phiL)
+ *      = 1, Trento's phi beam-spin asymmetry: A_LU(phi)
  *
  * intXsec = 0, totally integrated xsec
  */
@@ -76,17 +84,26 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
     // ******************************************************
 
     // Create GPDModule
-    //GPD model : GK16
+    //GPD model: GK16
     GPDModule* pGPDModule =
             Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
                     GPDGK16Numerical::classId);
+    //GPDGK16::classId);
 
     // Create GPDModule
-    //GPD model: VGG99
+//    //GPD model: VGG99
 //    GPDModule* pGPDModule =
 //            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
 //                    GPDVGG99::classId);
 //    pGPDModule->configure(ElemUtils::Parameter("setName", "MSTW2008nlo68cl"));
+
+    // Create GPDModule
+    //GPD model: MMS13
+//    GPDModule* pGPDModule =
+//            Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+//                    GPDMMS13::classId);
+//    pGPDModule->configure(ElemUtils::Parameter("absoluteTolerance", 0.1));
+//    pGPDModule->configure(ElemUtils::Parameter("relativeTolerance", 0.1));
 
     // Create CFF module
     DDVCSConvolCoeffFunctionModule* pDDVCSCFFModel =
@@ -206,22 +223,28 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newTCSObservable(
                     TCSCrossSectionUUThetaPhiIntegrated::classId);
 
+    PARTONS::TCSObservable* pTCSObservableModuleTCSAcuThetaIntegrated =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newTCSObservable(
+                    TCSAcuThetaIntegrated::classId);
+
     // Link modules (set physics assumptions of your computation)
     pTCSProcessModule->setScaleModule(pTCSScalesModule);
     pTCSProcessModule->setXiConverterModule(pTCSXiConverterModule);
     pTCSProcessModule->setConvolCoeffFunctionModule(pTCSCFFModel);
     pTCSCFFModel->setGPDModule(pGPDModule);
     pTCSObservableModule->setProcessModule(pTCSProcessModule);
+    pTCSObservableModuleTCSAcuThetaIntegrated->setProcessModule(
+            pTCSProcessModule);
 
     //Get GPDs for xsec and asymmetries
     List<GPDType> gpdTypes;
 
     gpdTypes.add(GPDType::H);
-    gpdTypes.add(GPDType::E);
-    gpdTypes.add(GPDType::Ht);
-    gpdTypes.add(GPDType::Et);
-    gpdTypes.add(GPDType::HL);
-    gpdTypes.add(GPDType::EL);
+//    gpdTypes.add(GPDType::E);
+//    gpdTypes.add(GPDType::Ht);
+//    gpdTypes.add(GPDType::Et);
+//    gpdTypes.add(GPDType::HL);
+//    gpdTypes.add(GPDType::EL);
 
     //Choose GPD for CFF (you need to have uncommented the corresponding gpdTypes.add() above
     GPDType::Type GPDforCFF;
@@ -243,59 +266,15 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
     //computation of asymmetries for DDVCS. lim and cff inputs are ignored if asym != 0
     if (asym == 0) {
         // ******************************************************
-        // Beam spin asymmetry (as a function of phiL) *************
+        // Beam spin asymmetry (as a function of phiL) **********
         // ******************************************************
         double phiLBDP; //phiL as the azymuthal lepton angle in the BDP2001 lepton-CM frame
 
-        double t = -0.1;
-        double Q2 = 0.3;
-        double Q2Prim = 2.5;
-        double y = 0.3;
-        double E;
-
-        //*** Computation of E (beam energy in proton rest frame) given energies of proton and electron beams in head-to-head collision:
-        double E1 = 10.; //electron energy
-        double E2 = 100.; //hadron energy
-        double m1 = Constant::ELECTRON_MASS; //electron mass
-        double m2 = Constant::PROTON_MASS; //hadron mass
-        double p1 = sqrt(E1 * E1 - m1 * m1);
-        double p2 = sqrt(E2 * E2 - m2 * m2);
-        E = (E1 * E2 + p1 * p2) / m2; //equivalent electron energy in fix target experiment
-        //***
-
-        double xB = Q2 / (2. * y * (Constant::PROTON_MASS) * E);
-        //double xB = Q2 / (2. * (Constant::PROTON_MASS) * nu);
-
-        double AluPhiLValue = 0.;
-
-        int total = 30;
-        for (int i = 0; i <= total; i++) {
-
-            phiLBDP = 0.001 + i * (2 * M_PI - 0.002) / total;
-//            phiLBDP = 1.45;  //in the neighborhood of peak of the asymmetry
-
-            AluPhiLValue = pDDVCSObservableModuleDDVCSAluPhiL->compute(
-                    DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, 0., phiLBDP,
-                            0.), gpdTypes).getValue().getValue();
-
-            std::cout << phiLBDP << " " << AluPhiLValue << " " << y << " " << E
-                    << " phiLBDP A_LU(phiLBDP) y E " << std::endl;
-
-        }
-
-    }
-
-    if (asym == 1) {
-        // ******************************************************
-        // Beam spin asymmetry (as a function of phi) *************
-        // ******************************************************
-        double phi; //in Trento convention
-
         double t = -0.2;
-        double Q2 = 0.3;
+        double Q2 = 0.6;
         double Q2Prim = 2.5;
         double E = 10.6;
-        double y = 0.4;
+        double y = 0.5;
 
         //*** Computation of E (beam energy in proton rest frame) given energies of proton and electron beams in head-to-head collision:
 //        double E1 = 10.; //electron energy
@@ -304,18 +283,82 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
 //        double m2 = Constant::PROTON_MASS; //hadron mass
 //        double p1 = sqrt(E1 * E1 - m1 * m1);
 //        double p2 = sqrt(E2 * E2 - m2 * m2);
-//        E = (E1 * E2 + p1 * p2) / m2; //equivalent electron energy in fix target experiment
+//        E = (E1 * E2 + p1 * p2) / m2; //equivalent electron energy in fixed-target experiment
+        //***
+
+        double xB = Q2 / (2. * y * (Constant::PROTON_MASS) * E);
+
+        //check where we fall in ERBL/DGLAP plane:
+        double xi = (Q2 + Q2Prim) / (2. * Q2 / xB - Q2 - Q2Prim); //t-dependence dropped
+        double rho = xi * (Q2 - Q2Prim) / (Q2 + Q2Prim); // t-dependence dropped
+        std::cout << rho / xi << " " << rho << " " << xi
+                << " rho/xi rho xi (NOTE: t-dropped as in CFF evaluation)"
+                << std::endl;
+
+        double AluPhiLValue = 0.;
+//        double AcuValue = 0.;
+
+        int total = 35;
+        for (int i = 0; i <= total; i++) {
+
+            phiLBDP = 0.001 + i * (2 * M_PI - 0.002) / total;
+            phiLBDP = 1.4367;//DEBUG peak of asymmetry
+
+            //DDVCS A_LU(phiL) asymmetry
+            AluPhiLValue = pDDVCSObservableModuleDDVCSAluPhiL->compute(
+                    DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, 0., phiLBDP,
+                            0.), gpdTypes).getValue().getValue();
+
+            std::cout << phiLBDP << " " << AluPhiLValue
+                    << " phiLBDP A_LU(phiLBDP)" << std::endl;
+
+            //TCS A_CU(phiL) asymmetry (there is integration in thetaLBDP)
+//            double Ephoton = y * E;
+//            AcuValue = pTCSObservableModuleTCSAcuThetaIntegrated->compute(
+//                    TCSObservableKinematic(t, Q2Prim, Ephoton, phiLBDP, 0.),
+//                    gpdTypes).getValue().getValue();
+
+//            AcuValue *= -1.; // maybe?
+
+//            std::cout << phiLBDP << " " << AluPhiLValue << " " << AcuValue
+//                    << " " << 100. * fabs((AluPhiLValue - AcuValue) / AcuValue)
+//                    << " phiLBDP ddvcs_A_LU(phiLBDP) tcs_A_CU(phiLBDP) rel.error(%)"
+//                    << std::endl;
+
+        }
+
+    }
+
+    if (asym == 1) {
+        // ******************************************************
+        // Beam spin asymmetry (as a function of phi) ***********
+        // ******************************************************
+        double phi; //in Trento convention
+
+        double t = -0.1;
+        double Q2 = 0.3;
+        double Q2Prim = 2.5;
+        double E = 22.;
+        double y = 0.15;
+
+        //*** Computation of E (beam energy in proton rest frame) given energies of proton and electron beams in head-to-head collision:
+//        double E1 = 10.; //electron energy
+//        double E2 = 100.; //hadron energy
+//        double m1 = Constant::ELECTRON_MASS; //electron mass
+//        double m2 = Constant::PROTON_MASS; //hadron mass
+//        double p1 = sqrt(E1 * E1 - m1 * m1);
+//        double p2 = sqrt(E2 * E2 - m2 * m2);
+//        E = (E1 * E2 + p1 * p2) / m2; //equivalent electron energy in fixed-target experiment
         //***
 
         double xB = Q2 / (2. * y * (Constant::PROTON_MASS) * E);
 
         double AluPhiValue = 0.;
 
-        int total = 40;
+        int total = 35;
         for (int i = 0; i <= total; i++) {
 
             phi = 0.001 + i * (2 * M_PI - 0.002) / total;
-            //phi = 1.4;        //peak of the asymmetry
 
             AluPhiValue = pDDVCSObservableModuleDDVCSAluPhi->compute(
                     DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi, 0., 0.),
@@ -337,19 +380,30 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
     if (lim == 0 && cff == 0) {
 
         double xB = 0.2;
-        double t = -0.1;
-        double Q2 = 3.;
-        double Q2Prim = pow(10., -3.);
+        double t = -0.25;
+        double Q2 = 40.;
+        double Q2Prim = pow(10., -6.);
         double E = 160.;
-        double phi = M_PI / 7.;
+        double phi;
 
-        int total = 10;
+        //tMin value
+        double epsilon2 = pow(2. * xB * Constant::PROTON_MASS, 2.) / Q2;
+
+        double tMin = -1. / (4. * xB * (1. - xB) + epsilon2);
+        tMin *= (2. * ((1. - xB) * Q2 - xB * Q2Prim) + epsilon2 * (Q2 - Q2Prim)
+                - 2. * sqrt(1. + epsilon2)
+                        * sqrt(
+                                pow((1. - xB) * Q2 - xB * Q2Prim, 2.)
+                                        - epsilon2 * Q2 * Q2Prim));
+
+        std::cout << tMin << ", " << t << " tMin vs t " << std::endl;
+
+        int total = 35;
         for (size_t i = 0; i <= total; i++) {
+            phi = 0.001 + i * (2. * M_PI - 0.002) / total;
 
-            phi = 0.001 + i * (2 * M_PI - 0.002) / total;
-
-            double NoverQPrim2 = Constant::FINE_STRUCTURE_CONSTANT / (4 * M_PI)
-                    * (4 / 3.) / Q2Prim;
+            double NoverQPrim2 = Constant::FINE_STRUCTURE_CONSTANT / (4. * M_PI)
+                    * (4. / 3.) / Q2Prim;
 
             double ddvcsValue = pDDVCSObservableModuleDVCSLimit->compute(
                     DDVCSObservableKinematic(xB, t, Q2, Q2Prim, E, phi, 0., 0.),
@@ -359,15 +413,15 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
             double A = pDVCSProcessModule->compute(1., -1,
                     NumA::Vector3D(0., 0., 0.),
                     DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                    VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                    VCSSubProcessType::INT).getValue().makeSameUnitAs(
                     PhysicalUnit::NB).getValue();
             double B = pDVCSProcessModule->compute(-1., -1,
                     NumA::Vector3D(0., 0., 0.),
                     DVCSObservableKinematic(xB, t, Q2, E, phi), gpdTypes,
-                    VCSSubProcessType::DVCS).getValue().makeSameUnitAs(
+                    VCSSubProcessType::INT).getValue().makeSameUnitAs(
                     PhysicalUnit::NB).getValue();
 
-            double dvcsValue = 2 * M_PI * (A + B) / 2.;
+            double dvcsValue = 2. * M_PI * (A + B) / 2.;
 
             std::cout << Q2Prim << " " << phi << " " << dvcsValue << " "
                     << ddvcsValue / NoverQPrim2 << " "
@@ -417,7 +471,7 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
                 DDVCSConvolCoeffFunctionResult cffResult =
                         pDDVCSCFFModel->compute(thiscffKinematics, gpdTypes);
 
-                //Q2 vs real and imaginary parts of CFF_H
+                //Q2 vs real and imaginary parts of CFF
                 std::cout << xi << ' ' << Q2 << ' ' << Q2Prim << ' '
                         << cffResult.getResult(GPDforCFF).real() << ' '
                         << cffResult.getResult(GPDforCFF).imag() << ' '
@@ -434,13 +488,25 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
     //xsec evaluation
     if (lim == 1 && cff == 0) {
 
-        double phiL = M_PI / 7.;
+        double phiL;
         double xB = pow(10., -4.);
-        double t = -0.1;
+        double t = -0.25;
         double Q2 = pow(10., -2.);
-        double Q2Prim = 3.;
+        double Q2Prim = 33.;
         double E = 160.;
-        double thetaL = 1.04 * M_PI / 4.;
+        double thetaL = 1.5 * M_PI / 4.;
+
+        //tMin value
+        double epsilon2 = pow(2. * xB * Constant::PROTON_MASS, 2.) / Q2;
+
+        double tMin = -1. / (4. * xB * (1. - xB) + epsilon2);
+        tMin *= (2. * ((1. - xB) * Q2 - xB * Q2Prim) + epsilon2 * (Q2 - Q2Prim)
+                - 2. * sqrt(1. + epsilon2)
+                        * sqrt(
+                                pow((1. - xB) * Q2 - xB * Q2Prim, 2.)
+                                        - epsilon2 * Q2 * Q2Prim));
+
+        std::cout << tMin << ", " << t << " tMin vs t " << std::endl;
 
         double nu = Q2 / (2 * Constant::PROTON_MASS * xB);
         double y = nu / E;
@@ -448,16 +514,17 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
         std::cout << "nu: " << nu << std::endl;
         std::cout << "y: " << y << std::endl;
 
-        double Q2Min = pow(y * Constant::ELECTRON_MASS, 2) / (1. - y);
+        double Q2Min = pow(y * Constant::ELECTRON_MASS, 2.) / (1. - y);
 
         std::cout << "Q2Min: " << Q2Min << std::endl;
 
-        double flux = Constant::FINE_STRUCTURE_CONSTANT / (2 * M_PI * Q2)
+        double flux = Constant::FINE_STRUCTURE_CONSTANT
                 * ((1. + pow(1. - y, 2)) / y - 2 * (1. - y) * Q2Min / (y * Q2));
 
         flux *= Q2 / (2 * E * Constant::PROTON_MASS * xB * xB);
+        flux = flux / (2 * M_PI * Q2);
 
-        int total = 10;
+        int total = 35;
         for (size_t i = 0; i <= total; i++) {
 
             phiL = 0.001 + i * (2 * M_PI - 0.002) / total;
@@ -467,30 +534,33 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
                             thetaL), gpdTypes).getValue().getValue();
 
             //TCS
+            double thetaL_tcs = -thetaL; // bc in BDP01, dxsecBDP/(... dt dthetaL) but we use dxsec/(... d|t|dthetaL)
+
             double A = pTCSProcessModule->compute(1.,
                     NumA::Vector3D(0., 0., 0.),
-                    TCSObservableKinematic(t, Q2Prim, nu, phiL, thetaL),
-                    gpdTypes, VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                    TCSObservableKinematic(t, Q2Prim, nu, phiL, thetaL_tcs),
+                    gpdTypes, VCSSubProcessType::INT).getValue().makeSameUnitAs(
                     PhysicalUnit::NB).getValue();
             double B = pTCSProcessModule->compute(-1.,
                     NumA::Vector3D(0., 0., 0.),
-                    TCSObservableKinematic(t, Q2Prim, nu, phiL, thetaL),
-                    gpdTypes, VCSSubProcessType::TCS).getValue().makeSameUnitAs(
+                    TCSObservableKinematic(t, Q2Prim, nu, phiL, thetaL_tcs),
+                    gpdTypes, VCSSubProcessType::INT).getValue().makeSameUnitAs(
                     PhysicalUnit::NB).getValue();
 
-            double tcsValue = 2 * M_PI * (A + B) / 2.;
+            double tcsValue = 2. * M_PI * (A + B) / 2.;
 
-            std::cout << phiL << " " << tcsValue << " " << ddvcsValue / flux
-                    << " "
-                    << 100. * fabs(tcsValue - ddvcsValue / flux)
-                            / tcsValue
-                    << " phiL tcs ddvcs_in_lim_of_tcs rel.error(%)"
+            tcsValue = -tcsValue; // Jacobian coming from: dxsecBDP/(... dt dthetaL) -> dxsecBM2003/(... d|t|dthetaL)
+
+            std::cout << Q2 << " " << phiL << " " << tcsValue << " "
+                    << ddvcsValue / flux << " "
+                    << 100. * fabs(tcsValue - ddvcsValue / flux) / tcsValue
+                    << " Q2 phiL tcs ddvcs_in_lim_of_tcs rel.error(%)"
                     << std::endl;
 
-            std::cout << thetaL << " " << tcsValue << " " << ddvcsValue / flux
-                    << " "
+            std::cout << Q2 << " " << thetaL << " " << tcsValue << " "
+                    << ddvcsValue / flux << " "
                     << 100. * fabs(tcsValue - ddvcsValue / flux) / tcsValue
-                    << " thetaL tcs ddvcs_in_lim_of_tcs rel.error(%)"
+                    << " Q2 thetaL tcs ddvcs_in_lim_of_tcs rel.error(%)"
                     << std::endl;
         }
     }
@@ -521,7 +591,7 @@ void compareLimit(int lim, int cff, int asym, int intXsec) {
                         computeSingleKinematicsForTCSComptonFormFactor(xi, t,
                                 Q2Prim, muF2, muR2);
 
-                //Q2 vs real and imaginary parts of CFF_H
+                //Q2 vs real and imaginary parts of CFF
                 std::cout << xi << ' ' << 0. << ' ' << Q2Prim << ' '
                         << cffResult.getResult(GPDforCFF).real() << ' '
                         << cffResult.getResult(GPDforCFF).imag() << ' '

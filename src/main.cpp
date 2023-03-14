@@ -16,7 +16,9 @@
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DDVCS/DDVCSCFFStandard.h>
 #include <partons/modules/gpd/GPDGK16Numerical.h>
+#include <partons/modules/gpd/GPDGK16.h>
 #include <partons/modules/gpd/GPDVGG99.h>
+#include <partons/modules/gpd/GPDMMS13.h>
 #include <partons/modules/process/DDVCS/DDVCSProcessDMSW22.h>
 #include <partons/modules/scales/DDVCS/DDVCSScalesVirtualitiesSum.h>
 #include <partons/beans/Scales.h>
@@ -72,6 +74,7 @@ int main(int argc, char** argv) {
         GPDModule* pGPDModule =
                 Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
                         GPDGK16Numerical::classId);
+//                        GPDGK16::classId);
 
         // Create GPDModule
         //GPD model: VGG99
@@ -81,6 +84,12 @@ int main(int argc, char** argv) {
 //        pGPDModule->configure(ElemUtils::Parameter(
 //                "setName",
 //                "MSTW2008nlo68cl"));
+
+        // Create GPDModule
+        //GPD model: MMS13
+//        GPDModule* pGPDModule =
+//                Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+//                        GPDMMS13::classId);
 
         // Create CFF module
         DDVCSConvolCoeffFunctionModule* pDDVCSCFFModel =
@@ -133,10 +142,65 @@ int main(int argc, char** argv) {
 
         //DVCS and TCS limits of DDVCS, CFFs and asymmetries computations
         int lim = -1;
-        int cff = -1;
-        int asym = -1;
-        int intXsec = 0;
+        int cff = 0;
+        int asym = 0;
+        int intXsec = -1;
         compareLimit(lim, cff, asym, intXsec);
+
+        //-----------------------------------------------------------------------
+
+        //computation of amplitudes:
+//        double XI = 0.135; //Zhao's xi (same as xi in our paper and -eta in BM2003)
+//        double XIprime = 0.06; //Zhao's xi' (same as rho in our paper and xi in BM2003)
+//
+//        double xB;
+//        double t = -0.15;
+//        double Q2 = 1.25;
+//        double Q2Prim;
+//        double E = 11.;
+//        double phi;
+//        double phiL = M_PI / 3.;
+//        double thetaL = M_PI / 6.;
+//
+//        Q2Prim = Q2 * (XI - XIprime) + XI * t / 2.;
+//        Q2Prim /= (XIprime + XI);
+//
+//        xB = (XI + XIprime) * Q2;
+//        xB /= (Q2 + t / 4.) * (1. + XI) - (XI + XIprime) * t / 2.;
+//
+//        //tMin value
+//        double epsilon2 = pow(2. * xB * Constant::PROTON_MASS, 2.) / Q2;
+//
+//        double tMin = -1. / (4. * xB * (1. - xB) + epsilon2);
+//        tMin *= (2. * ((1. - xB) * Q2 - xB * Q2Prim) + epsilon2 * (Q2 - Q2Prim)
+//                - 2. * sqrt(1. + epsilon2)
+//                        * sqrt(
+//                                pow((1. - xB) * Q2 - xB * Q2Prim, 2.)
+//                                        - epsilon2 * Q2 * Q2Prim));
+//        double tMax = -1. / (4. * xB * (1. - xB) + epsilon2);
+//        tMax *= (2. * ((1. - xB) * Q2 - xB * Q2Prim) + epsilon2 * (Q2 - Q2Prim)
+//                + 2. * sqrt(1. + epsilon2)
+//                        * sqrt(
+//                                pow((1. - xB) * Q2 - xB * Q2Prim, 2.)
+//                                        - epsilon2 * Q2 * Q2Prim));
+//
+//        double tVal = t;
+//        std::cout << tMin << ", " << tVal << ", " << tMax
+//                << " tMin, tVal, tMax " << std::endl;
+//
+//        int total = 36;
+//        for (int i = 0; i <= total; i++) {
+//
+//            phi = i * 10.; //phi in deg
+//            phi = phi * M_PI / 180.; //phi in rad
+//
+//            double xsec =
+//                    pProcessModule->compute(1, -1, NumA::Vector3D(0., 0., 0.),
+//                            DDVCSObservableKinematic(xB, tVal, Q2, Q2Prim, E,
+//                                    phi, phiL, thetaL), gpdTypes,
+//                            VCSSubProcessType::DDVCS).getValue().makeSameUnitAs(
+//                            PhysicalUnit::NB).getValue();
+//        }
 
         //------------------------------------------------
 
