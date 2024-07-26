@@ -367,7 +367,7 @@ void computeManyKinematicsForDVCSNNComptonFormFactor() {
     // Load list of kinematics from file
     PARTONS::List<PARTONS::DVCSConvolCoeffFunctionKinematic> cffKinematicList =
             PARTONS::KinematicUtils().getDVCSCCFKinematicFromFile(
-                    "/home/partons/git/partons-example/data/examples/cff/kinematics_dvcs_cff.csv");
+                    "/local/home/cmezrag/git/partons-example/data/examples/cff/kinematics_dvcs_cff.csv");
 
     // Run computation
     PARTONS::List<PARTONS::DVCSConvolCoeffFunctionResult> cffResultList =
