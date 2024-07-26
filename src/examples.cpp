@@ -22,6 +22,7 @@
 #include <partons/modules/active_flavors_thresholds/ActiveFlavorsThresholdsQuarkMasses.h>
 #include <partons/modules/convol_coeff_function/ConvolCoeffFunctionModule.h>
 #include <partons/modules/convol_coeff_function/DVCS/DVCSCFFStandard.h>
+#include <partons/modules/convol_coeff_function/DVCS/DVCSCFFNN.h>
 #include <partons/modules/convol_coeff_function/DVMP/DVMPCFFGK06.h>
 #include <partons/modules/evolution/gpd/GPDEvolutionVinnikov.h>
 #include <partons/modules/gpd/GPDGK16Numerical.h>
@@ -335,7 +336,7 @@ void computeSingleKinematicsForDVMPComptonFormFactor() {
 
 
 // I introduce here an attempt to retrieve the CFF encoded in the ANN
-void computeManyKinematicsForDVCSANNComptonFormFactor() {
+void computeManyKinematicsForDVCSNNComptonFormFactor() {
 
     // Retrieve service
     PARTONS::DVCSConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
@@ -350,7 +351,7 @@ void computeManyKinematicsForDVCSANNComptonFormFactor() {
     // Create CFF ANN module with the BaseModuleFactory
     PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
             PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
-                    PARTONS::DVCSCFFANN::classId);
+                    PARTONS::DVCSCFFNN::classId);
 
     // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
     ElemUtils::Parameters parameters(
@@ -361,7 +362,7 @@ void computeManyKinematicsForDVCSANNComptonFormFactor() {
     pDVCSCFFModule->configure(parameters);
 
     // Link modules (set physics assumptions of your computation)
-    pDVCSCFFModule->setGPDModule(pGPDModule);
+    //    pDVCSCFFModule->setGPDModule(pGPDModule);
 
     // Load list of kinematics from file
     PARTONS::List<PARTONS::DVCSConvolCoeffFunctionKinematic> cffKinematicList =
@@ -383,9 +384,10 @@ void computeManyKinematicsForDVCSANNComptonFormFactor() {
             pDVCSCFFModule, 0);
     pDVCSCFFModule = 0;
 
-    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+    /*    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
             pGPDModule, 0);
     pGPDModule = 0;
+    */
 }
 
 

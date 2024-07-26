@@ -53,6 +53,16 @@ void computeManyKinematicsForDVCSComptonFormFactor();
  */
 void computeSingleKinematicsForDVMPComptonFormFactor();
 
+
+/**
+ * This function demonstrates the evaluation of DVCS Compton Form Factors (CFF) for kinematics defined in a text file.
+ * However, contrary to the previous case, this function uses the ANN fit done in 1905.02089 
+ * In this file kinematic points are encoded in separate lines using the following format: "xi|t|Q2|MuF2|MuR2".
+ * The result of this function is printed out to the standard output.
+ * These are CFF values for all GPD types defined in the selected GPD model.
+ */
+void computeManyKinematicsForDVCSNNComptonFormFactor();
+
 // ******************************************************
 // OBSERVABLE EXAMPLES **********************************
 // ******************************************************

@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         pPartons = PARTONS::Partons::getInstance();
         pPartons->init(argc, argv);
 
-        // ******************************************************
+	/*        // ******************************************************
         // RUN XML SCENARIO *************************************
         // ******************************************************
 
@@ -61,6 +61,7 @@ int main(int argc, char** argv) {
                     xmlScenarioFilePathList[i]);
             pAutomationService->playScenario(pScenario);
         }
+	*/
 
         // ******************************************************
         // RUN CPP CODE *****************************************
@@ -71,8 +72,8 @@ int main(int argc, char** argv) {
         // include/examples.h (header) and src/examples.cpp (source) files.
         // To run these examples just call them here, e.g.:
 
-        // computeSingleKinematicsForGPD();
-
+         computeManyKinematicsForDVCSNNComptonFormFactor();
+	 
         // Note, that you may need to comment out the part responsible for the running of XML scenarios.
 
     }
