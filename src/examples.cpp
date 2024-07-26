@@ -333,6 +333,64 @@ void computeSingleKinematicsForDVMPComptonFormFactor() {
     pGPDModule = 0;
 }
 
+
+// I introduce here an attempt to retrieve the CFF encoded in the ANN
+void computeManyKinematicsForDVCSANNComptonFormFactor() {
+
+    // Retrieve service
+    PARTONS::DVCSConvolCoeffFunctionService* pDVCSConvolCoeffFunctionService =
+            PARTONS::Partons::getInstance()->getServiceObjectRegistry()->getDVCSConvolCoeffFunctionService();
+
+/*    // Create GPD module with the BaseModuleFactory
+    PARTONS::GPDModule* pGPDModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newGPDModule(
+                    PARTONS::GPDGK16::classId);
+                   */
+
+    // Create CFF ANN module with the BaseModuleFactory
+    PARTONS::DVCSConvolCoeffFunctionModule* pDVCSCFFModule =
+            PARTONS::Partons::getInstance()->getModuleObjectFactory()->newDVCSConvolCoeffFunctionModule(
+                    PARTONS::DVCSCFFANN::classId);
+
+    // Create parameters to configure later DVCSCFFModel with PerturbativeQCD = LO
+    ElemUtils::Parameters parameters(
+            PARTONS::PerturbativeQCDOrderType::PARAMETER_NAME_PERTURBATIVE_QCD_ORDER_TYPE,
+            PARTONS::PerturbativeQCDOrderType::LO);
+
+    // Configure DVCSCFFModule with previous parameters.
+    pDVCSCFFModule->configure(parameters);
+
+    // Link modules (set physics assumptions of your computation)
+    pDVCSCFFModule->setGPDModule(pGPDModule);
+
+    // Load list of kinematics from file
+    PARTONS::List<PARTONS::DVCSConvolCoeffFunctionKinematic> cffKinematicList =
+            PARTONS::KinematicUtils().getDVCSCCFKinematicFromFile(
+                    "/home/partons/git/partons-example/data/examples/cff/kinematics_dvcs_cff.csv");
+
+    // Run computation
+    PARTONS::List<PARTONS::DVCSConvolCoeffFunctionResult> cffResultList =
+            pDVCSConvolCoeffFunctionService->computeManyKinematic(
+                    cffKinematicList, pDVCSCFFModule);
+
+    // Print results for DVCSCFFModule
+    PARTONS::Partons::getInstance()->getLoggerManager()->info("main", __func__,
+            cffResultList.toString());
+
+    // Remove pointer references
+    // Module pointers are managed by PARTONS
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pDVCSCFFModule, 0);
+    pDVCSCFFModule = 0;
+
+    PARTONS::Partons::getInstance()->getModuleObjectFactory()->updateModulePointerReference(
+            pGPDModule, 0);
+    pGPDModule = 0;
+}
+
+
+
+
 void computeSingleKinematicsForDVCSObservable() {
 
     // Retrieve Observable service
