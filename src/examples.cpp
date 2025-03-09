@@ -12,7 +12,6 @@
 #include <partons/beans/gpd/GPDType.h>
 #include <partons/beans/KinematicUtils.h>
 #include <partons/beans/List.h>
-#include <partons/beans/MesonPolarization.h>
 #include <partons/beans/MesonType.h>
 #include <partons/beans/observable/DVCS/DVCSObservableKinematic.h>
 #include <partons/beans/observable/DVMP/DVMPObservableKinematic.h>
