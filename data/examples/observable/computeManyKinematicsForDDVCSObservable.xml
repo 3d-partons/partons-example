@@ -9,8 +9,8 @@ This scenario demonstrates the evaluation of DDVCS observable for kinematics def
 <scenario date="2017-07-18" description="DDVCS observable for many kinematics evaluation example">
 
    <!-- First task: evaluate DDVCS observable for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="DDVCSObservableService" method="computeManyKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="DDVCSObservableService" method="computeManyKinematic">
 
       <!-- Define DDVCS observable kinematics -->
       <kinematics type="DDVCSObservableKinematic">

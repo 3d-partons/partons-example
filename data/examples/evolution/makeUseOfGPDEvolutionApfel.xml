@@ -16,8 +16,8 @@ calculation of CFFs or observables.
 <scenario date="2020-07-27" description="GPD evaluation for single kinematics example with evolution">
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="GPDService" method="computeSingleKinematic">
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">
