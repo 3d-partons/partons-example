@@ -3,7 +3,6 @@
 #include <partons/Partons.h>
 #include <partons/services/automation/AutomationService.h>
 #include <partons/ServiceObjectRegistry.h>
-#include <QtCore/qcoreapplication.h>
 #include <string>
 #include <vector>
 
@@ -27,8 +26,6 @@ std::vector<std::string> parseArguments(int argc, char** argv) {
  */
 int main(int argc, char** argv) {
 
-    // Init Qt4
-    QCoreApplication a(argc, argv);
     PARTONS::Partons* pPartons = 0;
 
     try {
