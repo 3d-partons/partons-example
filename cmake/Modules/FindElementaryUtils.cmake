@@ -21,11 +21,15 @@ else (ElementaryUtils_INCLUDE_DIR AND ElementaryUtils_LIBRARIES)
       ${CMAKE_SOURCE_DIR}/../elementary-utils
       ${CMAKE_SOURCE_DIR}/elementary-utils
       ${CMAKE_SOURCE_DIR}
+      HINTS 
+      ${ElementaryUtils_HINT}
       PATH_SUFFIXES include/PARTONS include
     )
     
   find_library(ElementaryUtils_LIBRARIES
                      NAMES ElementaryUtils
+		     HINTS 
+		     ${ElementaryUtils_HINT}
                      PATHS
                      ${CMAKE_INSTALL_PREFIX}
                      ${CMAKE_SOURCE_DIR}/../ElementaryUtils

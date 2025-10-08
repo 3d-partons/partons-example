@@ -13,8 +13,8 @@ This scenario is the demonstration for GPD module. Note however that the way of 
 <scenario date="2017-07-18" description="Change integration routine example">
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="GPDService" method="computeSingleKinematic">
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">

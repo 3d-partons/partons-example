@@ -9,8 +9,8 @@ This scenario demonstrates a simple task as the evaluation of GPD model in a sin
 <scenario date="2017-07-18" description="GPD evaluation for single kinematics example">
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="GPDService" method="computeSingleKinematic">
 
       <!-- Define GPD kinematics -->
       <kinematics type="GPDKinematic">

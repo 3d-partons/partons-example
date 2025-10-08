@@ -12,8 +12,8 @@ are the values for all defined distributions.
 <scenario date="2020-07-18" description="Collinear distribution evaluation for single kinematics example using LHAPDF">
 
    <!-- First task: evaluate CollinearDistribution model for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="CollinearDistributionService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="CollinearDistributionService" method="computeSingleKinematic">
 
       <!-- Define CollinearDistribution kinematics -->
       <kinematics type="CollinearDistributionKinematic">

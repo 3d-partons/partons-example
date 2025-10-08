@@ -9,8 +9,8 @@ This scenario demonstrates a simple task as the evaluation of DVCS observable in
 <scenario date="2017-07-18" description="DVCS observable evaluation for single kinematics example">
 
    <!-- First task: evaluate DVCS observable for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="DVCSObservableService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="DVCSObservableService" method="computeSingleKinematic">
 
       <!-- Define DVCS observable kinematics -->
       <kinematics type="DVCSObservableKinematic">

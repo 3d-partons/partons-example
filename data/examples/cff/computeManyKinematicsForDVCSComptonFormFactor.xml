@@ -9,8 +9,8 @@ This scenario demonstrates the evaluation of DVCS Compton Form Factors (CFF) for
 <scenario date="2017-07-18" description="DVCS CFF evaluation for many kinematics example">
 
    <!-- First task: evaluate DVCS CFF for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="DVCSConvolCoeffFunctionService" method="computeManyKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="DVCSConvolCoeffFunctionService" method="computeManyKinematic">
 
       <!-- Define DVCS CFF kinematics -->
       <kinematics type="DVCSConvolCoeffFunctionKinematic">

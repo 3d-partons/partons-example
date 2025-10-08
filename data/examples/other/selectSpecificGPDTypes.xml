@@ -14,8 +14,8 @@ Note that you can use this example to select specific GPD types in the evaluatio
 <scenario date="2017-07-18" description="Select specific GPD types">
 
    <!-- First task: evaluate GPD model for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="GPDService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="GPDService" method="computeSingleKinematic">
 
       <!-- Define GPD types -->
       <task_param type="GPDType">

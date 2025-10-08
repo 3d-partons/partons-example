@@ -9,8 +9,8 @@ This scenario demonstrates a simple task as the evaluation of DDVCS Compton Form
 <scenario date="2017-07-18" description="DDVCS CFF evaluation for single kinematics example">
 
    <!-- First task: evaluate DDVCS CFF for a single kinematics --> 
-   <!-- Indicate service and its methods to be used and indicate if the result should be stored in the database --> 
-   <task service="DDVCSConvolCoeffFunctionService" method="computeSingleKinematic" storeInDB="0">
+   <!-- Indicate service and its methods to be used --> 
+   <task service="DDVCSConvolCoeffFunctionService" method="computeSingleKinematic">
 
       <!-- Define DDVCS CFF kinematics -->
       <kinematics type="DDVCSConvolCoeffFunctionKinematic">
