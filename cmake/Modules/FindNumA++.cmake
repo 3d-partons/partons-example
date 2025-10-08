@@ -23,11 +23,15 @@ else (NumA++_INCLUDE_DIR AND NumA++_LIBRARIES)
       ${CMAKE_SOURCE_DIR}/NumA
       ${CMAKE_SOURCE_DIR}/NumA++
       ${CMAKE_SOURCE_DIR}
+      HINTS 
+      ${NumA++_HINT}
       PATH_SUFFIXES include/PARTONS include
     )
     
   find_library(NumA++_LIBRARIES
                      NAMES NumA NumA++
+      		     HINTS 
+      		     ${NumA++_HINT}
                      PATHS
                      ${CMAKE_INSTALL_PREFIX}
                      ${CMAKE_SOURCE_DIR}/../NumA++
