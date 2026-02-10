@@ -1,6 +1,11 @@
 # LHAPDF
 
-find_program(LHAPDF_CONFIG lhapdf-config REQUIRED)
+find_program(
+	LHAPDF_CONFIG lhapdf-config
+	HINTS
+	${LHAPDF_HINT}
+	REQUIRED
+)
 
 if (LHAPDF_CONFIG)
 
@@ -27,6 +32,12 @@ if (LHAPDF_CONFIG)
     PATHS ${LHAPDF_LIB_DIR} 
     NO_DEFAULT_PATH
   )
+
+  exec_program(${LHAPDF_CONFIG}
+    ARGS --incdir
+    OUTPUT_VARIABLE LHAPDF_INCLUDE_DIR
+  )
+  set(LHAPDF_INCLUDE_DIR ${LHAPDF_INCLUDE_DIR} CACHE PATH INTERNAL)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(LHAPDF REQUIRED_VARS LHAPDF_LIBRARIES VERSION_VAR LHAPDF_VERSION)
