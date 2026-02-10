@@ -1,7 +1,7 @@
 # APFEL++
 
 find_program(
-	Apfel++_CONFIG apfelxx-config 
+	Apfel++_CONFIG apfelxx-config
 	HINTS
 	${Apfel++_HINT}
 	REQUIRED
@@ -34,8 +34,8 @@ if (Apfel++_CONFIG)
   )
 
   exec_program(${Apfel++_CONFIG}
-    ARGS --incdir 
-    OUTPUT_VARIABLE Apfel++_INCLUDE_DIR 
+    ARGS --incdir
+    OUTPUT_VARIABLE Apfel++_INCLUDE_DIR
   )
   set(Apfel++_INCLUDE_DIR ${Apfel++_INCLUDE_DIR} CACHE PATH INTERNAL)
 

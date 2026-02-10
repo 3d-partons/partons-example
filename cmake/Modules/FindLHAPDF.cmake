@@ -1,7 +1,7 @@
 # LHAPDF
 
 find_program(
-	LHAPDF_CONFIG lhapdf-config 
+	LHAPDF_CONFIG lhapdf-config
 	HINTS
 	${LHAPDF_HINT}
 	REQUIRED
@@ -34,8 +34,8 @@ if (LHAPDF_CONFIG)
   )
 
   exec_program(${LHAPDF_CONFIG}
-    ARGS --incdir 
-    OUTPUT_VARIABLE LHAPDF_INCLUDE_DIR 
+    ARGS --incdir
+    OUTPUT_VARIABLE LHAPDF_INCLUDE_DIR
   )
   set(LHAPDF_INCLUDE_DIR ${LHAPDF_INCLUDE_DIR} CACHE PATH INTERNAL)
 

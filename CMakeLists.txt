@@ -8,14 +8,14 @@ project(PARTONS_example CXX)
 
 # define c++ standard and issue all the warning demanded by this standard
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-   add_definitions(-std=c++11 -pedantic -Wno-vla-extension)
+	add_definitions(-std=c++17 -pedantic -Wno-vla-extension)
 else()
-   add_definitions(-std=c++11 -pedantic -Wno-vla-extension -fext-numeric-literals)
+	add_definitions(-std=c++17 -pedantic -Wno-vla-extension -fext-numeric-literals)
 endif()
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 if (NOT DEFINED CMAKE_MACOSX_RPATH)
-   set(CMAKE_MACOSX_RPATH 0)
+	set(CMAKE_MACOSX_RPATH 0)
 endif()
 
 # FIND LIBRARIES ===========================================================================
@@ -48,21 +48,21 @@ find_package(Apfel++ REQUIRED)
 find_package(LHAPDF REQUIRED)
 
 # find libxml2
-find_package(LibXml2)
+find_package(LibXml2 REQUIRED)
 
 # directories containing headers 
-include_directories(${QT_INCLUDE_DIRS} ${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${SFML_INCLUDE_DIR} ${CLN_INCLUDE_DIR} ${GSL_INCLUDE_DIRS} ${Apfel++_INCLUDE_DIR} ${LHAPDF_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})
+include_directories(${ElementaryUtils_INCLUDE_DIR} ${NumA++_INCLUDE_DIR} ${PARTONS_INCLUDE_DIR} ${SFML_INCLUDE_DIR} ${CLN_INCLUDE_DIR} ${GSL_INCLUDE_DIRS} ${Apfel++_INCLUDE_DIR} ${LHAPDF_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIRS})
 
 # FINALIZE ==================================================================================
 
 # generate list of source files
 file(
 
-        GLOB_RECURSE
+    GLOB_RECURSE
 
-        source_files
+    source_files
 
-        src/*
+    src/*
 )
 
 # define target executable
@@ -70,17 +70,17 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 add_executable(
 
-        PARTONS_example
+	PARTONS_example
 
-        ${source_files}
+    ${source_files}
 )
 
 # define libraries to be linked
 target_link_libraries(
 
-        PARTONS_example
+	PARTONS_example
         
-    	${SFML_LIBRARIES}
+    ${SFML_LIBRARIES}
           
 	${CLN_LIBRARIES}
           
