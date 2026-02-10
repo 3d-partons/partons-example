@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 #include <H5Cpp.h>
 
@@ -26,32 +27,6 @@ std::vector<std::string> getDataSetNames(const H5::H5File& file) {
     return result;
 }
 
-/*
- * Compare two lists.
- */
-void compareTwoLists(const std::vector<std::string>& namesA, const std::vector<std::string>& namesB) {
-
-    if (namesA.size() != namesB.size()) {
-        std::cerr << "[EE] files made for different lists of modules (different sizes)" << std::endl;
-        exit(1);
-    }
-
-    for (std::vector<std::string>::const_iterator it1 = namesA.begin(); it1 != namesA.end(); it1++) {
-
-        bool isThere = false;
-
-        for (std::vector<std::string>::const_iterator it2 = namesB.begin(); it2 != namesB.end(); it2++) {
-            if ((*it1) == (*it2)) {
-                isThere = true;
-            }
-        }
-
-        if (! isThere) {
-            std::cerr << "[EE] files made for different lists of modules (" << (*it1) << "only in one file)" << std::endl;
-            exit(1);
-        }
-    }
-}
 
 /*
  * Compare with precision.
@@ -139,17 +114,38 @@ int main(int argc, char** argv) {
         std::vector<std::string> namesB = getDataSetNames(fileB);
 
         // Compare lists
-        compareTwoLists(namesA, namesB);
+        std::sort(namesA.begin(), namesA.end());
+        std::sort(namesB.begin(), namesB.end());
 
-        // Compare
-        for (std::vector<std::string>::const_iterator it = namesA.begin(); it != namesA.end(); it++) {
+        auto itA = namesA.begin();
+        auto itB = namesB.begin();
 
-            std::cout << "[II] working for: " << (*it) << std::endl;
+        while (itA != namesA.end() || itB != namesB.end()) {
 
-            std::vector<double> dataA = getData(fileA, *it);
-            std::vector<double> dataB = getData(fileB, *it);
+            if (itA != namesA.end() && (itB == namesB.end() || *itA < *itB)) {
 
-            compareTwoDataSets(dataA, dataB);
+                std::cout << "[WW] files made for different lists of modules (" << (*itA) << "only in file A)" << std::endl;
+
+                ++itA;
+
+            } else if (itB != namesB.end() && (itA == namesA.end() || *itB < *itA)) {
+
+                std::cout << "[WW] files made for different lists of modules (" << (*itB) << "only in file B)" << std::endl;
+
+                ++itB;
+
+            } else {
+
+                std::cout << "[II] working for: " << (*itA) << std::endl;
+
+                std::vector<double> dataA = getData(fileA, *itA);
+                std::vector<double> dataB = getData(fileB, *itA);
+
+                compareTwoDataSets(dataA, dataB);
+
+                ++itA;
+                ++itB;
+            }
         }
     }
     // In a case of standard exception.
